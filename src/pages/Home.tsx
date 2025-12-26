@@ -10,9 +10,8 @@ const Home: React.FC = () => {
           <IonTitle>Home Module</IonTitle>
         </IonToolbar>
       </IonHeader>
-
-      /* Quarter 1 Card */
       <IonContent className="ion-padding">
+        /* Quarter 1 Card */
         <IonCard routerLink="/tabs/home/quarter/quarter1">
           <IonCardHeader>
             <IonCardTitle>

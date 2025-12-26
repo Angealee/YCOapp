@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">YCO App</string>
+    <string name="title_activity_main">YCO App</string>
+    <string name="package_name">com.yco.app</string>
+    <string name="custom_url_scheme">com.yco.app</string>
+</resources>
