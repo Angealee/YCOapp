@@ -21,7 +21,7 @@ import {
   gameControllerOutline,
 } from "ionicons/icons";
 
-import { quarter1Aralin } from "../../data/quarter1";
+import { quarter1Aralin } from "../../data/quarter1Aralin";
 import "./Quarter1.css";
 
 const Quarter1: React.FC = () => {
