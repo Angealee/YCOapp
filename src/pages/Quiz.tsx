@@ -1,6 +1,6 @@
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import ExploreContainer from '../components/ExploreContainer';
-import './Quiz.css';
+// import './Quiz.css';
 
 const Quiz: React.FC = () => {
   return (

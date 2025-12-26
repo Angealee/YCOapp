@@ -1,6 +1,6 @@
 import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
 import ExploreContainer from '../components/ExploreContainer';
-import './Home.css';
+// import './Home.css';
 
 const quarters = [
   {
@@ -58,7 +58,7 @@ const Home: React.FC = () => {
   
           </IonCard>
         ))}
-        
+
       </IonContent>
     </IonPage>
   );

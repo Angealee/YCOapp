@@ -1,0 +1,32 @@
+.lesson-header {
+  padding: 16px;
+}
+
+.lesson-header h2 {
+  margin: 0;
+  font-weight: 700;
+}
+
+.lesson-header p {
+  margin-top: 4px;
+  color: var(--ion-color-medium);
+}
+
+.lesson-content {
+  padding: 8px;
+}
+
+.lesson-content ul {
+  padding-left: 18px;
+}
+
+.lesson-content li {
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.placeholder {
+  padding: 24px;
+  text-align: center;
+  color: var(--ion-color-medium);
+}
