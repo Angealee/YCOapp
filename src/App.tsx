@@ -18,7 +18,7 @@ import Setting from './pages/Setting';
 // Quarter pages
 import Quarter1 from './pages/quarter/Quarter1';
 import Quarter1Lesson from './pages/lessons/Quarter1Aralin1';
-// import Quarter2 from './pages/quarter/Quarter2';
+import Quarter2 from './pages/quarter/Quarter2';
 // import Quarter2Lesson from './pages/quarter/Quarter2Lesson';
 // import Quarter3 from './pages/quarter/Quarter3';
 // import Quarter3Lesson from './pages/quarter/Quarter3Lesson';
@@ -56,6 +56,8 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
+import Quarter1Aralin1 from './pages/lessons/Quarter1Aralin1';
+import Quarter2Aralin1 from './pages/lessons/Quarter2Aralin1';
 
 setupIonicReact();
 
@@ -72,7 +74,7 @@ const App: React.FC = () => (
 
               {/* Quarter 1 */}
               <Route exact path="/quarter/1" component={Quarter1} />
-              <Route exact path="/quarter/1/aralin/:id" component={Quarter1Lesson} />
+              <Route exact path="/quarter/1/aralin/:id" component={Quarter1Aralin1} />
               
               <Route exact path="/quarter1">
                 <Quarter1 />
@@ -80,8 +82,8 @@ const App: React.FC = () => (
 
 
               {/* Quarter 2 */}
-              {/* <Route exact path="/quarter/2" component={Quarter2} />
-              <Route exact path="/quarter/2/aralin/:id" component={Quarter2Lesson} /> */}
+              <Route exact path="/quarter/2" component={Quarter2} />
+              <Route exact path="/quarter/2/aralin/:id" component={Quarter2Aralin1} />
 
               {/* Quarter 3 */}
               {/* <Route exact path="/quarter/3" component={Quarter3} />
