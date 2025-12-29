@@ -9,7 +9,7 @@
 
 .quarter-header p {
   margin-top: 4px;
-  color: var(--ion-color-medium);
+  color: var(--ion-color-primary);
 }
 
 .aralin-description {
@@ -17,13 +17,9 @@
   color: var(--ion-color-dark);
 }
 
-.aralin-description {
-  font-size: 0.95rem;
-  margin-bottom: 12px;
-}
-
 .aralin-progress {
   margin-top: 10px;
+  color: rgb(161, 58, 58);
 }
 
 .progress-label {
@@ -36,12 +32,12 @@
 }
 
 .progress-label strong {
-  color: var(--ion-color-light);
+  color: black;
 }
 .progress-label p {
   position: absolute;
   left: 9%;
-  color: var(--ion-color-medium);
+  color:black;
 }
 
 .aralin-card {
@@ -53,9 +49,12 @@
     rgba(184, 176, 176, 0.01)
   );
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6);
+
 }
 
 .aralin-card:hover {
   transform: translateY(-2px);
+  background-color: white;
   box-shadow: 0 12px 28px rgba(0, 0, 0, 0.6);
 }

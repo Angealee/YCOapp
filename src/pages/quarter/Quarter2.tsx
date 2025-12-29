@@ -10,7 +10,7 @@ import {
 } from "@ionic/react";
 
 import { quarter2Aralin, Aralin } from "../../data/quarter2AralinCards";
-import "./Quarter1.css";
+import "./Quarter2.css";
 
 const Quarter2: React.FC = () => {
   return (
