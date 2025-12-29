@@ -53,6 +53,8 @@
     rgba(184, 176, 176, 0.01)
   );
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.6);
+
 }
 
 .aralin-card:hover {

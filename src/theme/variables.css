@@ -5,7 +5,7 @@
   --fil-yellow: #fcd116;
 
   /* LIGHT MODE BASE */
-  --ion-background-color: #f5de91;
+  --ion-background-color: #e4ebd8ec;
   --ion-text-color: #1f1f1f;
 
   --ion-card-background: #ffffff;
@@ -20,29 +20,9 @@
   --ion-color-tertiary: var(--fil-yellow);
 
 }
-:root[theme="dark"] {
-  /* DARK MODE BASE */
-  --ion-background-color: #121212;
-  --ion-text-color: #000000;
-
-  --ion-card-background: #1e1e1e;
-  --ion-item-background: #1e1e1e;
-
-  --ion-border-color: #333333;
-
-  --ion-color-primary: var(--fil-blue);
-  --ion-color-primary-contrast: #ffffff;
-
-  --ion-color-secondary: var(--fil-red);
-  --ion-color-tertiary: var(--fil-yellow);
-}
 ion-toolbar {
   --background: #ce1126;
   --color: #ffffff;
   --border-color: #2e66a7;
 }
-:root[theme="dark"] ion-toolbar {
-  --background: #1e1e1e;
-  --color: #ffffff;
-  --border-color: #333333;
-}
+
