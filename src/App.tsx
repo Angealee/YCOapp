@@ -17,7 +17,7 @@ import Setting from './pages/Setting';
 
 // Quarter pages
 import Quarter1 from './pages/quarter/Quarter1';
-import Quarter1Lesson from './pages/lessons/Quarter1Lesson1';
+import Quarter1Lesson from './pages/lessons/Quarter1Aralin1';
 // import Quarter2 from './pages/quarter/Quarter2';
 // import Quarter2Lesson from './pages/quarter/Quarter2Lesson';
 // import Quarter3 from './pages/quarter/Quarter3';

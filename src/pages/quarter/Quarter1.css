@@ -17,16 +17,30 @@
   color: var(--ion-color-dark);
 }
 
-.modality-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 12px;
+.aralin-description {
+  font-size: 0.95rem;
+  margin-bottom: 12px;
 }
-.modality-chip {
+
+.aralin-progress {
+  margin-top: 10px;
+}
+
+.progress-label {
+  display: flex; 
+  /* justify-content: space-evenly; */
+  position: relative;
   font-size: 0.85rem;
-  padding: 6px 12px;
-  border-radius: 16px;
-  background-color: var(--ion-color-light);
-  color: var(--ion-color-primary);
+  color: var(--ion-color-medium);
+  margin-bottom: 4px;
 }
+
+.progress-label strong {
+  color: var(--ion-color-light);
+}
+.progress-label p {
+  position: absolute;
+  left: 9%;
+  color: var(--ion-color-medium);
+}
+
