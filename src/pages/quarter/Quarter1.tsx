@@ -34,6 +34,7 @@ const Quarter1: React.FC = () => {
             key={aralin.id}
             routerLink={`/quarter1/aralin/${aralin.id}`}
             className="aralin-card"
+
           >
             <IonCardContent>
               <div className="aralin-card-inner">
