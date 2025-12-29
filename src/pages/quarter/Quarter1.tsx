@@ -5,9 +5,6 @@ import {
   IonTitle,
   IonContent,
   IonCard,
-  IonCardHeader,
-  IonCardTitle,
-  IonCardSubtitle,
   IonCardContent,
   IonProgressBar,
 } from "@ionic/react";
@@ -36,22 +33,33 @@ const Quarter1: React.FC = () => {
           <IonCard
             key={aralin.id}
             routerLink={`/quarter1/aralin/${aralin.id}`}
+            className="aralin-card"
           >
-            <IonCardHeader>
-              <IonCardTitle>{aralin.title}</IonCardTitle>
-              <IonCardSubtitle>{aralin.subtitle}</IonCardSubtitle>
-            </IonCardHeader>
-
             <IonCardContent>
-              <p className="aralin-description">{aralin.description}</p>
+              <div className="aralin-card-inner">
+                {/* Accent */}
+                <div className="aralin-accent" />
 
-              {/* Progress */}
-              <div className="aralin-progress">
-                <div className="progress-label">
-                  <span>Progress</span>
-                  <p>{Math.round(aralin.progress * 100)}%</p>
+                {/* Content */}
+                <div className="aralin-content">
+                  <h3>{aralin.title}</h3>
+                  <p className="aralin-subtitle">{aralin.subtitle}</p>
+                  <p className="aralin-description">{aralin.description}</p>
+
+                  {/* Progress */}
+                  <div className="aralin-progress">
+                    <div className="progress-label">
+                      <span>Progress</span>
+                      <strong>
+                        {Math.round(aralin.progress * 100)}%
+                      </strong>
+                    </div>
+                    <IonProgressBar
+                      value={aralin.progress}
+                      color="tertiary"
+                    />
+                  </div>
                 </div>
-                <IonProgressBar value={aralin.progress} />
               </div>
             </IonCardContent>
           </IonCard>
