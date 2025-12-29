@@ -13,12 +13,22 @@ export const lesson1Reading: LessonSection[] = [
     ],
   },
   {
-    title: "Kahalagahan ng Bugtong",
+    title: "Pagsusuring Biswal",
+    content: [
+      "Komiks: Mas Malawak na Kahulugan at Kahalagahan",
+      "Nagpapalawak ng bokabularyo.",
+      "Nagpapaunlad ng malikhaing pag-iisip.",
+    ],
+  },
+
+  {
+    title: "Hudhud Epiko ng Ifugao",
     content: [
       "Nagpapatalas ng isip at lohika.",
       "Nagpapalawak ng bokabularyo.",
       "Nagpapaunlad ng malikhaing pag-iisip.",
     ],
   },
+
 ];
 

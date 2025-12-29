@@ -10,10 +10,12 @@ import {
   setupIonicReact
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { ellipse, square, triangle } from 'ionicons/icons';
+import { ellipse, square, triangle, pencilOutline } from 'ionicons/icons';
 import Home from './pages/Home';
 import Quiz from './pages/Quiz';
 import Setting from './pages/Setting';
+import Pagsusulat from './pages/Pagsusulat';
+
 
 // Quarter pages
 import Quarter1 from './pages/quarter/Quarter1';
@@ -70,6 +72,7 @@ const App: React.FC = () => (
           {/* Core Tabs */}
           <Route exact path="/home" component={Home} />
           <Route exact path="/quiz" component={Quiz} />
+          <Route exact path="/pagsusulat" component={Pagsusulat} />
           <Route exact path="/setting" component={Setting} />
 
               {/* Quarter 1 */}
@@ -84,6 +87,9 @@ const App: React.FC = () => (
               {/* Quarter 2 */}
               <Route exact path="/quarter/2" component={Quarter2} />
               <Route exact path="/quarter/2/aralin/:id" component={Quarter2Aralin1} />
+              <Route exact path="/quarter2">
+                <Quarter2 />
+              </Route>
 
               {/* Quarter 3 */}
               {/* <Route exact path="/quarter/3" component={Quarter3} />
@@ -112,6 +118,12 @@ const App: React.FC = () => (
           <IonTabButton tab="Quiz" href="/quiz">
             <IonIcon aria-hidden="true" icon={ellipse} />
             <IonLabel>Quiz</IonLabel>
+          </IonTabButton>
+        
+          {/* Pagsusulat Tab */}
+          <IonTabButton tab="Pagsusulat" href="/pagsusulat">
+            <IonIcon icon={pencilOutline} />
+            <IonLabel>Pagsusulat</IonLabel>
           </IonTabButton>
 
           {/* Setting Tab */}

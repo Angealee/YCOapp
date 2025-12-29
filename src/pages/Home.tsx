@@ -35,6 +35,7 @@ const quarters = [
     title: 'Quarter 3',
     subtitle: 'Panitikan at Pagsusuri',
     description: 'Mas malalim na pag-unawa sa teksto at biswal.',
+    image: './assets/img/quarter3.jpg',
     route: '/quarter/3'
   },
   {
@@ -42,6 +43,7 @@ const quarters = [
     title: 'Quarter 4',
     subtitle: 'Pagpapahalaga at Pananagutan',
     description: 'Sanhi at bunga, pagpapasya, at pananagutan.',
+    image: './assets/img/q4.jpg',
     route: '/quarter/4'
   }
 ];
@@ -63,25 +65,31 @@ const Home: React.FC = () => {
         <div className="home-container">
           <div className="quarter-grid">
             {quarters.map((q) => (
+          
+          // Card Section
           <IonCard
             key={q.id}
             routerLink={q.route}
             className="quarter-card"
           >
-            <IonCardContent>
+            <div
+                className="media-card-image"
+                style={{ backgroundImage: `url(${q.image})` 
+              }}
+            />
+
+            {/* Content Section */}
+            <IonCardContent className="media-card-content">
               <div className="quarter-card-inner">
                 <div className="quarter-accent" />
 
                 <div className="quarter-content">
-                  <IonCardTitle>{q.title}</IonCardTitle>
+                  <IonCardTitle className="media-card-title">{q.title}</IonCardTitle>
                   <IonCardSubtitle>{q.subtitle}</IonCardSubtitle>
                   <p className="quarter-desc">{q.description}</p>
                 </div>
                 
-                <div
-                  className="quarter-thumbnail"
-                  style={{ backgroundImage: `url(${q.image})` }}
-                />
+                
                 
               </div>
             </IonCardContent>
