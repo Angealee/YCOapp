@@ -1,6 +1,17 @@
-import { IonCard, IonCardContent, IonCardHeader, IonCardSubtitle, IonCardTitle, IonContent, IonHeader, IonPage, IonTitle, IonToolbar } from '@ionic/react';
-import ExploreContainer from '../components/ExploreContainer';
-// import './Home.css';
+import {
+  IonCard,
+  IonCardContent,
+  IonCardHeader,
+  IonCardSubtitle,
+  IonCardTitle,
+  IonContent,
+  IonHeader,
+  IonPage,
+  IonTitle,
+  IonToolbar
+} from '@ionic/react';
+
+import './Home.css';
 
 const quarters = [
   {
@@ -8,6 +19,7 @@ const quarters = [
     title: 'Quarter 1',
     subtitle: 'Panitikan at Wika',
     description: 'Bugtong, Tanaga, Komiks, Hudhud, at iba pa.',
+    image: './assets/img/q1.jpg',
     route: '/quarter/1'
   },
   {
@@ -15,6 +27,7 @@ const quarters = [
     title: 'Quarter 2',
     subtitle: 'Kuwentong Bayan at Pabula',
     description: 'Alamat, Pabula, Komiks, at Brochure.',
+    image: './assets/img/q2.jpg',
     route: '/quarter/2'
   },
   {
@@ -33,7 +46,6 @@ const quarters = [
   }
 ];
 
-
 const Home: React.FC = () => {
   return (
     <IonPage>
@@ -43,21 +55,40 @@ const Home: React.FC = () => {
         </IonToolbar>
       </IonHeader>
 
-      <IonContent className="ion-padding">
-        {quarters.map((q) => (
-          <IonCard key={q.id} routerLink={q.route}>
-
-            <IonCardHeader>
-              <IonCardTitle>{q.title}</IonCardTitle>
-              <IonCardSubtitle>{q.subtitle}</IonCardSubtitle>
-            </IonCardHeader>
-
+      <IonContent fullscreen>
+        <div className="home-header">
+          <h2>Mga Markahan</h2>
+          <p>Piliin ang quarter upang simulan ang pagkatuto</p>
+        </div>
+        <div className="home-container">
+          <div className="quarter-grid">
+            {quarters.map((q) => (
+          <IonCard
+            key={q.id}
+            routerLink={q.route}
+            className="quarter-card"
+          >
             <IonCardContent>
-              {q.description}
+              <div className="quarter-card-inner">
+                <div className="quarter-accent" />
+
+                <div className="quarter-content">
+                  <IonCardTitle>{q.title}</IonCardTitle>
+                  <IonCardSubtitle>{q.subtitle}</IonCardSubtitle>
+                  <p className="quarter-desc">{q.description}</p>
+                </div>
+                
+                <div
+                  className="quarter-thumbnail"
+                  style={{ backgroundImage: `url(${q.image})` }}
+                />
+                
+              </div>
             </IonCardContent>
-  
           </IonCard>
         ))}
+          </div>
+        </div>
 
       </IonContent>
     </IonPage>

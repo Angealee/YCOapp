@@ -10,7 +10,7 @@ import { useState } from "react";
 import { lesson1Reading } from "../../data/quarter1Lesson1";
 import "./Quarter1Aralin1.css";
 
-const Quarter1Aralin1: React.FC = () => {
+const Quarter2Aralin1: React.FC = () => {
  
 
   return (
@@ -31,4 +31,4 @@ const Quarter1Aralin1: React.FC = () => {
   );
 };
 
-export default Quarter1Aralin1;
+export default Quarter2Aralin1;
