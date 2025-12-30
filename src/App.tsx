@@ -78,13 +78,13 @@ const App: React.FC = () => (
               {/* Quarter 1 */}
               <Route exact path="/quarter/1" component={Quarter1} />
                 {/* Aralin Lessons */}
-                <Route exact path="/quarter/1/aralin/:id" component={Quarter1Aralin1} />
+                <Route exact path="/quarter/1/aralin/:aralinId" component={Quarter1Aralin1} />
                 
 
 
               {/* Quarter 2 */}
               <Route exact path="/quarter/2" component={Quarter2} />
-              <Route exact path="/quarter/2/aralin/:id" component={Quarter2Aralin1} />
+              <Route exact path="/quarter/2/aralin/:aralinId" component={Quarter2Aralin1} />
               <Route exact path="/quarter2">
                 <Quarter2 />
               </Route>

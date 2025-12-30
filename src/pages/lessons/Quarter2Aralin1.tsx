@@ -7,7 +7,7 @@ import {
 } from "@ionic/react";
 
 import { useState } from "react";
-import { lesson1Reading } from "../../data/quarter1Lesson1";
+import { quarter1Lessons } from "../../data/quarter1Lessons";
 import "./Quarter1Aralin1.css";
 
 const Quarter2Aralin1: React.FC = () => {
