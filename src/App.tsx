@@ -19,7 +19,8 @@ import Pagsusulat from './pages/Pagsusulat';
 
 // Quarter pages
 import Quarter1 from './pages/quarter/Quarter1';
-import Quarter1Lesson from './pages/lessons/Quarter1Aralin1';
+import Quarter1Aralin1 from './pages/lessons/Quarter1Aralin1';
+import Quarter2Aralin1 from './pages/lessons/Quarter2Aralin1';
 import Quarter2 from './pages/quarter/Quarter2';
 // import Quarter2Lesson from './pages/quarter/Quarter2Lesson';
 // import Quarter3 from './pages/quarter/Quarter3';
@@ -58,8 +59,7 @@ import '@ionic/react/css/display.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import Quarter1Aralin1 from './pages/lessons/Quarter1Aralin1';
-import Quarter2Aralin1 from './pages/lessons/Quarter2Aralin1';
+
 
 setupIonicReact();
 
@@ -77,11 +77,9 @@ const App: React.FC = () => (
 
               {/* Quarter 1 */}
               <Route exact path="/quarter/1" component={Quarter1} />
-              <Route exact path="/quarter/1/aralin/:id" component={Quarter1Aralin1} />
-              
-              <Route exact path="/quarter1">
-                <Quarter1 />
-              </Route>
+                {/* Aralin Lessons */}
+                <Route exact path="/quarter/1/aralin/:id" component={Quarter1Aralin1} />
+                
 
 
               {/* Quarter 2 */}
