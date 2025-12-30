@@ -32,7 +32,7 @@ const Quarter1: React.FC = () => {
         {quarter1Aralin.map((aralin: Aralin) => (
           <IonCard
             key={aralin.id}
-            routerLink={`/quarter1/aralin/${aralin.id}`}
+            routerLink={`/quarter/1/aralin/${aralin.id}`}
             className="aralin-card"
 
           >
