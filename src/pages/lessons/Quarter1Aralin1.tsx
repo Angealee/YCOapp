@@ -16,7 +16,9 @@ import {
   IonIcon,
   IonButton,
   IonChip,
-  IonRippleEffect
+  IonRippleEffect,
+  IonBackButton,
+  IonButtons
 } from '@ionic/react';
 
 import {
@@ -34,7 +36,10 @@ const Quarter1Aralin1: React.FC = () => {
   return (
     <IonPage>
       <IonHeader>
-        <IonToolbar color="primary">
+        <IonToolbar color="danger ">
+           <IonButtons slot="start">
+            <IonBackButton text={'Ibalik'}></IonBackButton>
+          </IonButtons>
           <IonTitle>Quarter 1 • Aralin 1</IonTitle>
         </IonToolbar>
       </IonHeader>

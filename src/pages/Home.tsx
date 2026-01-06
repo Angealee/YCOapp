@@ -38,14 +38,7 @@ const quarters = [
     image: './assets/img/quarter3.jpg',
     route: '/quarter/3'
   },
-  {
-    id: 4,
-    title: 'Quarter 4',
-    subtitle: 'Pagpapahalaga at Pananagutan',
-    description: 'Sanhi at bunga, pagpapasya, at pananagutan.',
-    image: './assets/img/q4.jpg',
-    route: '/quarter/4'
-  }
+  
 ];
 
 const Home: React.FC = () => {
@@ -87,10 +80,7 @@ const Home: React.FC = () => {
                   <IonCardTitle className="media-card-title">{q.title}</IonCardTitle>
                   <IonCardSubtitle>{q.subtitle}</IonCardSubtitle>
                   <p className="quarter-desc">{q.description}</p>
-                </div>
-                
-                
-                
+                </div>           
               </div>
             </IonCardContent>
           </IonCard>

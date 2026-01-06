@@ -7,6 +7,8 @@ import {
   IonCard,
   IonCardContent,
   IonProgressBar,
+  IonButtons,
+  IonBackButton,
 } from "@ionic/react";
 
 import { quarter1Aralin, Aralin } from "../../data/quarter1AralinCards";
@@ -17,7 +19,10 @@ const Quarter1: React.FC = () => {
     <IonPage>
       <IonHeader>
         <IonToolbar>
-          <IonTitle>Quarter 1</IonTitle>
+          <IonButtons slot="start">
+            <IonBackButton text={"Ibalik"}></IonBackButton>
+          </IonButtons>
+          <IonTitle> Quarter 1</IonTitle>
         </IonToolbar>
       </IonHeader>
 
