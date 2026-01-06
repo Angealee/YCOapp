@@ -13,7 +13,7 @@ const Quiz: React.FC = () => {
       <IonContent fullscreen>
         <IonHeader collapse="condense">
           <IonToolbar>
-            <IonTitle size="large">Quiz</IonTitle>
+            <IonTitle size="large">Pagsusulit</IonTitle>
           </IonToolbar>
         </IonHeader>
         <ExploreContainer name="Quiz Section" />
