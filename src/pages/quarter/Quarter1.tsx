@@ -55,9 +55,9 @@ const Quarter1: React.FC = () => {
                   {/* Progress */}
                   <div className="aralin-progress">
                     <div className="progress-label">
-                      <span>Progress</span>
-                      <strong>
-                        {Math.round(aralin.progress * 100)}%
+                      <span style={{paddingRight:"5px"}}>Progress </span>
+                      <strong >
+                        { Math.round(aralin.progress * 100)}%
                       </strong>
                     </div>
                     <IonProgressBar

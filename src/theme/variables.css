@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap');
 :root {
   /* Filipino Palette */
   --fil-blue: #0038a8;
@@ -24,4 +25,8 @@ ion-toolbar {
   --background: #ce1126;
   --color: #ffffff;
   --border-color: #2e66a7;
+}
+*{  
+  font-family: "Montserrat", sans-serif;
+  font-optical-sizing: auto;
 }
