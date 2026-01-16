@@ -78,11 +78,8 @@ const Quarter1Aralin1: React.FC = () => {
               </IonText>
 
               <div className="chip-row">
-                <IonChip><IonIcon icon={bookOutline} /> Pagbabasa</IonChip>
-                <IonChip><IonIcon icon={volumeHighOutline} /> Pakikinig</IonChip>
-                <IonChip><IonIcon icon={imageOutline} /> Larawan</IonChip>
-                <IonChip><IonIcon icon={gameControllerOutline} /> Laro</IonChip>
-                <IonChip><IonIcon icon={createOutline} /> Pagsulat</IonChip>
+                <IonChip><IonIcon icon={bookOutline} style={{paddingRight:"8.5px" }}/> Pagbabasa</IonChip>
+                <IonChip><IonIcon icon={volumeHighOutline} style={{paddingRight:"8.5px" }} /> Pakikinig</IonChip>
               </div>
 
               <IonCard>

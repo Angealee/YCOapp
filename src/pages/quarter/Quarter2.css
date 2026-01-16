@@ -35,9 +35,7 @@
   margin-bottom: 4px;
 }
 
-.progress-label strong {
-  color: var(--ion-color-light);
-}
+
 .progress-label p {
   position: absolute;
   left: 9%;

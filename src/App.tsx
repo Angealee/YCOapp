@@ -118,10 +118,10 @@ const App: React.FC = () => (
           </IonTabButton>
 
           {/* Setting Tab */}
-          <IonTabButton tab="Setting" href="/setting">
+          {/* <IonTabButton tab="Setting" href="/setting">
             <IonIcon aria-hidden="true" icon={settingsSharp} />
             <IonLabel>Setting</IonLabel>
-          </IonTabButton>
+          </IonTabButton> */}
         
         </IonTabBar>
       </IonTabs>

@@ -27,7 +27,7 @@
   /* justify-content: space-evenly; */
   position: relative;
   font-size: 0.85rem;
-  color: var(--ion-color-medium);
+  color: var( --fil-red);
   margin-bottom: 4px;
 }
 
