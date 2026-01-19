@@ -27,7 +27,6 @@ interface RouteParams {
   aralinId: string;
 }
 
-console.log("FULL URL:", window.location.pathname);
 
 const Quarter1Aralin1: React.FC = () => {
   const { aralinId } = useParams<RouteParams>();
