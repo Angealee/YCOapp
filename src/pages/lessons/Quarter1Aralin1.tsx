@@ -31,8 +31,13 @@ import {
 } from 'ionicons/icons';
 
 import './Quarter1Aralin1.css';
+import { useState } from 'react';
 
 const Quarter1Aralin1: React.FC = () => {
+  const [isAudio, setIsAudio ] = useState(false);
+  const changeState =  () =>{
+    setIsAudio(!isAudio)
+  }
   return (
     <IonPage>
       <IonHeader>
@@ -78,12 +83,21 @@ const Quarter1Aralin1: React.FC = () => {
               </IonText>
 
               <div className="chip-row">
-                <IonChip><IonIcon icon={bookOutline} style={{paddingRight:"8.5px" }}/> Pagbabasa</IonChip>
-                <IonChip><IonIcon icon={volumeHighOutline} style={{paddingRight:"8.5px" }} /> Pakikinig</IonChip>
+                <IonChip><IonIcon icon={bookOutline} style={{paddingRight:"8.5px" }} onClick={changeState}/> Pagbabasa</IonChip>
+                <IonChip><IonIcon icon={volumeHighOutline} style={{paddingRight:"8.5px" }}  onClick={changeState} /> Pakikinig</IonChip>
               </div>
-
+            { isAudio ? 
+                <IonCard>
+                <IonCardContent >
+                  <IonText>
+                      Play Audio
+                  </IonText>
+                  <IonText color="medium"><br />Sagot: Cellphone</IonText>
+                </IonCardContent>
+              </IonCard>
+              : 
               <IonCard>
-                <IonCardContent>
+                <IonCardContent >
                   <IonText>
                     <strong>Halimbawa:</strong><br />
                     Hindi tao, hindi hayop,<br />
@@ -93,8 +107,7 @@ const Quarter1Aralin1: React.FC = () => {
                   </IonText>
                   <IonText color="medium"><br />Sagot: Cellphone</IonText>
                 </IonCardContent>
-              </IonCard>
-
+              </IonCard>}
               <IonButton expand="block" color="secondary">
                 Subukan ang Bugtong Game
               </IonButton>
