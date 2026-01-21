@@ -30,3 +30,23 @@
   text-align: center;
   color: var(--ion-color-medium);
 }
+.text-content {
+  text-align: justify;
+  font-size: 16px;
+  line-height: 1.6;
+  font-weight: 500;
+  color: var(--ion-color-dark);
+}
+.title-text-content {
+  text-align: justify;
+  font-size: 21px;
+  line-height: 1.6;
+  font-weight: 500;
+  color: black
+}
+.halimbawa-content {
+  margin-top: 16px;
+  padding: 12px;
+  background-color: var(--ion-color-light);
+  border-left: 4px solid var(--ion-color-primary);
+}
