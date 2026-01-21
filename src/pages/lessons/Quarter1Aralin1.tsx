@@ -27,7 +27,10 @@ import {
   imageOutline,
   gameControllerOutline,
   createOutline,
-  eyeOutline
+  eyeOutline,
+  bookmark,
+  bookSharp,
+  bookmarkSharp
 } from 'ionicons/icons';
 
 import './Quarter1Aralin1.css';
@@ -51,15 +54,17 @@ const Quarter1Aralin1: React.FC = () => {
 
       <IonContent fullscreen className="q1-aralin1">
 
-        {/* HERO SECTION */}
+        {/* CONTENT SECTION */}
         <IonCard className="hero-card">
           <IonCardHeader>
             <IonCardTitle>
-              Panitikan sa Panahon ng Katutubo
+             <strong>
+              Kaligirang Pangkasaysayan ng Panitikan sa Panahon ng Katutubo
+              </strong> 
             </IonCardTitle>
           </IonCardHeader>
           <IonCardContent>
-            <IonText>
+            <IonText className= "text-content">
               Bago pa man dumating ang mga mananakop, mayaman na ang mga Pilipino
               sa panitikan—ipinapasa sa pamamagitan ng salita, awit, laro,
               at karanasan.
@@ -73,19 +78,63 @@ const Quarter1Aralin1: React.FC = () => {
           {/* BUGTONG */}
           <IonAccordion value="bugtong">
             <IonItem slot="header">
-              <IonLabel>Bugtong</IonLabel>
+              <IonLabel>
+                <strong>
+                  Bugtong
+                </strong></IonLabel>
             </IonItem>
 
             <div className="ion-padding" slot="content">
-              <IonText>
-                Ang bugtong ay isang maikling patulang palaisipan na gumagamit ng
-                talinghaga upang ilarawan ang isang bagay o ideya.
+              <IonText className='text-content'>
+                Ang bugtong ay isang maikling patulang palaisipan na naglalarawan ng isang bagay, hayop, tao, o pangyayari sa pamamagitan ng pahiwatig o talinghaga. < br /> 
+                <br />
+                Hindi tuwiran ang paglalarawan; kailangan ng mambabasa o nakikinig na gumamit ng imahinasyon, lohika, at kaalaman sa wika upang mahulaan ang sagot. Ang bugtong ay isang anyo ng panitikan na nag-uugnay sa wika at kultura, at karaniwang ginagamit sa mga tradisyunal na laro at paligsahan sa barangay at paaralan.
               </IonText>
+              <div className='halimbawa-content'>
+                <IonCard>
+                  <IonCardContent>
+                    <IonText className='title-text-content'>
+                      <strong>Katangian ng Bugtong</strong><br />
+                    </IonText>
+                    <IonText className='text-content'>
+                      <strong>1. Maikli at Patula </strong>– karaniwan ay may tugma at sukat upang madaling matandaan.
+                      <br />
+                      <strong>2. May Talinghaga </strong>– gumagamit ng paglalarawan na di-tuwer o simboliko, kaya’t pinipilit ang utak ng mambabasa o tagapakinig na mag-isip.
+                      <br />
+                      <strong>3. Naglalarawan ng isang bagay o kaisipan </strong>– maaaring tao, hayop, bagay, halaman, o pangyayari.
+                      <br />
+                      <strong>4. Layunin </strong>–  aliwin ang nakikinig, hamunin ang katalinuhan, at palawakin ang kaalaman sa wika at kultura.
+                      <br />
+                    </IonText>
+                    <br />
+                    <IonText className='title-text-content'>
+                      <strong>Kahalagahan ng Bugtong</strong><br />
+                    </IonText>
+
+                    <IonText className='text-content'>
+
+                      <strong>1. Nagpapatalas ng isip at lohika </strong>– sapagkat ang tamang sagot ay kailangan tuklasin at i-analisa.
+                      <br />
+                      <strong>2. Nagpapalawak ng bokabularyo at kaalaman sa wika </strong>– nakikilala ang mga salitang Filipino at kasanayan sa paggamit ng wika.
+                      <br />
+                      <strong>3. Nagpapaunlad ng imahinasyon at malikhaing pag-iisip </strong>– dahil ang mga pahiwatig ay hindi literal, kailangang gamitin ang imahinasyon.
+                      <br />
+                      <strong>4. Nagpapahalaga sa kulturang Pilipino </strong>–  aliwin ang nakikinig, hamunin ang katalinuhan, at palawakin ang kaalaman sa wika at kultura.
+                      <br />
+                      <strong>5. Naglilinang ng pakikipag-ugnayan at pakikisalamuha </strong>–  karaniwang ginagamit sa laro, paligsahan, o pagtuturo sa silid-aralan.
+                      <br />
+                    </IonText>
+
+                  </IonCardContent>
+                </IonCard>
+              </div>
 
               <div className="chip-row">
                 <IonChip><IonIcon icon={bookOutline} style={{paddingRight:"8.5px" }} onClick={changeState}/> Pagbabasa</IonChip>
                 <IonChip><IonIcon icon={volumeHighOutline} style={{paddingRight:"8.5px" }}  onClick={changeState} /> Pakikinig</IonChip>
+                <IonChip><IonIcon icon={bookmarkSharp} style={{paddingRight:"8.5px" }}  onClick={changeState} /> Halimbawa ng Bugtong</IonChip>
               </div>
+
             { isAudio ? 
                 <IonCard>
                 <IonCardContent >
@@ -113,6 +162,10 @@ const Quarter1Aralin1: React.FC = () => {
               </IonButton>
             </div>
           </IonAccordion>
+
+
+
+
 
           {/* PALAISIPAN */}
           <IonAccordion value="palaisipan">
