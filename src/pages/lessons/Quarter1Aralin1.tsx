@@ -44,6 +44,14 @@ import { useState } from 'react';
 const Quarter1Aralin1: React.FC = () => {
   const [isAudio, setIsAudio] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('');
+  const [showAnswers, setShowAnswers] = useState<{[key: number]: boolean}>({});
+
+  const toggleAnswer = (id: number) => {
+    setShowAnswers(prev => ({
+      ...prev,
+      [id]: !prev[id]
+    }));
+  };
 
   const changeState = () => {
     setIsAudio(!isAudio);
@@ -238,24 +246,15 @@ const Quarter1Aralin1: React.FC = () => {
                   </IonChip>
                 </div>
 
-                {/* Example Card */}
-                <IonCard className="example-card">
-                  <IonCardContent>
-                    {isAudio ? (
-                      <div className="audio-player">
-                        <div className="audio-icon">
-                          <IonIcon icon={playCircleOutline} />
-                        </div>
-                        <div className="audio-info">
-                          <p className="audio-title">Play Audio</p>
-                          <p className="audio-subtitle">Sagot: Cellphone</p>
-                        </div>
-                      </div>
-                    ) : (
+                {/* Bugtong Examples with Hide/Show Answers */}
+                <div className="bugtong-examples">
+                  {/* Example 1 */}
+                  <IonCard className="example-card">
+                    <IonCardContent>
                       <div className="example-text">
                         <div className="example-label">
                           <IonIcon icon={bookmarkSharp} />
-                          <span>Halimbawa</span>
+                          <span>Halimbawa 1</span>
                         </div>
                         <p className="riddle-text">
                           Hindi tao, hindi hayop,<br />
@@ -263,14 +262,126 @@ const Quarter1Aralin1: React.FC = () => {
                           Sa isang pindot mo lamang,<br />
                           Buong mundo'y makikita.
                         </p>
-                        <div className="answer-reveal">
-                          <IonIcon icon={bulbOutline} />
-                          <span>Sagot: Cellphone</span>
+                        <div className="answer-toggle">
+                          <IonButton 
+                            fill="clear" 
+                            size="small"
+                            onClick={() => toggleAnswer(1)}
+                          >
+                            <IonIcon icon={eyeOutline} slot="start" />
+                            {showAnswers[1] ? 'Itago ang Sagot' : 'Ipakita ang Sagot'}
+                          </IonButton>
                         </div>
+                        {showAnswers[1] && (
+                          <div className="answer-reveal animated">
+                            <IonIcon icon={bulbOutline} />
+                            <span>Sagot: Cellphone</span>
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </IonCardContent>
-                </IonCard>
+                    </IonCardContent>
+                  </IonCard>
+
+                  {/* Example 2 */}
+                  <IonCard className="example-card">
+                    <IonCardContent>
+                      <div className="example-text">
+                        <div className="example-label">
+                          <IonIcon icon={bookmarkSharp} />
+                          <span>Halimbawa 2</span>
+                        </div>
+                        <p className="riddle-text">
+                          May hawak ako ng kandila<br />
+                          Pero hindi ako ilaw;<br />
+                          May damit ako pero hindi ako tao,<br />
+                          May katawan ako pero hindi ako hayop.
+                        </p>
+                        <div className="answer-toggle">
+                          <IonButton 
+                            fill="clear" 
+                            size="small"
+                            onClick={() => toggleAnswer(2)}
+                          >
+                            <IonIcon icon={eyeOutline} slot="start" />
+                            {showAnswers[2] ? 'Itago ang Sagot' : 'Ipakita ang Sagot'}
+                          </IonButton>
+                        </div>
+                        {showAnswers[2] && (
+                          <div className="answer-reveal animated">
+                            <IonIcon icon={bulbOutline} />
+                            <span>Sagot: Manananggal</span>
+                          </div>
+                        )}
+                      </div>
+                    </IonCardContent>
+                  </IonCard>
+
+                  {/* Example 3 */}
+                  <IonCard className="example-card">
+                    <IonCardContent>
+                      <div className="example-text">
+                        <div className="example-label">
+                          <IonIcon icon={bookmarkSharp} />
+                          <span>Halimbawa 3</span>
+                        </div>
+                        <p className="riddle-text">
+                          Isang butil ng palay<br />
+                          Sakop ko ang buong mundo.
+                        </p>
+                        <div className="answer-toggle">
+                          <IonButton 
+                            fill="clear" 
+                            size="small"
+                            onClick={() => toggleAnswer(3)}
+                          >
+                            <IonIcon icon={eyeOutline} slot="start" />
+                            {showAnswers[3] ? 'Itago ang Sagot' : 'Ipakita ang Sagot'}
+                          </IonButton>
+                        </div>
+                        {showAnswers[3] && (
+                          <div className="answer-reveal animated">
+                            <IonIcon icon={bulbOutline} />
+                            <span>Sagot: Bituin</span>
+                          </div>
+                        )}
+                      </div>
+                    </IonCardContent>
+                  </IonCard>
+
+                  {/* Example 4 */}
+                  <IonCard className="example-card">
+                    <IonCardContent>
+                      <div className="example-text">
+                        <div className="example-label">
+                          <IonIcon icon={bookmarkSharp} />
+                          <span>Halimbawa 4</span>
+                        </div>
+                        <p className="riddle-text">
+                          Labing-apat na inahin<br />
+                          Labing-apat na anak,<br />
+                          Labing-apat na bahay,<br />
+                          Labing-apat na buhay.
+                        </p>
+                        <div className="answer-toggle">
+                          <IonButton 
+                            fill="clear" 
+                            size="small"
+                            onClick={() => toggleAnswer(4)}
+                          >
+                            <IonIcon icon={eyeOutline} slot="start" />
+                            {showAnswers[4] ? 'Itago ang Sagot' : 'Ipakita ang Sagot'}
+                          </IonButton>
+                        </div>
+                        {showAnswers[4] && (
+                          <div className="answer-reveal animated">
+                            <IonIcon icon={bulbOutline} />
+                            <span>Sagot: Kalendaryo</span>
+                          </div>
+                        )}
+                      </div>
+                    </IonCardContent>
+                  </IonCard>
+                </div>
 
                 <IonButton expand="block" className="game-button">
                   <IonIcon icon={gameControllerOutline} slot="start" />
@@ -302,21 +413,101 @@ const Quarter1Aralin1: React.FC = () => {
                   </IonText>
                 </div>
 
-                <IonCard className="example-card gradient-blue">
-                  <IonCardContent>
-                    <div className="example-label">
-                      <IonIcon icon={bulbOutline} />
-                      <span>Tanong</span>
-                    </div>
-                    <p className="riddle-text">
-                      Ano ang bagay na habang kinukuha mo ay lalo mong pinapalaki?
-                    </p>
-                    <div className="answer-reveal">
-                      <IonIcon icon={sparklesOutline} />
-                      <span>Sagot: Butas</span>
-                    </div>
-                  </IonCardContent>
-                </IonCard>
+                {/* Palaisipan Examples with Hide/Show Answers */}
+                <div className="palaisipan-examples">
+                  {/* Example 1 */}
+                  <IonCard className="example-card gradient-blue">
+                    <IonCardContent>
+                      <div className="example-text">
+                        <div className="example-label">
+                          <IonIcon icon={bulbOutline} />
+                          <span>Tanong 1</span>
+                        </div>
+                        <p className="riddle-text">
+                          Ano ang bagay na habang kinukuha mo ay lalo mong pinapalaki?
+                        </p>
+                        <div className="answer-toggle">
+                          <IonButton 
+                            fill="clear" 
+                            size="small"
+                            onClick={() => toggleAnswer(5)}
+                          >
+                            <IonIcon icon={eyeOutline} slot="start" />
+                            {showAnswers[5] ? 'Itago ang Sagot' : 'Ipakita ang Sagot'}
+                          </IonButton>
+                        </div>
+                        {showAnswers[5] && (
+                          <div className="answer-reveal animated">
+                            <IonIcon icon={sparklesOutline} />
+                            <span>Sagot: Butas</span>
+                          </div>
+                        )}
+                      </div>
+                    </IonCardContent>
+                  </IonCard>
+
+                  {/* Example 2 */}
+                  <IonCard className="example-card gradient-blue">
+                    <IonCardContent>
+                      <div className="example-text">
+                        <div className="example-label">
+                          <IonIcon icon={bulbOutline} />
+                          <span>Tanong 2</span>
+                        </div>
+                        <p className="riddle-text">
+                          Anong hayop ang may apat na paa kapag bata, dalawa kapag matanda?
+                        </p>
+                        <div className="answer-toggle">
+                          <IonButton 
+                            fill="clear" 
+                            size="small"
+                            onClick={() => toggleAnswer(6)}
+                          >
+                            <IonIcon icon={eyeOutline} slot="start" />
+                            {showAnswers[6] ? 'Itago ang Sagot' : 'Ipakita ang Sagot'}
+                          </IonButton>
+                        </div>
+                        {showAnswers[6] && (
+                          <div className="answer-reveal animated">
+                            <IonIcon icon={sparklesOutline} />
+                            <span>Sagot: Tao</span>
+                          </div>
+                        )}
+                      </div>
+                    </IonCardContent>
+                  </IonCard>
+
+                  {/* Example 3 */}
+                  <IonCard className="example-card gradient-blue">
+                    <IonCardContent>
+                      <div className="example-text">
+                        <div className="example-label">
+                          <IonIcon icon={bulbOutline} />
+                          <span>Tanong 3</span>
+                        </div>
+                        <p className="riddle-text">
+                          Ano ang bagay na kahit puno pa ay hindi tumatanda?
+                        </p>
+                        <div className="answer-toggle">
+                          <IonButton 
+                            fill="clear" 
+                            size="small"
+                            onClick={() => toggleAnswer(7)}
+                          >
+                            <IonIcon icon={eyeOutline} slot="start" />
+                            {showAnswers[7] ? 'Itago ang Sagot' : 'Ipakita ang Sagot'}
+                          </IonButton>
+                        </div>
+                        {showAnswers[7] && (
+                          <div className="answer-reveal animated">
+                            <IonIcon icon={sparklesOutline} />
+                            <span>Sagot: Bato</span>
+                          </div>
+                        )}
+                      </div>
+                    </IonCardContent>
+                  </IonCard>
+                </div>
 
                 <IonButton expand="block" className="challenge-button" color="tertiary">
                   <IonIcon icon={bulbOutline} slot="start" />
@@ -348,20 +539,110 @@ const Quarter1Aralin1: React.FC = () => {
                   </IonText>
                 </div>
 
-                <IonCard className="example-card gradient-green">
-                  <IonCardContent>
-                    <div className="example-label">
-                      <IonIcon icon={createOutline} />
-                      <span>Halimbawa ng Tanaga</span>
-                    </div>
-                    <p className="poem-text">
-                      Wika'y ating yaman,<br />
-                      Sa puso'y pinagyayaman;<br />
-                      Sa bawat salitang bigkas,<br />
-                      Pagka-Pilipino'y lantad.
-                    </p>
-                  </IonCardContent>
-                </IonCard>
+                {/* Tanaga Examples with Hide/Show Answers */}
+                <div className="tanaga-examples">
+                  {/* Example 1 */}
+                  <IonCard className="example-card gradient-green">
+                    <IonCardContent>
+                      <div className="example-text">
+                        <div className="example-label">
+                          <IonIcon icon={createOutline} />
+                          <span>Tanaga 1</span>
+                        </div>
+                        <p className="poem-text">
+                          Wika'y ating yaman,<br />
+                          Sa puso'y pinagyayaman;<br />
+                          Sa bawat salitang bigkas,<br />
+                          Pagka-Pilipino'y lantad.
+                        </p>
+                        <div className="answer-toggle">
+                          <IonButton 
+                            fill="clear" 
+                            size="small"
+                            onClick={() => toggleAnswer(8)}
+                          >
+                            <IonIcon icon={eyeOutline} slot="start" />
+                            {showAnswers[8] ? 'Itago ang Tema' : 'Ipakita ang Tema'}
+                          </IonButton>
+                        </div>
+                        {showAnswers[8] && (
+                          <div className="answer-reveal animated">
+                            <IonIcon icon={createOutline} />
+                            <span>Tema: Pagmamahal sa Wikang Filipino</span>
+                          </div>
+                        )}
+                      </div>
+                    </IonCardContent>
+                  </IonCard>
+
+                  {/* Example 2 */}
+                  <IonCard className="example-card gradient-green">
+                    <IonCardContent>
+                      <div className="example-text">
+                        <div className="example-label">
+                          <IonIcon icon={createOutline} />
+                          <span>Tanaga 2</span>
+                        </div>
+                        <p className="poem-text">
+                          Kabataan ng bayan,<br />
+                          Mag-aral nang mabuti;<br />
+                          Sa hinaharap mong buhay,<br />
+                          Ikaw ang magiging liwanag.
+                        </p>
+                        <div className="answer-toggle">
+                          <IonButton 
+                            fill="clear" 
+                            size="small"
+                            onClick={() => toggleAnswer(9)}
+                          >
+                            <IonIcon icon={eyeOutline} slot="start" />
+                            {showAnswers[9] ? 'Itago ang Tema' : 'Ipakita ang Tema'}
+                          </IonButton>
+                        </div>
+                        {showAnswers[9] && (
+                          <div className="answer-reveal animated">
+                            <IonIcon icon={createOutline} />
+                            <span>Tema: Edukasyon at Kinabukasan</span>
+                          </div>
+                        )}
+                      </div>
+                    </IonCardContent>
+                  </IonCard>
+
+                  {/* Example 3 */}
+                  <IonCard className="example-card gradient-green">
+                    <IonCardContent>
+                      <div className="example-text">
+                        <div className="example-label">
+                          <IonIcon icon={createOutline} />
+                          <span>Tanaga 3</span>
+                        </div>
+                        <p className="poem-text">
+                          Kalikasan ay yaman,<br />
+                          Alagaan natin ito;<br />
+                          Para sa susunod na henerasyon,<br />
+                          Magiging masaganang buhay.
+                        </p>
+                        <div className="answer-toggle">
+                          <IonButton 
+                            fill="clear" 
+                            size="small"
+                            onClick={() => toggleAnswer(10)}
+                          >
+                            <IonIcon icon={eyeOutline} slot="start" />
+                            {showAnswers[10] ? 'Itago ang Tema' : 'Ipakita ang Tema'}
+                          </IonButton>
+                        </div>
+                        {showAnswers[10] && (
+                          <div className="answer-reveal animated">
+                            <IonIcon icon={createOutline} />
+                            <span>Tema: Pangangalaga sa Kalikasan</span>
+                          </div>
+                        )}
+                      </div>
+                    </IonCardContent>
+                  </IonCard>
+                </div>
 
                 <IonButton expand="block" className="create-button">
                   <IonIcon icon={createOutline} slot="start" />
@@ -393,17 +674,129 @@ const Quarter1Aralin1: React.FC = () => {
                   </IonText>
                 </div>
 
-                <IonCard className="example-card gradient-orange">
-                  <IonCardContent>
-                    <div className="quote-icon">
-                      <IonIcon icon={heartOutline} />
-                    </div>
-                    <p className="quote-text">
-                      "Ang hindi marunong lumingon sa pinanggalingan ay hindi
-                      makararating sa paroroonan."
-                    </p>
-                  </IonCardContent>
-                </IonCard>
+                {/* Salawikain at Kasabihan Examples with Hide/Show Answers */}
+                <div className="salawikain-examples">
+                  {/* Example 1 */}
+                  <IonCard className="example-card gradient-orange">
+                    <IonCardContent>
+                      <div className="example-text">
+                        <div className="quote-icon">
+                          <IonIcon icon={heartOutline} />
+                        </div>
+                        <p className="quote-text">
+                          "Ang hindi marunong lumingon sa pinanggalingan ay hindi
+                          makararating sa paroroonan."
+                        </p>
+                        <div className="answer-toggle">
+                          <IonButton 
+                            fill="clear" 
+                            size="small"
+                            onClick={() => toggleAnswer(11)}
+                          >
+                            <IonIcon icon={eyeOutline} slot="start" />
+                            {showAnswers[11] ? 'Itago ang Aral' : 'Ipakita ang Aral'}
+                          </IonButton>
+                        </div>
+                        {showAnswers[11] && (
+                          <div className="answer-reveal animated">
+                            <IonIcon icon={heartOutline} />
+                            <span>Aral: Mahalagang alamin at ipagmalaki ang ating pinagmulan</span>
+                          </div>
+                        )}
+                      </div>
+                    </IonCardContent>
+                  </IonCard>
+
+                  {/* Example 2 */}
+                  <IonCard className="example-card gradient-orange">
+                    <IonCardContent>
+                      <div className="example-text">
+                        <div className="quote-icon">
+                          <IonIcon icon={heartOutline} />
+                        </div>
+                        <p className="quote-text">
+                          "Nasa Diyos ang awa, nasa tao ang gawa."
+                        </p>
+                        <div className="answer-toggle">
+                          <IonButton 
+                            fill="clear" 
+                            size="small"
+                            onClick={() => toggleAnswer(12)}
+                          >
+                            <IonIcon icon={eyeOutline} slot="start" />
+                            {showAnswers[12] ? 'Itago ang Aral' : 'Ipakita ang Aral'}
+                          </IonButton>
+                        </div>
+                        {showAnswers[12] && (
+                          <div className="answer-reveal animated">
+                            <IonIcon icon={heartOutline} />
+                            <span>Aral: Huwag umasa sa biyaya lamang, kailangan din ang sariling pagkilos</span>
+                          </div>
+                        )}
+                      </div>
+                    </IonCardContent>
+                  </IonCard>
+
+                  {/* Example 3 */}
+                  <IonCard className="example-card gradient-orange">
+                    <IonCardContent>
+                      <div className="example-text">
+                        <div className="quote-icon">
+                          <IonIcon icon={heartOutline} />
+                        </div>
+                        <p className="quote-text">
+                          "Kung ano ang puno, siya ang bunga."
+                        </p>
+                        <div className="answer-toggle">
+                          <IonButton 
+                            fill="clear" 
+                            size="small"
+                            onClick={() => toggleAnswer(13)}
+                          >
+                            <IonIcon icon={eyeOutline} slot="start" />
+                            {showAnswers[13] ? 'Itago ang Aral' : 'Ipakita ang Aral'}
+                          </IonButton>
+                        </div>
+                        {showAnswers[13] && (
+                          <div className="answer-reveal animated">
+                            <IonIcon icon={heartOutline} />
+                            <span>Aral: Ang kalakasan o kahinaan ng isang tao ay nagmumula sa kanyang pamilya at pinagmulan</span>
+                          </div>
+                        )}
+                      </div>
+                    </IonCardContent>
+                  </IonCard>
+
+                  {/* Example 4 */}
+                  <IonCard className="example-card gradient-orange">
+                    <IonCardContent>
+                      <div className="example-text">
+                        <div className="quote-icon">
+                          <IonIcon icon={heartOutline} />
+                        </div>
+                        <p className="quote-text">
+                          "Wag mo ring kalalimangin ang dating iniirog."
+                        </p>
+                        <div className="answer-toggle">
+                          <IonButton 
+                            fill="clear" 
+                            size="small"
+                            onClick={() => toggleAnswer(14)}
+                          >
+                            <IonIcon icon={eyeOutline} slot="start" />
+                            {showAnswers[14] ? 'Itago ang Aral' : 'Ipakita ang Aral'}
+                          </IonButton>
+                        </div>
+                        {showAnswers[14] && (
+                          <div className="answer-reveal animated">
+                            <IonIcon icon={heartOutline} />
+                            <span>Aral: Huwag kalimutan ang mga taong dati nating minahal at tinulungan</span>
+                          </div>
+                        )}
+                      </div>
+                    </IonCardContent>
+                  </IonCard>
+                </div>
 
                 <IonButton expand="block" className="lesson-button" fill="outline">
                   <IonIcon icon={eyeOutline} slot="start" />
