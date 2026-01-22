@@ -1,15 +1,16 @@
 import {
   IonCard,
   IonCardContent,
-  IonCardHeader,
-  IonCardSubtitle,
   IonCardTitle,
+  IonCardSubtitle,
   IonContent,
   IonHeader,
   IonPage,
   IonTitle,
-  IonToolbar
+  IonToolbar,
+  IonIcon
 } from '@ionic/react';
+import { chevronForwardOutline, schoolOutline } from 'ionicons/icons';
 
 import './Home.css';
 
@@ -20,7 +21,9 @@ const quarters = [
     subtitle: 'Panitikan at Wika',
     description: 'Bugtong, Tanaga, Komiks, Hudhud, at iba pa.',
     image: './assets/img/q1.jpg',
-    route: '/quarter/1'
+    route: '/quarter/1',
+    gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+    color: '#667eea'
   },
   {
     id: 2,
@@ -28,7 +31,9 @@ const quarters = [
     subtitle: 'Kuwentong Bayan at Pabula',
     description: 'Alamat, Pabula, Komiks, at Brochure.',
     image: './assets/img/q2.jpg',
-    route: '/quarter/2'
+    route: '/quarter/2',
+    gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+    color: '#f093fb'
   },
   {
     id: 3,
@@ -36,58 +41,121 @@ const quarters = [
     subtitle: 'Panitikan at Pagsusuri',
     description: 'Mas malalim na pag-unawa sa teksto at biswal.',
     image: './assets/img/quarter3.jpg',
-    route: '/quarter/3'
+    route: '/quarter/3',
+    gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+    color: '#4facfe'
   },
-  
 ];
 
 const Home: React.FC = () => {
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar>
-          <IonTitle>Home Module</IonTitle>
+      <IonHeader className="ion-no-border">
+        <IonToolbar className="modern-home-toolbar">
+          <IonTitle className="modern-home-title">Yco App</IonTitle>
         </IonToolbar>
       </IonHeader>
 
-      <IonContent fullscreen>
-        <div className="home-header">
-          <h2>Mga Markahan</h2>
-          <p>Piliin ang quarter upang simulan ang pagkatuto</p>
-        </div>
-        <div className="home-container">
-          <div className="quarter-grid">
-            {quarters.map((q) => (
-          
-          // Card Section
-          <IonCard
-            key={q.id}
-            routerLink={q.route}
-            className="quarter-card"
-          >
-            <div
-                className="media-card-image"
-                style={{ backgroundImage: `url(${q.image})` 
-              }}
-            />
-
-            {/* Content Section */}
-            <IonCardContent className="media-card-content">
-              <div className="quarter-card-inner">
-                <div className="quarter-accent" />
-
-                <div className="quarter-content">
-                  <IonCardTitle className="media-card-title">{q.title}</IonCardTitle>
-                  <IonCardSubtitle>{q.subtitle}</IonCardSubtitle>
-                  <p className="quarter-desc">{q.description}</p>
-                </div>           
+      <IonContent fullscreen className="modern-home-content">
+        {/* Hero Header */}
+        <div className="home-hero">
+          <div className="home-hero-gradient" />
+          <div className="home-hero-content">
+            <div className="home-hero-icon">
+              <IonIcon icon={schoolOutline} />
+            </div>
+            <h1 className="home-hero-title">Mga Markahan</h1>
+            <p className="home-hero-subtitle">Piliin ang quarter upang simulan ang pagkatuto</p>
+            
+            <div className="learning-path">
+              <div className="path-line" />
+              <div className="path-dots">
+                {[1, 2, 3].map((num) => (
+                  <div key={num} className="path-dot">{num}</div>
+                ))}
               </div>
-            </IonCardContent>
-          </IonCard>
-        ))}
+            </div>
           </div>
         </div>
 
+        {/* Quarter Cards Grid */}
+        <div className="home-container">
+          <div className="modern-quarter-grid">
+            {quarters.map((q, index) => (
+              <IonCard
+                key={q.id}
+                routerLink={q.route}
+                className={`modern-quarter-card quarter-${index + 1}`}
+                button
+              >
+                {/* Background Image with Overlay */}
+                <div 
+                  className="quarter-image-wrapper"
+                  style={{ backgroundImage: `url(${q.image})` }}
+                >
+                  <div 
+                    className="quarter-overlay"
+                    style={{ background: q.gradient }}
+                  />
+                  
+                  {/* Quarter Number Badge */}
+                  <div className="quarter-number-badge">
+                    <span className="quarter-number">Q{q.id}</span>
+                  </div>
+                </div>
+
+                {/* Card Content */}
+                <IonCardContent className="modern-quarter-content">
+                  {/* Filipino Flag Accent */}
+                  <div className="filipino-accent-bar">
+                    <span className="accent-blue" />
+                    <span className="accent-red" />
+                    <span className="accent-yellow" />
+                  </div>
+
+                  {/* Text Content */}
+                  <div className="quarter-text">
+                    <div className="quarter-header-row">
+                      <div>
+                        <IonCardTitle className="quarter-title">
+                          {q.title}
+                        </IonCardTitle>
+                        <IonCardSubtitle className="quarter-subtitle">
+                          {q.subtitle}
+                        </IonCardSubtitle>
+                      </div>
+                      <div 
+                        className="quarter-icon-circle"
+                        style={{ background: q.gradient }}
+                      >
+                        <IonIcon icon={chevronForwardOutline} />
+                      </div>
+                    </div>
+                    
+                    <p className="quarter-description">{q.description}</p>
+                    
+                    {/* Action Button */}
+                    <div className="quarter-action">
+                      <span 
+                        className="start-learning-btn"
+                        style={{ 
+                          background: q.gradient,
+                          boxShadow: `0 4px 15px ${q.color}40`
+                        }}
+                      >
+                        Simulan
+                        <IonIcon icon={chevronForwardOutline} />
+                      </span>
+                    </div>
+                  </div>
+                </IonCardContent>
+              </IonCard>
+            ))}
+          </div>
+        </div>
+
+        {/* Bottom Spacing */}
+        <div className="home-bottom-spacing" />
       </IonContent>
     </IonPage>
   );

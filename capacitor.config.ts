@@ -1,9 +1,9 @@
 import type { CapacitorConfig } from '@capacitor/cli';
 
 const config: CapacitorConfig = {
-  appId: 'com.yco.app',
-  appName: 'YCO App',
-  webDir: 'dist'
+  appId: 'com.devfaculty.ycoapp',
+  appName: 'YCOapp',
+  webDir: 'build'
 };
 
 export default config;
