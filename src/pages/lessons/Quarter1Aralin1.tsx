@@ -33,7 +33,9 @@ import {
   bulbOutline,
   heartOutline,
   playCircleOutline,
-  chevronForwardOutline
+  chevronForwardOutline,
+  chevronBackOutline,
+  checkmarkCircleOutline
 } from 'ionicons/icons';
 
 import './Quarter1Aralin1.css';
@@ -45,6 +47,12 @@ const Quarter1Aralin1: React.FC = () => {
 
   const changeState = () => {
     setIsAudio(!isAudio);
+  };
+
+  // Remove progress tracking and make all lessons accessible
+  const handleQuizStart = () => {
+    // Navigate to quiz without checking progress
+    window.location.href = '/quiz';
   };
 
   return (
@@ -409,20 +417,36 @@ const Quarter1Aralin1: React.FC = () => {
           {/* QUIZ CTA */}
           <IonCard className="quiz-cta-card">
             <IonCardContent>
-              <div className="quiz-cta-content">
-                <div className="quiz-icon">
-                  <IonIcon icon={gameControllerOutline} />
+              <div className="lesson-complete-message">
+                <div className="complete-icon">
+                  <IonIcon icon={checkmarkCircleOutline} />
                 </div>
-                <div className="quiz-text">
-                  <h3>Handa ka na bang subukan ang iyong kaalaman?</h3>
-                  <p>Subukin kung gaano karami ang iyong natutunan!</p>
+                <div className="complete-text">
+                  <h3>Natapos mo ang Aralin 1!</h3>
+                  <p>Magaling! Ikaw ay handa na para sa susunod na aralin.</p>
+                </div>
+                
+                {/* Navigation Buttons */}
+                <div className="navigation-buttons">
+                  <IonButton 
+                    fill="clear" 
+                    className="nav-button prev-button"
+                    onClick={() => window.location.href = '/quarter/1'}
+                  >
+                    <IonIcon icon={chevronBackOutline} slot="start" />
+                    Bumalik sa Quarter 1
+                  </IonButton>
+                  
+                  <IonButton 
+                    expand="block" 
+                    className="nav-button next-button"
+                    onClick={() => window.location.href = '/quarter/1/aralin/2'}
+                  >
+                    Susunod na Aralin
+                    <IonIcon icon={chevronForwardOutline} slot="end" />
+                  </IonButton>
                 </div>
               </div>
-              <IonButton expand="block" className="quiz-button" color="success">
-                <IonIcon icon={playCircleOutline} slot="start" />
-                Simulan ang Mini Quiz
-                <IonIcon icon={chevronForwardOutline} slot="end" />
-              </IonButton>
             </IonCardContent>
           </IonCard>
         </div>

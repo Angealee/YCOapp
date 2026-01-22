@@ -10,8 +10,9 @@ import {
   IonButtons,
   IonBackButton,
   IonIcon,
+  IonButton,
 } from "@ionic/react";
-import { bookOutline, trophyOutline } from "ionicons/icons";
+import { bookOutline, trophyOutline, playCircleOutline } from "ionicons/icons";
 import { useState, useEffect } from 'react';
 
 import { quarter1Aralin, Aralin } from "../../data/quarter1AralinCards";
@@ -41,16 +42,6 @@ const Quarter1: React.FC = () => {
     // Otherwise, use the default progress from the data
     const defaultAralin = quarter1Aralin.find(a => a.id === aralinId);
     return defaultAralin ? defaultAralin.progress : 0;
-  };
-  
-  // Check if user can access an aralin based on progress
-  const canAccessAralin = (aralinId: number): boolean => {
-    // Always allow access to first aralin
-    if (aralinId === 1) return true;
-    
-    // Check if the previous aralin is completed (100%)
-    const previousAralinProgress = getAralinProgress(aralinId - 1);
-    return previousAralinProgress === 1;
   };
   
   return (
@@ -87,14 +78,13 @@ const Quarter1: React.FC = () => {
         <div className="aralin-grid">
           {quarter1Aralin.map((aralin: Aralin, index: number) => {
             const progress = getAralinProgress(aralin.id);
-            const canAccess = canAccessAralin(aralin.id);
             
             return (
               <IonCard
                 key={aralin.id}
-                routerLink={canAccess ? `/quarter/1/aralin/${aralin.id}` : undefined}
-                className={`modern-aralin-card ${!canAccess ? 'locked' : ''}`}
-                button={canAccess}
+                routerLink={`/quarter/1/aralin/${aralin.id}`}
+                className="modern-aralin-card"
+                button
               >
                 <div className="card-number">#{index + 1}</div>
                 <div className="card-glow" />
@@ -103,9 +93,6 @@ const Quarter1: React.FC = () => {
                   {/* Top Section */}
                   <div className="card-top">
                     <div className="lesson-badge">Aralin {aralin.id}</div>
-                    <div className={`status-indicator ${progress === 1 ? 'complete' : progress > 0 ? 'in-progress' : 'not-started'}`}>
-                      {progress === 1 ? '✓' : progress > 0 ? '◐' : '○'}
-                    </div>
                   </div>
 
                   {/* Content */}
@@ -117,16 +104,37 @@ const Quarter1: React.FC = () => {
 
                   {/* Card Footer */}
                   <div className="card-footer">
-                    {!canAccess ? (
-                      <span className="locked-hint">Kumpletuhin muna ang nauna →</span>
-                    ) : (
-                      <span className="tap-hint">Tap upang buksan →</span>
-                    )}
+                    <span className="tap-hint">Tap upang buksan →</span>
                   </div>
                 </IonCardContent>
               </IonCard>
             );
           })}
+        </div>
+
+        {/* Quiz Redirect Section */}
+        <div className="quiz-redirect-section">
+          <IonCard className="quiz-promo-card">
+            <IonCardContent>
+              <div className="promo-content">
+                <div className="promo-icon">
+                  <IonIcon icon={bookOutline} />
+                </div>
+                <div className="promo-text">
+                  <h3>Subukan ang Iyong Kaalaman sa Unang Markahan</h3>
+                  <p>Ikaw na ba ang handa? Subukin ang iyong pag-unawa sa Panitikang Filipino!</p>
+                </div>
+                <IonButton 
+                  expand="block" 
+                  className="main-quiz-button"
+                  onClick={() => window.location.href = '/quiz'}
+                >
+                  <IonIcon icon={playCircleOutline} slot="start" />
+                  Simulan ang Pagsusulit
+                </IonButton>
+              </div>
+            </IonCardContent>
+          </IonCard>
         </div>
 
         {/* Bottom Spacing */}
