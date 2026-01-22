@@ -16,9 +16,9 @@ import {
   IonIcon,
   IonButton,
   IonChip,
-  IonRippleEffect,
   IonBackButton,
-  IonButtons
+  IonButtons,
+  IonBadge
 } from '@ionic/react';
 
 import {
@@ -28,243 +28,407 @@ import {
   gameControllerOutline,
   createOutline,
   eyeOutline,
-  bookmark,
-  bookSharp,
-  bookmarkSharp
+  bookmarkSharp,
+  sparklesOutline,
+  bulbOutline,
+  heartOutline,
+  playCircleOutline,
+  chevronForwardOutline
 } from 'ionicons/icons';
 
 import './Quarter1Aralin1.css';
 import { useState } from 'react';
 
 const Quarter1Aralin1: React.FC = () => {
-  const [isAudio, setIsAudio ] = useState(false);
-  const changeState =  () =>{
-    setIsAudio(!isAudio)
-  }
+  const [isAudio, setIsAudio] = useState(false);
+  const [activeSection, setActiveSection] = useState<string>('');
+
+  const changeState = () => {
+    setIsAudio(!isAudio);
+  };
+
   return (
     <IonPage>
-      <IonHeader>
-        <IonToolbar color="danger ">
-           <IonButtons slot="start">
-            <IonBackButton text={'Ibalik'}></IonBackButton>
+      <IonHeader className="ion-no-border">
+        <IonToolbar className="modern-aralin-toolbar">
+          <IonButtons slot="start">
+            <IonBackButton text="Ibalik" className="modern-back-btn" />
           </IonButtons>
-          <IonTitle>Quarter 1 • Aralin 1</IonTitle>
+          <IonTitle className="modern-aralin-title">
+            <div className="title-content">
+              <span className="quarter-badge">Q1</span>
+              <span className="separator">•</span>
+              <span className="aralin-badge">Aralin 1</span>
+            </div>
+          </IonTitle>
         </IonToolbar>
       </IonHeader>
 
-      <IonContent fullscreen className="q1-aralin1">
-
-        {/* CONTENT SECTION */}
-        <IonCard className="hero-card">
-          <IonCardHeader>
-            <IonCardTitle>
-             <strong>
+      <IonContent fullscreen className="modern-aralin-content">
+        {/* Hero Section */}
+        <div className="aralin-hero">
+          <div className="hero-bg-gradient" />
+          <div className="hero-content-wrapper">
+            <div className="hero-icon-badge">
+              <IonIcon icon={bookOutline} />
+            </div>
+            <h1 className="hero-main-title">
               Kaligirang Pangkasaysayan ng Panitikan sa Panahon ng Katutubo
-              </strong> 
-            </IonCardTitle>
-          </IonCardHeader>
-          <IonCardContent>
-            <IonText className= "text-content">
+            </h1>
+            <p className="hero-description">
               Bago pa man dumating ang mga mananakop, mayaman na ang mga Pilipino
-              sa panitikan—ipinapasa sa pamamagitan ng salita, awit, laro,
-              at karanasan.
-            </IonText>
-          </IonCardContent>
-        </IonCard>
+              sa panitikan—ipinapasa sa pamamagitan ng salita, awit, laro, at
+              karanasan.
+            </p>
+            <div className="hero-stats">
+              <div className="stat-item">
+                <IonIcon icon={sparklesOutline} />
+                <span>4 Paksa</span>
+              </div>
+              <div className="stat-item">
+                <IonIcon icon={bulbOutline} />
+                <span>Interactive</span>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        {/* ACCORDION CONTENT */}
-        <IonAccordionGroup multiple>
+        {/* Main Content */}
+        <div className="content-wrapper">
+          {/* ACCORDION SECTIONS */}
+          <IonAccordionGroup 
+            className="modern-accordion-group"
+            onIonChange={(e) => setActiveSection(e.detail.value as string)}
+          >
+            {/* BUGTONG */}
+            <IonAccordion value="bugtong" className="modern-accordion">
+              <IonItem slot="header" className="accordion-header" lines="none">
+                <div className="header-content">
+                  <div className="header-icon bugtong-icon">
+                    <IonIcon icon={bulbOutline} />
+                  </div>
+                  <div className="header-text">
+                    <IonLabel className="accordion-title">Bugtong</IonLabel>
+                    <p className="accordion-subtitle">Palaisipang Panitikan</p>
+                  </div>
+                </div>
+              </IonItem>
 
-          {/* BUGTONG */}
-          <IonAccordion value="bugtong">
-            <IonItem slot="header">
-              <IonLabel>
-                <strong>
-                  Bugtong
-                </strong></IonLabel>
-            </IonItem>
+              <div className="accordion-content" slot="content">
+                <div className="content-intro">
+                  <IonText className="intro-text">
+                    Ang bugtong ay isang maikling patulang palaisipan na naglalarawan 
+                    ng isang bagay, hayop, tao, o pangyayari sa pamamagitan ng pahiwatig 
+                    o talinghaga. Hindi tuwiran ang paglalarawan; kailangan ng mambabasa o nakikinig na gumamit ng imahinasyon, lohika, at kaalaman sa wika upang mahulaan ang sagot. Ang bugtong ay isang anyo ng panitikan na nag-uugnay sa wika at kultura, at karaniwang ginagamit sa mga tradisyunal na laro at paligsahan sa barangay at paaralan.
+                  </IonText>
+                </div>
 
-            <div className="ion-padding" slot="content">
-              <IonText className='text-content'>
-                Ang bugtong ay isang maikling patulang palaisipan na naglalarawan ng isang bagay, hayop, tao, o pangyayari sa pamamagitan ng pahiwatig o talinghaga. < br /> 
-                <br />
-                Hindi tuwiran ang paglalarawan; kailangan ng mambabasa o nakikinig na gumamit ng imahinasyon, lohika, at kaalaman sa wika upang mahulaan ang sagot. Ang bugtong ay isang anyo ng panitikan na nag-uugnay sa wika at kultura, at karaniwang ginagamit sa mga tradisyunal na laro at paligsahan sa barangay at paaralan.
-              </IonText>
-              <div className='halimbawa-content'>
-                <IonCard>
+                {/* Info Cards */}
+                <div className="info-cards-grid">
+                  <IonCard className="info-card gradient-purple">
+                    <IonCardContent>
+                      <div className="card-icon">
+                        <IonIcon icon={sparklesOutline} />
+                      </div>
+                      <h1 className="card-title"><strong>Katangian ng Bugtong</strong></h1>
+                      <div className="card-list">
+                        <div className="list-item">
+                          <span className="item-number">1</span>
+                          <div>
+                            <strong>Maikli at Patula</strong>
+                            <p>karaniwan ay may tugma at sukat upang madaling matandaan.</p>
+                          </div>
+                        </div>
+                        <div className="list-item">
+                          <span className="item-number">2</span>
+                          <div>
+                            <strong>May Talinghaga</strong>
+                            <p>gumagamit ng paglalarawan na di-tuwer o simboliko.</p>
+                          </div>
+                        </div>
+                        <div className="list-item">
+                          <span className="item-number">3</span>
+                          <div>
+                            <strong>Naglalarawan ng isang bagay o kaisipan</strong>
+                            <p>maaaring tao, hayop, bagay, halaman, o pangyayari.</p>
+                          </div>
+                        </div>
+                        <div className="list-item">
+                          <span className="item-number">4</span>
+                          <div>
+                            <strong>Layunin</strong>
+                            <p>aliwin ang nakikinig, hamunin ang katalinuhan, at palawakin 
+                            ang kaalaman sa wika at kultura.</p>
+                          </div>
+                        </div>
+                      </div>
+                    </IonCardContent>
+                  </IonCard>
+
+                  <IonCard className="info-card gradient-pink">
+                    <IonCardContent>
+                      <div className="card-icon">
+                        <IonIcon icon={heartOutline} />
+                      </div>
+                      <h1 className="card-title"><strong>Kahalagahan ng Bugtong</strong></h1>
+                      <div className="card-list">
+                        <div className="list-item">
+                          <span className="item-number">1</span>
+                          <div>
+                            <strong>Nagpapatalas ng isip at lohika</strong>
+                            <p>sapagkat ang tamang sagot ay kailangan tuklasin at i-analisa.</p>
+                          </div>
+                        </div>
+                        <div className="list-item">
+                          <span className="item-number">2</span>
+                          <div>
+                            <strong>Nagpapalawak ng bokabularyo</strong>
+                            <p>nakikilala ang mga salitang Filipino at kasanayan sa paggamit ng wika.</p>
+                          </div>
+                        </div>
+                        <div className="list-item">
+                          <span className="item-number">3</span>
+                          <div>
+                            <strong>Nagpapaunlad ng imahinasyon</strong>
+                            <p>dahil ang mga pahiwatig ay hindi literal.</p>
+                          </div>
+                        </div>
+                        <div className="list-item">
+                          <span className="item-number">4</span>
+                          <div>
+                            <strong>Nagpapahalaga sa kulturang Pilipino</strong>
+                            <p>aliwin ang nakikinig, hamunin ang katalinuhan.</p>
+                          </div>
+                        </div>
+                        <div className="list-item">
+                          <span className="item-number">5</span>
+                          <div>
+                            <strong>Naglilinang ng pakikipag-ugnayan</strong>
+                            <p>karaniwang ginagamit sa laro, paligsahan, o pagtuturo.</p>
+                          </div>
+                        </div>
+                      </div>
+                    </IonCardContent>
+                  </IonCard>
+                </div>
+
+                {/* Interactive Chips */}
+                <div className="action-chips">
+                  <IonChip 
+                    className={`modern-chip ${!isAudio ? 'active' : ''}`}
+                    onClick={() => setIsAudio(false)}
+                  >
+                    <IonIcon icon={bookOutline} />
+                    <IonLabel>Pagbabasa</IonLabel>
+                  </IonChip>
+                  <IonChip 
+                    className={`modern-chip ${isAudio ? 'active' : ''}`}
+                    onClick={() => setIsAudio(true)}
+                  >
+                    <IonIcon icon={volumeHighOutline} />
+                    <IonLabel>Pakikinig</IonLabel>
+                  </IonChip>
+                </div>
+
+                {/* Example Card */}
+                <IonCard className="example-card">
                   <IonCardContent>
-                    <IonText className='title-text-content'>
-                      <strong>Katangian ng Bugtong</strong><br />
-                    </IonText>
-                    <IonText className='text-content'>
-                      <strong>1. Maikli at Patula </strong>– karaniwan ay may tugma at sukat upang madaling matandaan.
-                      <br />
-                      <strong>2. May Talinghaga </strong>– gumagamit ng paglalarawan na di-tuwer o simboliko, kaya’t pinipilit ang utak ng mambabasa o tagapakinig na mag-isip.
-                      <br />
-                      <strong>3. Naglalarawan ng isang bagay o kaisipan </strong>– maaaring tao, hayop, bagay, halaman, o pangyayari.
-                      <br />
-                      <strong>4. Layunin </strong>–  aliwin ang nakikinig, hamunin ang katalinuhan, at palawakin ang kaalaman sa wika at kultura.
-                      <br />
-                    </IonText>
-                    <br />
-                    <IonText className='title-text-content'>
-                      <strong>Kahalagahan ng Bugtong</strong><br />
-                    </IonText>
-
-                    <IonText className='text-content'>
-
-                      <strong>1. Nagpapatalas ng isip at lohika </strong>– sapagkat ang tamang sagot ay kailangan tuklasin at i-analisa.
-                      <br />
-                      <strong>2. Nagpapalawak ng bokabularyo at kaalaman sa wika </strong>– nakikilala ang mga salitang Filipino at kasanayan sa paggamit ng wika.
-                      <br />
-                      <strong>3. Nagpapaunlad ng imahinasyon at malikhaing pag-iisip </strong>– dahil ang mga pahiwatig ay hindi literal, kailangang gamitin ang imahinasyon.
-                      <br />
-                      <strong>4. Nagpapahalaga sa kulturang Pilipino </strong>–  aliwin ang nakikinig, hamunin ang katalinuhan, at palawakin ang kaalaman sa wika at kultura.
-                      <br />
-                      <strong>5. Naglilinang ng pakikipag-ugnayan at pakikisalamuha </strong>–  karaniwang ginagamit sa laro, paligsahan, o pagtuturo sa silid-aralan.
-                      <br />
-                    </IonText>
-
+                    {isAudio ? (
+                      <div className="audio-player">
+                        <div className="audio-icon">
+                          <IonIcon icon={playCircleOutline} />
+                        </div>
+                        <div className="audio-info">
+                          <p className="audio-title">Play Audio</p>
+                          <p className="audio-subtitle">Sagot: Cellphone</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="example-text">
+                        <div className="example-label">
+                          <IonIcon icon={bookmarkSharp} />
+                          <span>Halimbawa</span>
+                        </div>
+                        <p className="riddle-text">
+                          Hindi tao, hindi hayop,<br />
+                          Ngunit marunong magsalita;<br />
+                          Sa isang pindot mo lamang,<br />
+                          Buong mundo'y makikita.
+                        </p>
+                        <div className="answer-reveal">
+                          <IonIcon icon={bulbOutline} />
+                          <span>Sagot: Cellphone</span>
+                        </div>
+                      </div>
+                    )}
                   </IonCardContent>
                 </IonCard>
+
+                <IonButton expand="block" className="game-button">
+                  <IonIcon icon={gameControllerOutline} slot="start" />
+                  Subukan ang Bugtong Laro
+                  <IonIcon icon={chevronForwardOutline} slot="end" />
+                </IonButton>
               </div>
+            </IonAccordion>
 
-              <div className="chip-row">
-                <IonChip><IonIcon icon={bookOutline} style={{paddingRight:"8.5px" }} onClick={changeState}/> Pagbabasa</IonChip>
-                <IonChip><IonIcon icon={volumeHighOutline} style={{paddingRight:"8.5px" }}  onClick={changeState} /> Pakikinig</IonChip>
-                <IonChip><IonIcon icon={bookmarkSharp} style={{paddingRight:"8.5px" }}  onClick={changeState} /> Halimbawa ng Bugtong</IonChip>
+            {/* PALAISIPAN */}
+            <IonAccordion value="palaisipan" className="modern-accordion">
+              <IonItem slot="header" className="accordion-header" lines="none">
+                <div className="header-content">
+                  <div className="header-icon palaisipan-icon">
+                    <IonIcon icon={sparklesOutline} />
+                  </div>
+                  <div className="header-text">
+                    <IonLabel className="accordion-title">Pala-isipan</IonLabel>
+                    <p className="accordion-subtitle">Lohikal na Hamon</p>
+                  </div>
+                </div>
+              </IonItem>
+
+              <div className="accordion-content" slot="content">
+                <div className="content-intro">
+                  <IonText className="intro-text">
+                    Ang palaisipan ay humahamon sa lohikal at malikhaing pag-iisip
+                    gamit ang hindi tuwirang tanong.
+                  </IonText>
+                </div>
+
+                <IonCard className="example-card gradient-blue">
+                  <IonCardContent>
+                    <div className="example-label">
+                      <IonIcon icon={bulbOutline} />
+                      <span>Tanong</span>
+                    </div>
+                    <p className="riddle-text">
+                      Ano ang bagay na habang kinukuha mo ay lalo mong pinapalaki?
+                    </p>
+                    <div className="answer-reveal">
+                      <IonIcon icon={sparklesOutline} />
+                      <span>Sagot: Butas</span>
+                    </div>
+                  </IonCardContent>
+                </IonCard>
+
+                <IonButton expand="block" className="challenge-button" color="tertiary">
+                  <IonIcon icon={bulbOutline} slot="start" />
+                  Interactive Logic Challenge
+                  <IonIcon icon={chevronForwardOutline} slot="end" />
+                </IonButton>
               </div>
+            </IonAccordion>
 
-            { isAudio ? 
-                <IonCard>
-                <IonCardContent >
-                  <IonText>
-                      Play Audio
+            {/* TANAGA */}
+            <IonAccordion value="tanaga" className="modern-accordion">
+              <IonItem slot="header" className="accordion-header" lines="none">
+                <div className="header-content">
+                  <div className="header-icon tanaga-icon">
+                    <IonIcon icon={createOutline} />
+                  </div>
+                  <div className="header-text">
+                    <IonLabel className="accordion-title">Tanaga</IonLabel>
+                    <p className="accordion-subtitle">Tulang Pilipino</p>
+                  </div>
+                </div>
+              </IonItem>
+
+              <div className="accordion-content" slot="content">
+                <div className="content-intro">
+                  <IonText className="intro-text">
+                    Ang tanaga ay apat na taludtod na tula na may pitong pantig bawat
+                    linya (7-7-7-7) at may tugma.
                   </IonText>
-                  <IonText color="medium"><br />Sagot: Cellphone</IonText>
-                </IonCardContent>
-              </IonCard>
-              : 
-              <IonCard>
-                <IonCardContent >
-                  <IonText>
-                    <strong>Halimbawa:</strong><br />
-                    Hindi tao, hindi hayop,<br />
-                    Ngunit marunong magsalita;<br />
-                    Sa isang pindot mo lamang,<br />
-                    Buong mundo’y makikita.
+                </div>
+
+                <IonCard className="example-card gradient-green">
+                  <IonCardContent>
+                    <div className="example-label">
+                      <IonIcon icon={createOutline} />
+                      <span>Halimbawa ng Tanaga</span>
+                    </div>
+                    <p className="poem-text">
+                      Wika'y ating yaman,<br />
+                      Sa puso'y pinagyayaman;<br />
+                      Sa bawat salitang bigkas,<br />
+                      Pagka-Pilipino'y lantad.
+                    </p>
+                  </IonCardContent>
+                </IonCard>
+
+                <IonButton expand="block" className="create-button">
+                  <IonIcon icon={createOutline} slot="start" />
+                  Gumawa ng Sariling Tanaga
+                  <IonIcon icon={chevronForwardOutline} slot="end" />
+                </IonButton>
+              </div>
+            </IonAccordion>
+
+            {/* SALAWIKAIN */}
+            <IonAccordion value="salawikain" className="modern-accordion">
+              <IonItem slot="header" className="accordion-header" lines="none">
+                <div className="header-content">
+                  <div className="header-icon salawikain-icon">
+                    <IonIcon icon={heartOutline} />
+                  </div>
+                  <div className="header-text">
+                    <IonLabel className="accordion-title">Salawikain at Kasabihan</IonLabel>
+                    <p className="accordion-subtitle">Karunungan ng Bayan</p>
+                  </div>
+                </div>
+              </IonItem>
+
+              <div className="accordion-content" slot="content">
+                <div className="content-intro">
+                  <IonText className="intro-text">
+                    Ang salawikain at kasabihan ay mga pahayag ng karunungan na
+                    nagmumula sa karanasan ng mga Pilipino.
                   </IonText>
-                  <IonText color="medium"><br />Sagot: Cellphone</IonText>
-                </IonCardContent>
-              </IonCard>}
-              <IonButton expand="block" color="secondary">
-                Subukan ang Bugtong Game
+                </div>
+
+                <IonCard className="example-card gradient-orange">
+                  <IonCardContent>
+                    <div className="quote-icon">
+                      <IonIcon icon={heartOutline} />
+                    </div>
+                    <p className="quote-text">
+                      "Ang hindi marunong lumingon sa pinanggalingan ay hindi
+                      makararating sa paroroonan."
+                    </p>
+                  </IonCardContent>
+                </IonCard>
+
+                <IonButton expand="block" className="lesson-button" fill="outline">
+                  <IonIcon icon={eyeOutline} slot="start" />
+                  Tukuyin ang Aral
+                  <IonIcon icon={chevronForwardOutline} slot="end" />
+                </IonButton>
+              </div>
+            </IonAccordion>
+          </IonAccordionGroup>
+
+          {/* QUIZ CTA */}
+          <IonCard className="quiz-cta-card">
+            <IonCardContent>
+              <div className="quiz-cta-content">
+                <div className="quiz-icon">
+                  <IonIcon icon={gameControllerOutline} />
+                </div>
+                <div className="quiz-text">
+                  <h3>Handa ka na bang subukan ang iyong kaalaman?</h3>
+                  <p>Subukin kung gaano karami ang iyong natutunan!</p>
+                </div>
+              </div>
+              <IonButton expand="block" className="quiz-button" color="success">
+                <IonIcon icon={playCircleOutline} slot="start" />
+                Simulan ang Mini Quiz
+                <IonIcon icon={chevronForwardOutline} slot="end" />
               </IonButton>
-            </div>
-          </IonAccordion>
+            </IonCardContent>
+          </IonCard>
+        </div>
 
-
-
-
-
-          {/* PALAISIPAN */}
-          <IonAccordion value="palaisipan">
-            <IonItem slot="header">
-              <IonLabel>Pala-isipan</IonLabel>
-            </IonItem>
-
-            <div className="ion-padding" slot="content">
-              <IonText>
-                Ang palaisipan ay humahamon sa lohikal at malikhaing pag-iisip
-                gamit ang hindi tuwirang tanong.
-              </IonText>
-
-              <IonCard>
-                <IonCardContent>
-                  <IonText>
-                    <strong>Tanong:</strong><br />
-                    Ano ang bagay na habang kinukuha mo ay lalo mong pinapalaki?
-                  </IonText>
-                  <IonText color="medium"><br />Sagot: Butas</IonText>
-                </IonCardContent>
-              </IonCard>
-
-              <IonButton expand="block" color="tertiary">
-                Interactive Logic Challenge
-              </IonButton>
-            </div>
-          </IonAccordion>
-
-          {/* TANAGA */}
-          <IonAccordion value="tanaga">
-            <IonItem slot="header">
-              <IonLabel>Tanaga</IonLabel>
-            </IonItem>
-
-            <div className="ion-padding" slot="content">
-              <IonText>
-                Ang tanaga ay apat na taludtod na tula na may pitong pantig bawat
-                linya (7-7-7-7) at may tugma.
-              </IonText>
-
-              <IonCard>
-                <IonCardContent>
-                  <IonText>
-                    Wika’y ating yaman,<br />
-                    Sa puso’y pinagyayaman;<br />
-                    Sa bawat salitang bigkas,<br />
-                    Pagka-Pilipino’y lantad.
-                  </IonText>
-                </IonCardContent>
-              </IonCard>
-
-              <IonButton expand="block">
-                Gumawa ng Sariling Tanaga
-              </IonButton>
-            </div>
-          </IonAccordion>
-
-          {/* SALAWIKAIN & KASABIHAN */}
-          <IonAccordion value="salawikain">
-            <IonItem slot="header">
-              <IonLabel>Salawikain at Kasabihan</IonLabel>
-            </IonItem>
-
-            <div className="ion-padding" slot="content">
-              <IonText>
-                Ang salawikain at kasabihan ay mga pahayag ng karunungan na
-                nagmumula sa karanasan ng mga Pilipino.
-              </IonText>
-
-              <IonCard>
-                <IonCardContent>
-                  <IonText>
-                    “Ang hindi marunong lumingon sa pinanggalingan ay hindi
-                    makararating sa paroroonan.”
-                  </IonText>
-                </IonCardContent>
-              </IonCard>
-
-              <IonButton expand="block" fill="outline">
-                Tukuyin ang Aral
-              </IonButton>
-            </div>
-          </IonAccordion>
-
-        </IonAccordionGroup>
-
-        {/* FOOTER CTA */}
-        <IonCard className="next-card">
-          <IonCardContent>
-            <IonText>
-              Handa ka na bang subukan ang iyong kaalaman?
-            </IonText>
-            <IonButton expand="block" color="success">
-              Simulan ang Mini Quiz
-            </IonButton>
-          </IonCardContent>
-        </IonCard>
-
+        {/* Bottom Spacing */}
+        <div className="bottom-spacing" />
       </IonContent>
     </IonPage>
   );

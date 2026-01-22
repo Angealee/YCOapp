@@ -1,126 +1,415 @@
-/* ---------- PAGE HEADER ---------- */
+/* Modern Toolbar */
+.modern-home-toolbar {
+  --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --color: white;
+  padding-top: 8px;
+  padding-bottom: 2px;
 
-.home-header {
-  padding: 20px 16px 12px;
 }
 
-.home-header h2 {
-  margin: 0;
-  font-size: 1.4rem;
-  font-weight: 800;
+.modern-home-title {
+  position: relative;
+  font-weight: 700;
+  font-size: 1.2rem;
+  letter-spacing: 0.5px;
 }
 
-.home-header p {
-  margin-top: 4px;
-  font-size: 0.95rem;
-  color: rgba(0, 0, 0, 0.65);
+/* Content Background */
+.modern-home-content {
+  --background: linear-gradient(180deg, #f8f9ff 0%, #ffffff 100%);
 }
 
-/* ===== QUARTER GRID ===== */
-
-.quarter-grid {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 14px;
-  padding: 8px 16px 24px;
-}
-.quarter-grid > :nth-child(3) {
-  grid-column: 1 / -1;
-}
-/* ---------- QUARTER CARD (RECTANGLE) ---------- */
-
-/* Media card */
-.quarter-card { 
-  border-radius: 14px;
+/* Hero Header */
+.home-hero {
+  position: relative;
+  padding: 2.5rem 1.25rem 3rem;
+  margin-bottom: 1.5rem;
   overflow: hidden;
-  background: linear-gradient(
-    180deg,
-    rgba(22, 73, 214, 0.651),
-    rgba(160, 62, 17, 0.336)
-  );
-  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.08);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
-  /* height: 180px;              */
-  display: flex;
-  margin: 0;
 }
 
-.media-card-image {
-  width: 100%;
-  height: 200px;
-  border-radius: 12px;
-  background-size: cover;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-color: #f2f2f2; /* fallback */
+.home-hero-gradient {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #ce1126 0%, #ad9116 100%);
+  opacity: 0.95;
 }
 
-.quarter-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 14px 28px rgba(0, 0, 0, 0.12);
+.home-hero-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  color: rgb(255, 255, 255);
 }
 
-.media-card-title {
-  margin: 0;
-  font-size: 1.1rem;
-  font-weight: 800;
-  color:#000;
+.home-hero-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 100px;
+  height: 100px;
+  background: rgba(255, 255, 255, 0.2);
+  backdrop-filter: blur(10px);
+  border-radius: 50%;
+  margin-bottom: 1.25rem;
+  animation: float 2s ease-in-out infinite;
+  border: 5px solid rgba(255, 255, 255, 0.3);
 }
 
-.media-card-content {
-  padding: 18px;
+.home-hero-icon ion-icon {
+  font-size: 4rem;
+  color: white;
 }
 
-/* ---------- INNER LAYOUT ---------- */
-
-.quarter-card-inner {
-  display: flex;
-  gap: 12px;
-  align-items: flex-start;
-  width: 100%;
+@keyframes float {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-12px) rotate(5deg); }
 }
 
-/* ---------- FILIPINO ACCENT ---------- */
-
-.quarter-accent {
-  width: 6px;
-  border-radius: 6px;
-  background: linear-gradient(
-    to bottom,
-    #0038a8,
-    #ce1126,
-    #fcd116
-  );
-  flex-shrink: 0;
+.home-hero-title {
+  font-size: 2.2rem;
+  font-weight: 900;
+  margin: 0 0 0.5rem 0;
+  letter-spacing: -0.5px;
+  text-shadow: 0 3px 15px rgba(0, 0, 0, 0.2);
 }
 
-/* ---------- TEXT CONTENT ---------- */
-
-
-.quarter-content ion-card-subtitle {
-  font-size: 0.8rem;
-  color: #ffffff;
-  margin-top: 2px;
-}
-
-.quarter-desc {
-  margin-top: 8px;
-  font-size: 0.9rem;
+.home-hero-subtitle {
+  font-size: 1.05rem;
+  margin: 0 0 2rem 0;
+  opacity: 0.95;
   font-weight: 500;
-  color: rgba(0, 0, 0, 0.75);
   line-height: 1.5;
 }
 
-/* ---------- SMALL SCREENS SAFETY ---------- */
+/* Learning Path */
+.learning-path {
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2rem;
+  padding: 0 2rem;
+}
 
+.path-line {
+  position: absolute;
+  width: 200px;
+  height: 3px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 10px;
+  z-index: 1;
+}
+
+.path-dots {
+  display: flex;
+  justify-content: space-between;
+  width: 220px;
+  position: relative;
+  z-index: 2;
+}
+
+.path-dot {
+  width: 40px;
+  height: 40px;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(10px);
+  border: 3px solid rgba(255, 255, 255, 0.5);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.1rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.path-dot:nth-child(2) {
+  animation-delay: 0.3s;
+}
+
+.path-dot:nth-child(3) {
+  animation-delay: 0.6s;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.1); }
+}
+
+/* Container */
+.home-container {
+  padding: 0 1rem 1rem;
+}
+
+/* Quarter Grid */
+.modern-quarter-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+.modern-quarter-grid > .quarter-3 {
+  grid-column: 1 / -1;
+}
+
+/* Modern Quarter Card */
+.modern-quarter-card {
+  position: relative;
+  margin: 0;
+  border-radius: 24px;
+  overflow: hidden;
+  background: white;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border: none;
+}
+
+.modern-quarter-card:active {
+  transform: scale(0.96);
+}
+
+/* Image Wrapper */
+.quarter-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 160px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+.quarter-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  opacity: 0.85;
+  mix-blend-mode: multiply;
+  transition: opacity 0.3s ease;
+}
+
+.modern-quarter-card:hover .quarter-overlay {
+  opacity: 0.7;
+}
+
+/* Quarter Number Badge */
+.quarter-number-badge {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  width: 50px;
+  height: 50px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  z-index: 3;
+  animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-5px); }
+}
+
+.quarter-number {
+  font-size: 1.2rem;
+  font-weight: 900;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Card Content */
+.modern-quarter-content {
+  padding: 1.25rem;
+}
+
+/* Filipino Flag Accent */
+.filipino-accent-bar {
+  display: flex;
+  gap: 4px;
+  margin-bottom: 1rem;
+  height: 6px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.accent-blue,
+.accent-red,
+.accent-yellow {
+  flex: 1;
+  border-radius: 2px;
+}
+
+.accent-blue {
+  background: #0038a8;
+}
+
+.accent-red {
+  background: #ce1126;
+}
+
+.accent-yellow {
+  background: #fcd116;
+}
+
+/* Quarter Text */
+.quarter-text {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.quarter-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 0.75rem;
+}
+
+.quarter-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: #1e293b;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.quarter-subtitle {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #64748b;
+  margin: 0.25rem 0 0 0;
+  line-height: 1.3;
+}
+
+.quarter-icon-circle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  transition: transform 0.3s ease;
+}
+
+.quarter-icon-circle ion-icon {
+  font-size: 1.2rem;
+  color: white;
+}
+
+.modern-quarter-card:hover .quarter-icon-circle {
+  transform: translateX(3px);
+}
+
+.quarter-description {
+  font-size: 0.9rem;
+  color: #64748b;
+  line-height: 1.6;
+  margin: 0;
+}
+
+/* Action Button */
+.quarter-action {
+  display: flex;
+  justify-content: flex-start;
+  margin-top: 0.5rem;
+}
+
+.start-learning-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
+  color: white;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.start-learning-btn ion-icon {
+  font-size: 1rem;
+  transition: transform 0.3s ease;
+}
+
+.modern-quarter-card:hover .start-learning-btn ion-icon {
+  transform: translateX(3px);
+}
+
+/* Full Width Card (Quarter 3) */
+.quarter-3 .quarter-image-wrapper {
+  height: 200px;
+}
+
+.quarter-3 .quarter-text {
+  max-width: 100%;
+}
+
+/* Bottom Spacing */
+.home-bottom-spacing {
+  height: 2rem;
+}
+
+/* Responsive Design */
 @media (max-width: 360px) {
-  .quarter-list {
+  .modern-quarter-grid {
     grid-template-columns: 1fr;
+    gap: 1rem;
   }
-
-  .quarter-card {
-    height: auto;
+  
+  .modern-quarter-grid > .quarter-3 {
+    grid-column: 1;
+  }
+  
+  .quarter-image-wrapper {
+    height: 180px;
   }
 }
 
+@media (min-width: 768px) {
+  .home-container {
+    padding: 0 2rem 2rem;
+  }
+  
+  .modern-quarter-grid {
+    gap: 1.5rem;
+  }
+  
+  .home-hero {
+    padding: 3.5rem 2rem 4rem;
+  }
+  
+  .quarter-image-wrapper {
+    height: 200px;
+  }
+  
+  .quarter-3 .quarter-image-wrapper {
+    height: 240px;
+  }
+}
 
+@media (min-width: 1024px) {
+  .modern-quarter-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  
+  .modern-quarter-grid > .quarter-3 {
+    grid-column: auto;
+  }
+}
