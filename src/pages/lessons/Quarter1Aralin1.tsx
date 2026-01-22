@@ -289,10 +289,44 @@ const Quarter1Aralin1: React.FC = () => {
               <div className="accordion-content" slot="content">
                 <div className="content-intro">
                   <IonText className="intro-text">
-                    Ang palaisipan ay humahamon sa lohikal at malikhaing pag-iisip
-                    gamit ang hindi tuwirang tanong.
+                    Ang palaisipan ay isang uri ng patalinghagang tanong o sitwasyon na layuning hamunin ang isipan ng isang tao. Hindi tuwiran ang sagot; kailangan ng lohikal na pagiisip, obserbasyon, at malikhaing pag-aanalisa upang matuklasan ang kasagutan. Maaari itong maging bugtong, problema sa matematika, o kahit anong uri ng tanong na nangangailangan ng katalinuhan upang masagot.
                   </IonText>
                 </div>
+                
+                <IonCard className="info-card gradient-pink">
+                    <IonCardContent>
+                      <div className="card-icon">
+                        <IonIcon icon={sparklesOutline} />
+                      </div>
+                      <h1 className="card-title"><strong>Katangian ng Palaisipan</strong></h1>
+                      <div className="card-list">
+                        <div className="list-item">
+                          <span className="item-number">1</span> 
+                          <div>
+                            <p>May halong palaisipan at paglalarawan – kadalasan ay patula o may malikhaing pahayag.</p>
+                          </div>
+                        </div>
+                        <div className="list-item">
+                          <span className="item-number">2</span>
+                          <div>
+                            <p>Hindi literal ang sagot – kailangan gumamit ng isip at malikhain.</p>
+                          </div>
+                        </div>
+                        <div className="list-item">
+                          <span className="item-number">3</span>
+                          <div>
+                            <p>Nagpapakita ng lohika at kaalaman sa wika – nakatutulong sa pagpapatalas ng isip.</p>
+                          </div>
+                        </div>
+                        <div className="list-item">
+                          <span className="item-number">4</span>
+                          <div>
+                            <p>Maikli at madaling tandaan – kadalasang may ritmo o sukat.</p>
+                          </div>
+                        </div>
+                      </div>
+                    </IonCardContent>
+                </IonCard>
 
                 <IonCard className="example-card gradient-blue">
                   <IonCardContent>
