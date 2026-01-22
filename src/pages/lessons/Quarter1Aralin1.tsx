@@ -34,8 +34,12 @@ import {
   heartOutline,
   playCircleOutline,
   chevronForwardOutline,
+<<<<<<< HEAD
   chevronBackOutline,
   checkmarkCircleOutline
+=======
+  eye
+>>>>>>> bc4d18951366c5a0f74cdba3bd28781a18900966
 } from 'ionicons/icons';
 
 import './Quarter1Aralin1.css';
@@ -44,6 +48,14 @@ import { useState } from 'react';
 const Quarter1Aralin1: React.FC = () => {
   const [isAudio, setIsAudio] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('');
+  const [visibleAnswers, setVisibleAnswers] = useState<Record<number, boolean>>({});
+
+  const toggleAnswer = (index: number) => {
+  setVisibleAnswers(prev => ({
+    ...prev,
+    [index]: !prev[index]
+  }));
+}
 
   const changeState = () => {
     setIsAudio(!isAudio);
@@ -263,11 +275,103 @@ const Quarter1Aralin1: React.FC = () => {
                           Sa isang pindot mo lamang,<br />
                           Buong mundo'y makikita.
                         </p>
+                        <div className="answer-reveal"
+                        onClick={() => toggleAnswer(0)}
+                        style={{ cursor: 'pointer' }}>
+                          <IonIcon icon={eyeOutline} />
+                          <span>
+                            {visibleAnswers[0] ? "Sagot: Cellphone" : "Ipakita ang Sagot"}
+                          </span>
+                        </div>
+
+                        <p className="riddle-text">
+                          May ulo ngunit walang buhok,<br />
+                          May mukha ngunit walang mata;<br />
+                          Araw-araw mo akong tinitingnan,<br />
+                          Panahon ang aking wika.
+                        </p>
+                        <div className="answer-reveal"
+                          onClick={() => toggleAnswer(1)}
+                          style={{ cursor: 'pointer' }}>
+                          <IonIcon icon={eyeOutline} />
+                          <span>
+                            {visibleAnswers[1] ? "Sagot: Salamin" : "Ipakita ang Sagot"}
+                          </span>
+                        </div>
+
+                        <p className="riddle-text">
+                          Maliit pa nang isilang,<br/>
+                          Sa paglaki’y nagiging salamin;<br/>
+                          Sa ulan ako’y kaibigan,<br/>
+                          Sa init ay nawawala rin.
+                        </p>
+                        <div className="answer-reveal"
+                          onClick={() => toggleAnswer(2)}
+                          style={{ cursor: 'pointer' }}>
+                          <IonIcon icon={eyeOutline} />
+                          <span>
+                            {visibleAnswers[2] ? "Sagot: Salamin" : "Ipakita ang Sagot"}
+                          </span>
+                        </div>
+
+                        <p className="riddle-text">
+                          Isang bagay na walang paa, <br />
+                          Ngunit kayang maglakbay sa bansa; <br />
+                          Sa pahina ako’y nakatira, <br />
+                          Karununga’y aking dala. 
+                        </p>
+                        <div className="answer-reveal"
+                          onClick={() => toggleAnswer(3)}
+                          style={{ cursor: 'pointer' }}>
+                          <IonIcon icon={eyeOutline} />
+                          <span>
+                            {visibleAnswers[3] ? "Sagot: Aklat" : "Ipakita ang Sagot"}
+                          </span>
+                        </div>
+
+                        <p className="riddle-text">
+                          May bibig ngunit di nagsasalita, <br />
+                          May tainga ngunit di nakaririnig; <br />
+                          Sa tunog ako’y nabubuhay, <br />
+                          Damdamin ang aking tinig.
+                        </p>
                         <div className="answer-reveal">
                           <IonIcon icon={bulbOutline} />
-                          <span>Sagot: Cellphone</span>
+                          <span>Sagot: Radyo</span>
                         </div>
-                      </div>
+
+                        <p className="riddle-text">
+                          May mata ngunit hindi nakakakita, <br />
+                          May ngipin ngunit hindi kumakain; <br />
+                          Kapag ako’y ginamit nang tama, <br />
+                          Buhok mo’y aking inaayos pa rin.
+                        </p>
+                        <div className="answer-reveal"
+                          onClick={() => toggleAnswer(4)}
+                          style={{ cursor: 'pointer' }}>
+                            <IonIcon icon={eyeOutline} />
+                            <span>
+                              {visibleAnswers[4] ? "Sagot: Suklay" : "Ipakita ang Sagot"}
+                            </span>
+                        </div>
+
+                        <p className="riddle-text">
+                          Sa umaga ako’y mahaba, <br />
+                          Sa tanghali ako’y maiksi; <br />
+                          Sa hapon muli akong humahaba, <br />
+                          Sino ako, hulaan mo’t isipin.
+                        </p>
+                        <div className="answer-reveal"
+                          onClick={() => toggleAnswer(5)}
+                          style={{ cursor: 'pointer' }}>
+                            <IonIcon icon={eyeOutline} />
+                            <span>
+                              {visibleAnswers[5] ? "Sagot: Anino" : "Ipakita ang Sagot"}
+                            </span>
+                        </div>
+                          <IonIcon icon={bulbOutline} />
+                          <span>Sagot: Anino</span>
+                        </div>
                     )}
                   </IonCardContent>
                 </IonCard>
