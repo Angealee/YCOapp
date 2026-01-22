@@ -97,30 +97,64 @@ const App: React.FC = () => (
 
         </IonRouterOutlet>
 
-        <IonTabBar slot="bottom">
+        <IonTabBar 
+          slot="bottom" 
+          className="modern-tab-bar"
+        >
 
           {/* Home Tab */}
-          <IonTabButton tab="Home" href="/home">
-            <IonIcon aria-hidden="true" icon={ bookSharp} />
-            <IonLabel>Quarter</IonLabel>
+          <IonTabButton 
+            tab="Home" 
+            href="/home"
+            className="modern-tab-button"
+          >
+            <IonIcon 
+              aria-hidden="true" 
+              icon={bookSharp} 
+              className="tab-icon"
+            />
+            <IonLabel className="tab-label">Quarter</IonLabel>
           </IonTabButton>
 
           {/* Quiz Tab */}
-          <IonTabButton tab="Quiz" href="/quiz">
-            <IonIcon aria-hidden="true" icon={createSharp} />
-            <IonLabel>Pagsusulit</IonLabel>
+          <IonTabButton 
+            tab="Quiz" 
+            href="/quiz"
+            className="modern-tab-button"
+          >
+            <IonIcon 
+              aria-hidden="true" 
+              icon={createSharp} 
+              className="tab-icon"
+            />
+            <IonLabel className="tab-label">Pagsusulit</IonLabel>
           </IonTabButton>
         
           {/* Pagsusulat Tab */}
-          <IonTabButton tab="Pagsusulat" href="/pagsusulat">
-            <IonIcon icon={pencilSharp} />
-            <IonLabel>Pagsusulat</IonLabel>
+          <IonTabButton 
+            tab="Pagsusulat" 
+            href="/pagsusulat"
+            className="modern-tab-button"
+          >
+            <IonIcon 
+              icon={pencilSharp} 
+              className="tab-icon"
+            />
+            <IonLabel className="tab-label">Pagsusulat</IonLabel>
           </IonTabButton>
 
           {/* Setting Tab */}
-          {/* <IonTabButton tab="Setting" href="/setting">
-            <IonIcon aria-hidden="true" icon={settingsSharp} />
-            <IonLabel>Setting</IonLabel>
+          {/* <IonTabButton 
+            tab="Setting" 
+            href="/setting"
+            className="modern-tab-button"
+          >
+            <IonIcon 
+              aria-hidden="true" 
+              icon={settingsSharp} 
+              className="tab-icon"
+            />
+            <IonLabel className="tab-label">Setting</IonLabel>
           </IonTabButton> */}
         
         </IonTabBar>

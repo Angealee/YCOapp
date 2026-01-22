@@ -30,3 +30,52 @@ ion-toolbar {
   font-family: "Montserrat", sans-serif;
   font-optical-sizing: auto;
 }
+
+/* Modern Tab Bar Styling */
+.modern-tab-bar {
+  --background: linear-gradient(180deg, #ffffff 0%, #f8f9fc 100%);
+  --border: 1px solid rgba(0, 0, 0, 0.05);
+  box-shadow: 0 -2px 20px rgba(0, 0, 0, 0.08);
+  backdrop-filter: blur(10px);
+}
+
+.modern-tab-button {
+  --color: #64748b;
+  --color-selected: #667eea;
+  --background-focused: rgba(102, 126, 234, 0.1);
+  --ripple-color: rgba(102, 126, 234, 0.3);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 12px;
+  margin: 6px 4px;
+  height: 50px;
+}
+
+.modern-tab-button.tab-selected {
+  --background: linear-gradient(135deg, rgba(102, 126, 234, 0.15) 0%, rgba(118, 75, 162, 0.15) 100%);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+}
+
+.tab-icon {
+  font-size: 22px;
+  margin-bottom: 4px;
+  transition: all 0.3s ease;
+}
+
+.modern-tab-button.tab-selected .tab-icon {
+  transform: scale(1.1);
+  filter: drop-shadow(0 2px 4px rgba(102, 126, 234, 0.3));
+}
+
+.tab-label {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  transition: all 0.3s ease;
+}
+
+.modern-tab-button.tab-selected .tab-label {
+  color: #667eea;
+  font-weight: 700;
+  transform: translateY(1px);
+}
