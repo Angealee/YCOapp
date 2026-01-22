@@ -676,6 +676,47 @@
   }
 }
 
+/* Examples Container */
+.bugtong-examples,
+.palaisipan-examples,
+.tanaga-examples,
+.salawikain-examples {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  margin: 1.5rem 0;
+}
+
+.answer-toggle {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.answer-toggle ion-button {
+  --color: #667eea;
+  --background-hover: rgba(102, 126, 234, 0.1);
+  font-weight: 600;
+  text-transform: none;
+  letter-spacing: 0.3px;
+  border-radius: 8px;
+}
+
+.answer-reveal.animated {
+  animation: fadeInUp 0.3s ease-out;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* Bottom Spacing */
 .bottom-spacing {
   height: 2rem;
