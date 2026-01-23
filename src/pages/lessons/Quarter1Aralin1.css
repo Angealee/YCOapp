@@ -51,8 +51,8 @@
   left: 0;
   right: 0;
   bottom: 0;
-  background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
-  opacity: 0.95;
+  background: linear-gradient(135deg, #c72121 0%, #8e692a 100%);
+  fill-opacity: inherit;
 }
 
 .hero-bg-gradient::before {
