@@ -5,7 +5,6 @@ import {
   IonTitle,
   IonToolbar,
   IonButtons,
-  IonBackButton,
   IonCard,
   IonCardContent,
   IonButton,
@@ -18,7 +17,7 @@ import {
   IonFab,
   IonFabButton,
   IonList,
-  IonItem
+  IonItem,
 } from '@ionic/react';
 import { 
   playCircleOutline, 
@@ -30,7 +29,10 @@ import {
   trophyOutline
 } from 'ionicons/icons';
 import { useState, useEffect } from 'react';
+import { useHistory } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { quarter1Quiz, QuizQuestion } from '../data/quarter1Quiz';
+import { quarter2Quiz } from '../data/quarter2Quiz';
 import './Quiz.css';
 
 interface QuizResult {
@@ -41,12 +43,16 @@ interface QuizResult {
 }
 
 const Quiz: React.FC = () => {
+  const history = useHistory();
+  const { quarter } = useParams<{ quarter?: string }>();
+  const routeQuarter = quarter ? Number(quarter) : null;
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<(number | null)[]>([]);
   const [shuffledQuestions, setShuffledQuestions] = useState<QuizQuestion[]>([]);
   const [showResults, setShowResults] = useState(false);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [showRetakeAlert, setShowRetakeAlert] = useState(false);
+  const [showBackConfirm, setShowBackConfirm] = useState(false);
   const [showQuarterSelection, setShowQuarterSelection] = useState(true);
   const [selectedQuarter, setSelectedQuarter] = useState<number | null>(null);
   
@@ -88,58 +94,76 @@ const Quiz: React.FC = () => {
   // Quiz data for different quarters (placeholder for now)
   const quizData = {
     1: quarter1Quiz,
-    2: [], // Will be populated when quarter 2 quiz is created
+    2: quarter2Quiz,
     3: []  // Will be populated when quarter 3 quiz is created
   };
-  
-  // Load quiz results from localStorage on component mount
+
+  const resetQuizState = () => {
+    setCurrentQuestionIndex(0);
+    setSelectedAnswers([]);
+    setShuffledQuestions([]);
+    setShowResults(false);
+    setQuizCompleted(false);
+    setSelectedQuarter(null);
+    setShowQuarterSelection(true);
+  };
+
+  // Drive quiz mode from the URL:
+  // - /quiz => quarter selection (tab bar visible)
+  // - /quiz/take/:quarter => taking quiz (tab bar hidden via App.tsx)
   useEffect(() => {
-    if (selectedQuarter) {
-      const savedResults = localStorage.getItem(`quarter${selectedQuarter}QuizResults`);
-      if (savedResults) {
-        const results: QuizResult = JSON.parse(savedResults);
-        if (results && results.answers) {
-          setQuizCompleted(true);
-          setSelectedAnswers(results.answers.map(a => a.selectedOption));
-        }
-      }
-    } else {
-      // For Quarter 1 as fallback
-      const savedResults = localStorage.getItem('quarter1QuizResults');
-      if (savedResults) {
-        const results: QuizResult = JSON.parse(savedResults);
-        if (results && results.answers) {
-          setQuizCompleted(true);
-          setSelectedAnswers(results.answers.map(a => a.selectedOption));
-        }
-      }
-    }
-  }, [selectedQuarter]);
-  
-  // Shuffle questions when component mounts
-  useEffect(() => {
-    if (!quizCompleted && !showQuarterSelection) {
-      shuffleQuestions();
-    }
-  }, [quizCompleted, showQuarterSelection]);
-  
-  const selectQuarter = (quarter: number) => {
-    // Set the selected quarter's quiz data
-    const selectedQuiz = quizData[quarter as keyof typeof quizData];
-    if (selectedQuiz && selectedQuiz.length > 0) {
-      const shuffled = [...selectedQuiz].sort(() => Math.random() - 0.5);
-      setShuffledQuestions(shuffled);
-      setSelectedAnswers(new Array(shuffled.length).fill(null));
+    if (routeQuarter && Number.isFinite(routeQuarter)) {
       setCurrentQuestionIndex(0);
+      setSelectedAnswers([]);
+      setShuffledQuestions([]);
       setShowResults(false);
       setQuizCompleted(false);
+      setSelectedQuarter(routeQuarter);
       setShowQuarterSelection(false);
-      setSelectedQuarter(quarter);
+      return;
     }
+
+    // Back to selection
+    resetQuizState();
+  }, [routeQuarter]);
+  
+  // Load quiz results for the selected quarter (only in take mode)
+  useEffect(() => {
+    if (!selectedQuarter || showQuarterSelection) return;
+
+    const savedResults = localStorage.getItem(`quarter${selectedQuarter}QuizResults`);
+    if (savedResults) {
+      const results: QuizResult = JSON.parse(savedResults);
+      if (results && results.answers) {
+        setQuizCompleted(true);
+        setSelectedAnswers(results.answers.map((a) => a.selectedOption));
+      }
+      return;
+    }
+
+    setQuizCompleted(false);
+    setSelectedAnswers([]);
+  }, [selectedQuarter, showQuarterSelection]);
+  
+  const getQuizForQuarter = (quarter: number | null): QuizQuestion[] => {
+    const selected = quizData[(quarter ?? 1) as keyof typeof quizData];
+    return (selected && selected.length ? selected : quarter1Quiz) as QuizQuestion[];
+  };
+
+  // Shuffle questions when component mounts
+  useEffect(() => {
+    if (!quizCompleted && !showQuarterSelection && shuffledQuestions.length === 0) {
+      shuffleQuestions(selectedQuarter ?? 1);
+    }
+  }, [quizCompleted, showQuarterSelection, selectedQuarter, shuffledQuestions.length]);
+  
+  const selectQuarter = (quarter: number) => {
+    history.push(`/quiz/take/${quarter}`);
   };
   
-  const shuffleQuestions = () => {
-    const shuffled = [...quarter1Quiz].sort(() => Math.random() - 0.5);
+  const shuffleQuestions = (quarter: number) => {
+    const quiz = getQuizForQuarter(quarter);
+    const shuffled = [...quiz].sort(() => Math.random() - 0.5);
     setShuffledQuestions(shuffled);
     setSelectedAnswers(new Array(shuffled.length).fill(null));
     setCurrentQuestionIndex(0);
@@ -215,19 +239,36 @@ const Quiz: React.FC = () => {
   };
   
   const confirmRetakeQuiz = () => {
-    shuffleQuestions();
+    shuffleQuestions(selectedQuarter ?? 1);
     setShowRetakeAlert(false);
   };
-  
+
+  const requestBackNavigation = () => {
+    setShowBackConfirm(true);
+  };
+
+  const confirmBackNavigation = () => {
+    setShowBackConfirm(false);
+    resetQuizState();
+    if (routeQuarter) {
+      history.replace('/quiz');
+      return;
+    }
+    history.goBack();
+  };
+
   if (showQuarterSelection) {
     // Quarter selection screen
     return (
       <IonPage>
         <IonHeader className="ion-no-border">
           <IonToolbar className="modern-toolbar">
-            <IonButtons slot="start">
-              <IonBackButton text="Ibalik" className="modern-back-btn" />
-            </IonButtons>
+            {/* <IonButtons slot="start">
+              <IonButton fill="clear" className="modern-back-btn" onClick={requestBackNavigation}>
+                <IonIcon icon={arrowBackOutline} slot="start" />
+                Ibalik
+              </IonButton>
+            </IonButtons> */}
             <IonTitle className="modern-title">Pagsusulit</IonTitle>
           </IonToolbar>
         </IonHeader>
@@ -273,8 +314,8 @@ const Quiz: React.FC = () => {
             </IonCard>
             
             <IonCard 
-              className="quarter-card disabled"
-              onClick={() => {}}
+              className="quarter-card"
+              onClick={() => selectQuarter(2)}
             >
               <div className="card-number">2</div>
               <div className="card-glow" />
@@ -300,7 +341,7 @@ const Quiz: React.FC = () => {
                   </div>
                 </div>
                 <div className="card-footer">
-                  <span className="coming-soon">Paparating na...</span>
+                  <span className="tap-hint">I-tap upang simulan →</span>
                 </div>
               </IonCardContent>
             </IonCard>
@@ -338,6 +379,20 @@ const Quiz: React.FC = () => {
               </IonCardContent>
             </IonCard>
           </div>
+
+          <IonAlert
+            isOpen={showBackConfirm}
+            onDidDismiss={() => setShowBackConfirm(false)}
+            header={'Babalik ka na ba?'}
+            message={
+              'Kapag bumalik ka, mawawala ang kasalukuyang progreso sa pagsusulit. ' +
+              'Kapag sinimulan mo ulit, magsisimula ito muli sa unang tanong.'
+            }
+            buttons={[
+              { text: 'Manatili', role: 'cancel' },
+              { text: 'Bumalik', handler: confirmBackNavigation },
+            ]}
+          />
         </IonContent>
       </IonPage>
     );
@@ -349,7 +404,10 @@ const Quiz: React.FC = () => {
         <IonHeader className="ion-no-border">
           <IonToolbar className="modern-toolbar">
             <IonButtons slot="start">
-              <IonBackButton text="Ibalik" className="modern-back-btn" />
+              <IonButton fill="clear" className="modern-back-btn" onClick={requestBackNavigation}>
+                <IonIcon icon={arrowBackOutline} slot="start" />
+                Ibalik
+              </IonButton>
             </IonButtons>
             <IonTitle className="modern-title">Pagsusulit</IonTitle>
           </IonToolbar>
@@ -359,6 +417,20 @@ const Quiz: React.FC = () => {
             <IonIcon icon={playCircleOutline} className="loading-icon" />
             <h2>Ini-load ang pagsusulit...</h2>
           </div>
+
+          <IonAlert
+            isOpen={showBackConfirm}
+            onDidDismiss={() => setShowBackConfirm(false)}
+            header={'Babalik ka na ba?'}
+            message={
+              'Kapag bumalik ka, mawawala ang kasalukuyang progreso sa pagsusulit. ' +
+              'Kapag sinimulan mo ulit, magsisimula ito muli sa unang tanong.'
+            }
+            buttons={[
+              { text: 'Manatili', role: 'cancel' },
+              { text: 'Bumalik', handler: confirmBackNavigation },
+            ]}
+          />
         </IonContent>
       </IonPage>
     );
@@ -367,22 +439,25 @@ const Quiz: React.FC = () => {
   if (showResults || quizCompleted) {
     // Show results screen
     const results: QuizResult = quizCompleted 
-      ? JSON.parse(localStorage.getItem('quarter1QuizResults') || '{"score": 0, "total": 0, "answers": []}')
+      ? JSON.parse(localStorage.getItem(`quarter${selectedQuarter || 1}QuizResults`) || '{"score": 0, "total": 0, "answers": []}')
       : calculateScore();
     
     const percentage = Math.round((results.score / results.total) * 100);
     
-    return (
-      <IonPage>
-        <IonHeader className="ion-no-border">
-          <IonToolbar className="modern-toolbar">
-            <IonButtons slot="start">
-              <IonBackButton text="Ibalik" className="modern-back-btn" />
-            </IonButtons>
-            <IonTitle className="modern-title">Pagsusulit - Resulta</IonTitle>
+      return (
+        <IonPage>
+          <IonHeader className="ion-no-border">
+            <IonToolbar className="modern-toolbar">
+              <IonButtons slot="start">
+                <IonButton fill="clear" className="modern-back-btn" onClick={requestBackNavigation}>
+                  <IonIcon icon={arrowBackOutline} slot="start" />
+                  Ibalik
+                </IonButton>
+              </IonButtons>
+              <IonTitle className="modern-title">Pagsusulit - Resulta</IonTitle>
 
-          </IonToolbar>
-        </IonHeader>
+            </IonToolbar>
+          </IonHeader>
         
         <IonContent fullscreen className="results-content">
           <div className="results-container">
@@ -422,7 +497,10 @@ const Quiz: React.FC = () => {
                 expand="block" 
                 fill="outline"
                 className="back-to-selection-button"
-                onClick={() => setShowQuarterSelection(true)}
+                onClick={() => {
+                  resetQuizState();
+                  history.replace('/quiz');
+                }}
               >
                 <IonIcon icon={arrowBackOutline} slot="start" />
                 Pumili ng Ibang Markahan
@@ -491,9 +569,23 @@ const Quiz: React.FC = () => {
           }, {
             text: 'Oo',
             handler: () => {
-              window.location.href = '/quarter/1/aralin/1';
+              window.location.href = `/quarter/${selectedQuarter || 1}/aralin/1`;
             }
           }]}
+        />
+
+        <IonAlert
+          isOpen={showBackConfirm}
+          onDidDismiss={() => setShowBackConfirm(false)}
+          header={'Babalik ka na ba?'}
+          message={
+            'Kapag bumalik ka, mawawala ang kasalukuyang progreso sa pagsusulit. ' +
+            'Kapag sinimulan mo ulit, magsisimula ito muli sa unang tanong.'
+          }
+          buttons={[
+            { text: 'Manatili', role: 'cancel' },
+            { text: 'Bumalik', handler: confirmBackNavigation },
+          ]}
         />
       </IonPage>
     );
@@ -508,7 +600,10 @@ const Quiz: React.FC = () => {
       <IonHeader className="ion-no-border">
         <IonToolbar className="modern-toolbar">
           <IonButtons slot="start">
-            <IonBackButton text="Ibalik" className="modern-back-btn" />
+            <IonButton fill="clear" className="modern-back-btn" onClick={requestBackNavigation}>
+              <IonIcon icon={arrowBackOutline} slot="start" />
+              Ibalik
+            </IonButton>
           </IonButtons>
           <IonTitle className="modern-title">Pagsusulit</IonTitle>
 
@@ -590,6 +685,20 @@ const Quiz: React.FC = () => {
           </div>
         </div>
       </IonContent>
+
+      <IonAlert
+        isOpen={showBackConfirm}
+        onDidDismiss={() => setShowBackConfirm(false)}
+        header={'Babalik ka na ba?'}
+        message={
+          'Kapag bumalik ka, mawawala ang kasalukuyang progreso sa pagsusulit. ' +
+          'Kapag sinimulan mo ulit, magsisimula ito muli sa unang tanong.'
+        }
+        buttons={[
+          { text: 'Manatili', role: 'cancel' },
+          { text: 'Bumalik', handler: confirmBackNavigation },
+        ]}
+      />
     </IonPage>
   );
 };
