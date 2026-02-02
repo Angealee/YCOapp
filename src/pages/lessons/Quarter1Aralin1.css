@@ -243,6 +243,7 @@
   font-weight: 800;
   color: #1e293b;
   margin: 0;
+  margin-bottom: 2px;
 }
 
 .accordion-subtitle {
@@ -328,6 +329,8 @@
 
 .info-card ion-card-content {
   padding: 1.5rem;
+  gap: 2px;
+  margin-bottom: 2px;
 }
 
 .card-icon {
@@ -737,7 +740,7 @@
   }
 
   .info-cards-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat (2, 1);
     gap: 1.5rem;
   }
 }

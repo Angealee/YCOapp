@@ -39,12 +39,17 @@ import {
 } from 'ionicons/icons';
 
 import './Quarter1Aralin1.css';
+import { quarter1Lesson1 } from "../../data/quarter1Lesson1";
 import { useState } from 'react';
 
 const Quarter1Aralin1: React.FC = () => {
   const [isAudio, setIsAudio] = useState(false);
   const [activeSection, setActiveSection] = useState<string>('');
   const [showAnswers, setShowAnswers] = useState<{[key: number]: boolean}>({});
+  
+  const bugtongSection = quarter1Lesson1.sections.find(
+  section => section.id === "bugtong"
+  );
 
   const toggleAnswer = (id: number) => {
     setShowAnswers(prev => ({
@@ -89,12 +94,10 @@ const Quarter1Aralin1: React.FC = () => {
               <IonIcon icon={bookOutline} />
             </div>
             <h1 className="hero-main-title">
-              Kaligirang Pangkasaysayan ng Panitikan sa Panahon ng Katutubo
+             {quarter1Lesson1.meta.title}
             </h1>
             <p className="hero-description">
-              Bago pa man dumating ang mga mananakop, mayaman na ang mga Pilipino
-              sa panitikan—ipinapasa sa pamamagitan ng salita, awit, laro, at
-              karanasan.
+              {quarter1Lesson1.meta.description}
             </p>
             <div className="hero-stats">
               <div className="stat-item">
@@ -116,7 +119,7 @@ const Quarter1Aralin1: React.FC = () => {
             className="modern-accordion-group"
             onIonChange={(e) => setActiveSection(e.detail.value as string)}
           >
-            {/* BUGTONG */}
+            {/* Bugtong Section */}
             <IonAccordion value="bugtong" className="modern-accordion">
               <IonItem slot="header" className="accordion-header" lines="none">
                 <div className="header-content">
@@ -133,9 +136,7 @@ const Quarter1Aralin1: React.FC = () => {
               <div className="accordion-content" slot="content">
                 <div className="content-intro">
                   <IonText className="intro-text">
-                    Ang bugtong ay isang maikling patulang palaisipan na naglalarawan 
-                    ng isang bagay, hayop, tao, o pangyayari sa pamamagitan ng pahiwatig 
-                    o talinghaga. Hindi tuwiran ang paglalarawan; kailangan ng mambabasa o nakikinig na gumamit ng imahinasyon, lohika, at kaalaman sa wika upang mahulaan ang sagot. Ang bugtong ay isang anyo ng panitikan na nag-uugnay sa wika at kultura, at karaniwang ginagamit sa mga tradisyunal na laro at paligsahan sa barangay at paaralan.
+                    {bugtongSection?.intro}
                   </IonText>
                 </div>
 
@@ -151,76 +152,69 @@ const Quarter1Aralin1: React.FC = () => {
                         <div className="list-item">
                           <span className="item-number">1</span>
                           <div>
-                            <strong>Maikli at Patula</strong>
-                            <p>karaniwan ay may tugma at sukat upang madaling matandaan.</p>
+                            <strong>{bugtongSection?.bugtongCharacteristics?.[0]?.title}</strong>
+                            <p>{bugtongSection?.bugtongCharacteristics?.[0]?.description}</p>
                           </div>
                         </div>
                         <div className="list-item">
                           <span className="item-number">2</span>
                           <div>
-                            <strong>May Talinghaga</strong>
-                            <p>gumagamit ng paglalarawan na di-tuwer o simboliko.</p>
+                            <strong>{bugtongSection?.bugtongCharacteristics?.[1]?.title}</strong>
+                            <p>{bugtongSection?.bugtongCharacteristics?.[1]?.description}</p>
                           </div>
                         </div>
                         <div className="list-item">
                           <span className="item-number">3</span>
                           <div>
-                            <strong>Naglalarawan ng isang bagay o kaisipan</strong>
-                            <p>maaaring tao, hayop, bagay, halaman, o pangyayari.</p>
+                            <strong>{bugtongSection?.bugtongCharacteristics?.[2]?.title}</strong>
+                            <p>{bugtongSection?.bugtongCharacteristics?.[2]?.description}</p>
                           </div>
                         </div>
                         <div className="list-item">
                           <span className="item-number">4</span>
                           <div>
-                            <strong>Layunin</strong>
-                            <p>aliwin ang nakikinig, hamunin ang katalinuhan, at palawakin 
-                            ang kaalaman sa wika at kultura.</p>
+                            <strong>{bugtongSection?.bugtongCharacteristics?.[3]?.title}</strong>
+                            <p>{bugtongSection?.bugtongCharacteristics?.[3]?.description}</p>
                           </div>
                         </div>
                       </div>
                     </IonCardContent>
                   </IonCard>
 
+{/* Palaisipan Section */}
                   <IonCard className="info-card gradient-pink">
                     <IonCardContent>
                       <div className="card-icon">
                         <IonIcon icon={heartOutline} />
                       </div>
                       <h1 className="card-title"><strong>Kahalagahan ng Bugtong</strong></h1>
-                      <div className="card-list">
+                       <div className="card-list">
                         <div className="list-item">
                           <span className="item-number">1</span>
                           <div>
-                            <strong>Nagpapatalas ng isip at lohika</strong>
-                            <p>sapagkat ang tamang sagot ay kailangan tuklasin at i-analisa.</p>
+                            <strong>{bugtongSection?.bugtongImportance?.[0]?.title}</strong>
+                            <p>{bugtongSection?.bugtongImportance?.[0]?.description}</p>
                           </div>
                         </div>
                         <div className="list-item">
                           <span className="item-number">2</span>
                           <div>
-                            <strong>Nagpapalawak ng bokabularyo</strong>
-                            <p>nakikilala ang mga salitang Filipino at kasanayan sa paggamit ng wika.</p>
+                            <strong>{bugtongSection?.bugtongImportance?.[1]?.title}</strong>
+                            <p>{bugtongSection?.bugtongImportance?.[1]?.description}</p>
                           </div>
                         </div>
                         <div className="list-item">
                           <span className="item-number">3</span>
                           <div>
-                            <strong>Nagpapaunlad ng imahinasyon</strong>
-                            <p>dahil ang mga pahiwatig ay hindi literal.</p>
+                            <strong>{bugtongSection?.bugtongImportance?.[2]?.title}</strong>
+                            <p>{bugtongSection?.bugtongImportance?.[2]?.description}</p>
                           </div>
                         </div>
                         <div className="list-item">
                           <span className="item-number">4</span>
                           <div>
-                            <strong>Nagpapahalaga sa kulturang Pilipino</strong>
-                            <p>aliwin ang nakikinig, hamunin ang katalinuhan.</p>
-                          </div>
-                        </div>
-                        <div className="list-item">
-                          <span className="item-number">5</span>
-                          <div>
-                            <strong>Naglilinang ng pakikipag-ugnayan</strong>
-                            <p>karaniwang ginagamit sa laro, paligsahan, o pagtuturo.</p>
+                            <strong>{bugtongSection?.bugtongImportance?.[3]?.title}</strong>
+                            <p>{bugtongSection?.bugtongImportance?.[3]?.description}</p>
                           </div>
                         </div>
                       </div>
@@ -249,138 +243,47 @@ const Quarter1Aralin1: React.FC = () => {
                 {/* Bugtong Examples with Hide/Show Answers */}
                 <div className="bugtong-examples">
                   {/* Example 1 */}
-                  <IonCard className="example-card">
-                    <IonCardContent>
-                      <div className="example-text">
-                        <div className="example-label">
-                          <IonIcon icon={bookmarkSharp} />
-                          <span>Halimbawa 1</span>
-                        </div>
-                        <p className="riddle-text">
-                          Hindi tao, hindi hayop,<br />
-                          Ngunit marunong magsalita;<br />
-                          Sa isang pindot mo lamang,<br />
-                          Buong mundo'y makikita.
-                        </p>
-                        <div className="answer-toggle">
-                          <IonButton 
-                            fill="clear" 
-                            size="small"
-                            onClick={() => toggleAnswer(1)}
-                          >
-                            <IonIcon icon={eyeOutline} slot="start" />
-                            {showAnswers[1] ? 'Itago ang Sagot' : 'Ipakita ang Sagot'}
-                          </IonButton>
-                        </div>
-                        {showAnswers[1] && (
-                          <div className="answer-reveal animated">
-                            <IonIcon icon={bulbOutline} />
-                            <span>Sagot: Cellphone</span>
+                  {bugtongSection?.examples?.map(example => (
+                    <IonCard key={example.id} className="example-card">
+                      <IonCardContent>
+                        <div className="example-text">
+                          <div className="example-label">
+                            <IonIcon icon={bookmarkSharp} />
+                            <span>{example.label}</span>
                           </div>
-                        )}
-                      </div>
-                    </IonCardContent>
-                  </IonCard>
 
-                  {/* Example 2 */}
-                  <IonCard className="example-card">
-                    <IonCardContent>
-                      <div className="example-text">
-                        <div className="example-label">
-                          <IonIcon icon={bookmarkSharp} />
-                          <span>Halimbawa 2</span>
-                        </div>
-                        <p className="riddle-text">
-                          May hawak ako ng kandila<br />
-                          Pero hindi ako ilaw;<br />
-                          May damit ako pero hindi ako tao,<br />
-                          May katawan ako pero hindi ako hayop.
-                        </p>
-                        <div className="answer-toggle">
-                          <IonButton 
-                            fill="clear" 
-                            size="small"
-                            onClick={() => toggleAnswer(2)}
-                          >
-                            <IonIcon icon={eyeOutline} slot="start" />
-                            {showAnswers[2] ? 'Itago ang Sagot' : 'Ipakita ang Sagot'}
-                          </IonButton>
-                        </div>
-                        {showAnswers[2] && (
-                          <div className="answer-reveal animated">
-                            <IonIcon icon={bulbOutline} />
-                            <span>Sagot: Manananggal</span>
-                          </div>
-                        )}
-                      </div>
-                    </IonCardContent>
-                  </IonCard>
+                          <p className="riddle-text">
+                            {example.text.split("\n").map((line, i) => (
+                              <span key={i}>
+                                {line}
+                                <br />
+                              </span>
+                            ))}
+                          </p>
 
-                  {/* Example 3 */}
-                  <IonCard className="example-card">
-                    <IonCardContent>
-                      <div className="example-text">
-                        <div className="example-label">
-                          <IonIcon icon={bookmarkSharp} />
-                          <span>Halimbawa 3</span>
-                        </div>
-                        <p className="riddle-text">
-                          Isang butil ng palay<br />
-                          Sakop ko ang buong mundo.
-                        </p>
-                        <div className="answer-toggle">
-                          <IonButton 
-                            fill="clear" 
-                            size="small"
-                            onClick={() => toggleAnswer(3)}
-                          >
-                            <IonIcon icon={eyeOutline} slot="start" />
-                            {showAnswers[3] ? 'Itago ang Sagot' : 'Ipakita ang Sagot'}
-                          </IonButton>
-                        </div>
-                        {showAnswers[3] && (
-                          <div className="answer-reveal animated">
-                            <IonIcon icon={bulbOutline} />
-                            <span>Sagot: Bituin</span>
+                          <div className="answer-toggle">
+                            <IonButton
+                              fill="clear"
+                              size="small"
+                              onClick={() => toggleAnswer(example.id)}
+                            >
+                              <IonIcon icon={eyeOutline} slot="start" />
+                              {showAnswers[example.id]
+                                ? "Itago ang Sagot"
+                                : "Ipakita ang Sagot"}
+                            </IonButton>
                           </div>
-                        )}
-                      </div>
-                    </IonCardContent>
-                  </IonCard>
 
-                  {/* Example 4 */}
-                  <IonCard className="example-card">
-                    <IonCardContent>
-                      <div className="example-text">
-                        <div className="example-label">
-                          <IonIcon icon={bookmarkSharp} />
-                          <span>Halimbawa 4</span>
+                          {showAnswers[example.id] && (
+                            <div className="answer-reveal animated">
+                              <IonIcon icon={bulbOutline} />
+                              <span>Sagot: {example.answer}</span>
+                            </div>
+                          )}
                         </div>
-                        <p className="riddle-text">
-                          Labing-apat na inahin<br />
-                          Labing-apat na anak,<br />
-                          Labing-apat na bahay,<br />
-                          Labing-apat na buhay.
-                        </p>
-                        <div className="answer-toggle">
-                          <IonButton 
-                            fill="clear" 
-                            size="small"
-                            onClick={() => toggleAnswer(4)}
-                          >
-                            <IonIcon icon={eyeOutline} slot="start" />
-                            {showAnswers[4] ? 'Itago ang Sagot' : 'Ipakita ang Sagot'}
-                          </IonButton>
-                        </div>
-                        {showAnswers[4] && (
-                          <div className="answer-reveal animated">
-                            <IonIcon icon={bulbOutline} />
-                            <span>Sagot: Kalendaryo</span>
-                          </div>
-                        )}
-                      </div>
-                    </IonCardContent>
-                  </IonCard>
+                      </IonCardContent>
+                    </IonCard>
+                  ))}
                 </div>
 
                 <IonButton expand="block" className="game-button">
