@@ -27,19 +27,12 @@
 }
 
 .progress-label {
-  display: flex; 
-  /* justify-content: space-evenly; */
-  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   font-size: 0.85rem;
   color: var(--ion-color-medium);
   margin-bottom: 4px;
-}
-
-
-.progress-label p {
-  position: absolute;
-  left: 9%;
-  color: var(--ion-color-medium);
 }
 
 .aralin-card {

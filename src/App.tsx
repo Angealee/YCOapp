@@ -1,4 +1,4 @@
-import { Redirect, Route } from 'react-router-dom';
+import { Redirect, Route, useLocation } from 'react-router-dom';
 import {
   IonApp,
   IonIcon,
@@ -64,16 +64,19 @@ import Aralin1 from './pages/quiz/Aralin1';
 
 setupIonicReact();
 
-const App: React.FC = () => (
-  
-  <IonApp>
-    <IonReactRouter>
-      <IonTabs>
-        <IonRouterOutlet>
+const Tabs: React.FC = () => {
+  const location = useLocation();
+  const hideTabBar =
+    location.pathname.startsWith('/quiz/take') || location.pathname.startsWith('/pagsusulit');
+
+  return (
+    <IonTabs>
+      <IonRouterOutlet>
 
           {/* Core Tabs */}
           <Route exact path="/home" component={Home} />
           <Route exact path="/quiz" component={Quiz} />
+          <Route exact path="/quiz/take/:quarter" component={Quiz} />
           <Route exact path="/pagsusulat" component={Pagsusulat} />
           <Route exact path="/setting" component={Setting} />
               {/* Pagsusulit  */}
@@ -95,12 +98,10 @@ const App: React.FC = () => (
             <Redirect to="/home" />
           </Route>
 
-        </IonRouterOutlet>
+      </IonRouterOutlet>
 
-        <IonTabBar 
-          slot="bottom" 
-          className="modern-tab-bar"
-        >
+      {!hideTabBar ? (
+        <IonTabBar slot="bottom" className="modern-tab-bar">
 
           {/* Home Tab */}
           <IonTabButton 
@@ -158,7 +159,15 @@ const App: React.FC = () => (
           </IonTabButton> */}
         
         </IonTabBar>
-      </IonTabs>
+      ) : null}
+    </IonTabs>
+  );
+};
+
+const App: React.FC = () => (
+  <IonApp>
+    <IonReactRouter>
+      <Tabs />
     </IonReactRouter>
   </IonApp>
 );

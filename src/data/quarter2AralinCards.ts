@@ -10,33 +10,33 @@ export const quarter2Aralin: Aralin[] = [
   {
     id: 1,
     title: "Aralin 1",
-    subtitle: "Kaligirang Pangkasaysayan ng Panitikan",
+    subtitle: "Kuwentong Bayan sa panahon ng katutubo: Alamat",
     description:
-      "Pagkilala sa panitikan sa panahon ng katutubo gamit ang bugtong, palaisipan, tanaga at salawikain.",
+      "Ang alamat ay isang uri ng panitikan na naglalahad ng pinagmulan ng isang bagay, pook, o kababalaghan. Karaniwang ipinapaliwanag nito kung paano nagkaroon ng isang bagay sa pamamagitan ng kuwento ng mga tauhan, diyos, o pangyayaring mahiwaga.",
     progress: 1,
   },
   {
     id: 2,
     title: "Aralin 2",
-    subtitle: "Pagsusuring Biswal: Komiks",
+    subtitle: "Minanang Kaugalian isinabuhay ko: Pabula",
     description:
-      "Paglikha at pagsusuri ng komiks na nakatuon sa tauhan at biswal na pagsasalaysay.",
+      "Ang pabula ay isang maikling kuwento na karaniwang hayop ang tauhan, ngunit may katangian ng tao tulad ng pagsasalita, pag-iisip, at paggawa ng desisyon. Layunin ng pabula na magbigay ng aral o leksyon sa mga mambabasa, lalo na tungkol sa mabuting asal, katapangan, kasipagan, o talino.",
     progress: 0.2,
   },
   {
     id: 3,
     title: "Aralin 3",
-    subtitle: "Hudhud: Epiko ng Ifugao",
+    subtitle: "Komiks",
     description:
-      "Pag-unawa sa epiko bilang panitikang bayan gamit ang awit, larawan, at salaysay.",
+      "Ang komiks ay isang anyo ng sining at panitikan na naglalahad ng kuwento sa pamamagitan ng magkakasunod na larawan at teksto. Karaniwang binubuo ito ng dialogue, narration, at illustration.",
     progress: 0.3,
   },
   {
     id: 4,
     title: "Aralin 4",
-    subtitle: "Tekstong Ekspositori",
+    subtitle: "Disenyo at pabalat ng Brochure",
     description:
-      "Pagkakatulad at pagkakaiba gamit ang malinaw na paliwanag at biswal.",
+      "Ang brochure ay isang uri ng print na materyal na naglalaman ng impormasyon tungkol sa produkto, serbisyo, proyekto, o isang paksa. Tinatalakay rito ang disenyo, pabalat, at mga uri ng brochure.",
     progress: 0.1,
   },
 ];
