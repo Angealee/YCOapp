@@ -22,6 +22,8 @@ import Quarter1 from './pages/quarter/Quarter1';
 import Quarter1Aralin1 from './pages/lessons/Quarter1Aralin1';
 import Quarter2Aralin1 from './pages/lessons/Quarter2Aralin1';
 import Quarter2 from './pages/quarter/Quarter2';
+import Quarter3 from './pages/quarter/Quarter3';
+import Quarter3Aralin from './pages/lessons/Quarter3Aralin';
 // import Quarter2Lesson from './pages/quarter/Quarter2Lesson';
 // import Quarter3 from './pages/quarter/Quarter3';
 // import Quarter3Lesson from './pages/quarter/Quarter3Lesson';
@@ -92,6 +94,10 @@ const Tabs: React.FC = () => {
               <Route exact path="/quarter2">
                 <Quarter2 />
               </Route>
+
+              {/* Quarter 3 */}
+              <Route exact path="/quarter/3" component={Quarter3} />
+              <Route exact path="/quarter/3/aralin/:id" component={Quarter3Aralin} />
 
 
           <Route exact path="/">
