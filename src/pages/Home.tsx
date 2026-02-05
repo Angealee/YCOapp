@@ -11,6 +11,7 @@ import {
   IonIcon
 } from '@ionic/react';
 import { chevronForwardOutline, schoolOutline } from 'ionicons/icons';
+import { useState } from 'react';
 
 import './Home.css';
 
@@ -48,6 +49,8 @@ const quarters = [
 ];
 
 const Home: React.FC = () => {
+  const [pressedId, setPressedId] = useState<number | null>(null);
+
   return (
     <IonPage>
       <IonHeader className="ion-no-border">
@@ -85,8 +88,13 @@ const Home: React.FC = () => {
               <IonCard
                 key={q.id}
                 routerLink={q.route}
-                className={`modern-quarter-card quarter-${index + 1}`}
+                className={`modern-quarter-card quarter-${index + 1} ${pressedId === q.id ? 'is-pressed' : ''}`}
                 button
+                onTouchStart={() => setPressedId(q.id)}
+                onTouchEnd={() => setPressedId(null)}
+                onTouchCancel={() => setPressedId(null)}
+                onMouseDown={() => setPressedId(q.id)}
+                onMouseUp={() => setPressedId(null)}
               >
                 {/* Background Image with Overlay */}
                 <div 
