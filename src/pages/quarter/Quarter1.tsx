@@ -92,7 +92,7 @@ const Quarter1: React.FC = () => {
                 <IonCardContent className="modern-card-content">
                   {/* Top Section */}
                   <div className="card-top">
-                    <div className="lesson-badge">Aralin {aralin.id}</div>
+                    <div className="lesson-badge">Aralin</div>
                   </div>
 
                   {/* Content */}
