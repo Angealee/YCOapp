@@ -181,13 +181,13 @@ const Quarter1Aralin1: React.FC = () => {
                     </IonCardContent>
                   </IonCard>
 
-{/* Palaisipan Section */}
+            {/* Palaisipan Section */}
                   <IonCard className="info-card gradient-pink">
                     <IonCardContent>
                       <div className="card-icon">
                         <IonIcon icon={heartOutline} />
                       </div>
-                      <h1 className="card-title"><strong>Kahalagahan ng Bugtong</strong></h1>
+                      <h1 className="card-title"><strong>Katangian ng Palaisipan</strong></h1>
                        <div className="card-list">
                         <div className="list-item">
                           <span className="item-number">1</span>
