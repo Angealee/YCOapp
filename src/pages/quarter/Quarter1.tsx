@@ -75,6 +75,27 @@ const Quarter1: React.FC = () => {
         </div>
 
         {/* Aralin Cards Grid */}
+        {/* Reading Section */}
+        <div className="reading-section">
+          <IonCard className="reading-card">
+            <div className="reading-card-glow" />
+            <IonCardContent className="reading-card-content">
+              <div className="reading-badge">Basahin</div>
+              <h2 className="reading-title">Panimulang Pagbasa</h2>
+              <div className="reading-layout">
+                <p className="reading-text">
+                  Ang <strong>edukasyon</strong> ay patuloy na umuunlad kasabay ng pagbabago ng lipunan, teknolohiya, at pangangailangan ng mga mag-aaral. Sa bawat yugto ng pagbabagong ito, ang <strong>guro</strong> ay nananatiling sentral na salik sa paghubog ng kaalaman, kakayahan, at pagpapahalaga ng kabataan. Higit sa simpleng paghahatid ng aralin, ang <strong>pagtuturo</strong> ay isang sining at bokasyong nangangailangan ng malikhaing pag-iisip, patuloy na pagkatuto, at kakayahang umangkop sa iba't ibang konteksto ng pagkatuto. Sa ganitong pananaw, mahalagang linangin at paunlarin ang mga <strong> pedagogiya</strong> ng tumutugon sa dinamiko at inklusibong pangangailangan ng mga mag-aaral sa makabagong panahon.
+                </p>
+                <img
+                  className="reading-image"
+                  src="/assets/img/PanimulaYco.jpg"
+                  alt="Panimulang pagbasa"
+                />
+              </div>
+            </IonCardContent>
+          </IonCard>
+        </div>
+
         <div className="aralin-grid">
           {quarter1Aralin.map((aralin: Aralin, index: number) => {
             const progress = getAralinProgress(aralin.id);
@@ -95,6 +116,11 @@ const Quarter1: React.FC = () => {
                     <div className="lesson-badge">Aralin</div>
                   </div>
 
+                  {/* Progress Bar */}
+                  <div className="progress-bar-container">
+                    <div className="progress-bar" style={{ width: `${progress}%` }} />
+                  </div>
+                
                   {/* Content */}
                   <h3 className="card-title">{aralin.title}</h3>
                   <p className="card-subtitle">{aralin.subtitle}</p>

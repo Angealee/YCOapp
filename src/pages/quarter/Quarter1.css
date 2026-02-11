@@ -176,6 +176,102 @@
   gap: 1rem;
 }
 
+/* Reading Section */
+.reading-section {
+  padding:1rem;
+}
+
+.reading-card {
+  position: relative;
+  margin: 0;
+  border-radius: var(--card-radius);
+  background: white;
+  box-shadow:
+    0 18px 45px rgba(38, 38, 95, 0.14),
+    0 4px 16px rgba(38, 38, 95, 0.08);
+  overflow: hidden;
+  border: 3px solid rgba(123, 44, 191, 0.14);
+}
+
+.reading-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--storybook-berry) 0%, var(--storybook-violet) 100%);
+}
+
+.reading-card-glow {
+  position: absolute;
+  inset: -40% -20% auto -20%;
+  height: 220%;
+  background: radial-gradient(circle, rgba(255, 92, 138, 0.18) 0%, transparent 70%);
+  pointer-events: none;
+  opacity: 0.7;
+}
+
+.reading-card-content {
+  padding: 1.6rem 1.7rem 1.9rem;
+  position: relative;
+  z-index: 2;
+
+}
+
+.reading-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: white;
+  background: linear-gradient(135deg, var(--storybook-berry) 0%, var(--storybook-violet) 100%);
+  box-shadow: 0 6px 16px rgba(255, 92, 138, 0.25);
+  margin-bottom: 0.9rem;
+}
+
+.reading-title {
+  font-size: 1.6rem;
+  font-weight: 800;
+  margin: 0 0 0.75rem 0;
+  color: var(--storybook-ink);
+  letter-spacing: -0.2px;
+}
+
+.reading-text {
+  font-size: 1.15rem;
+  line-height: 1.85;
+  margin: 0;
+  color: var(--storybook-ink-soft);
+  text-align: justify;
+}
+
+.reading-text strong {
+  color: var(--storybook-violet);
+  font-weight: 800;
+}
+
+.reading-layout {
+  display: flex;
+  align-items: center;
+  flex-direction: row;
+  gap: 1rem;
+}
+
+.reading-image {
+  width: 100%;
+  max-width: 350px;
+  align-self: center;
+  border-radius: 14px;
+  object-fit: fill;
+  box-shadow: 0 10px 24px rgba(38, 38, 95, 0.18);
+}
+
 /* Modern Card */
 .modern-aralin-card {
   position: relative;
@@ -410,6 +506,27 @@
     gap: 1.5rem;
     padding: 0 2rem 2rem;
   }
+
+  .reading-layout {
+    flex-direction: row;
+    align-items: stretch;
+    gap: 1.5rem;
+  }
+
+  .reading-text {
+    flex: 1.2;
+    font-size: 1.25rem;
+  }
+
+  .reading-image {
+    flex: 1;
+    max-width: none;
+    min-height: 280px;
+  }
+
+  .reading-section {
+    padding: 0 2rem 1.75rem;
+  }
   
   .hero-header {
     padding: 3rem 2rem 3.5rem;
@@ -419,6 +536,10 @@
 @media (min-width: 1024px) {
   .aralin-grid {
     grid-template-columns: repeat(3, 1fr);
+  }
+
+  .reading-card-content {
+    padding: 2rem 2.4rem 2.3rem;
   }
 }
 

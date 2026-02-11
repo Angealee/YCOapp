@@ -12,7 +12,9 @@ export const quarter1Lesson1 = {
       interactive: true
     }
   },
-
+  PaunangSalita: {
+    description: `Ang edukasyon ay patuloy na umuunlad kasabay ng pagbabago ng lipunan, teknolohiya, at pangangailangan ng mga mag-aaral. Sa bawat yugto ng pagbabagong ito, ang guro ay nananatiling sentral na salik sa paghubog ng kaalaman, kakayahan, at pagpapahalaga ng kabataan. Higit sa simpleng paghahatid ng aralin, ang pagtuturo ay isang sining at bokasyong nangangailangan ng malikhaing pag-iisip, patuloy na pagkatuto, at kakayahang umangkop sa iba’t ibang konteksto ng pagkatuto. Sa ganitong pananaw, mahalagang linangin at paunlarin ang mga pedagogiyang tumutugon sa dinamiko at inklusibong pangangailangan ng mga mag-aaral sa makabagong panahon.`
+  },
   sections: [
     {
       id: "bugtong",
@@ -159,8 +161,5 @@ export const quarter1Lesson1 = {
       ]
     }
 
-    // 👉 You will do the SAME pattern for:
-    // tanaga
-    // salawikain
   ]
 };
