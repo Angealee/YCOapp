@@ -18,7 +18,7 @@ import './Home.css';
 const quarters = [
   {
     id: 1,
-    title: 'Quarter 1',
+    title: 'Unang Markahan',
     subtitle: 'Panitikan at Wika',
     description: 'Bugtong, Tanaga, Komiks, Hudhud, at iba pa.',
     image: './assets/img/q1.jpg',
@@ -28,7 +28,7 @@ const quarters = [
   },
   {
     id: 2,
-    title: 'Quarter 2',
+    title: 'Pangalawang Markahan',
     subtitle: 'Kuwentong Bayan at Pabula',
     description: 'Alamat, Pabula, Komiks, at Brochure.',
     image: './assets/img/q2.jpg',
@@ -38,7 +38,7 @@ const quarters = [
   },
   {
     id: 3,
-    title: 'Quarter 3',
+    title: 'Pangatlong Markahan',
     subtitle: 'Panitikan at Pagsusuri',
     description: 'Mas malalim na pag-unawa sa teksto at biswal.',
     image: './assets/img/quarter3.jpg',

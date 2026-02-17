@@ -51,7 +51,7 @@ const Quarter1: React.FC = () => {
           <IonButtons slot="start">
             <IonBackButton text="Ibalik" className="modern-back-btn" />
           </IonButtons>
-          <IonTitle className="modern-title">Quarter 1</IonTitle>
+          <IonTitle className="modern-title">Unang Markahan</IonTitle>
         </IonToolbar>
       </IonHeader>
 
@@ -81,16 +81,17 @@ const Quarter1: React.FC = () => {
             <div className="reading-card-glow" />
             <IonCardContent className="reading-card-content">
               <div className="reading-badge">Basahin</div>
-              <h2 className="reading-title">Panimulang Pagbasa</h2>
+
               <div className="reading-layout">
-                <p className="reading-text">
-                  Ang <strong>edukasyon</strong> ay patuloy na umuunlad kasabay ng pagbabago ng lipunan, teknolohiya, at pangangailangan ng mga mag-aaral. Sa bawat yugto ng pagbabagong ito, ang <strong>guro</strong> ay nananatiling sentral na salik sa paghubog ng kaalaman, kakayahan, at pagpapahalaga ng kabataan. Higit sa simpleng paghahatid ng aralin, ang <strong>pagtuturo</strong> ay isang sining at bokasyong nangangailangan ng malikhaing pag-iisip, patuloy na pagkatuto, at kakayahang umangkop sa iba't ibang konteksto ng pagkatuto. Sa ganitong pananaw, mahalagang linangin at paunlarin ang mga <strong> pedagogiya</strong> ng tumutugon sa dinamiko at inklusibong pangangailangan ng mga mag-aaral sa makabagong panahon.
-                </p>
                 <img
                   className="reading-image"
                   src="/assets/img/PanimulaYco.jpg"
                   alt="Panimulang pagbasa"
                 />
+                <h2 className="reading-title">Panimulang Pagbasa</h2>
+                <p className="reading-text">
+                  Ang <strong>edukasyon</strong> ay patuloy na umuunlad kasabay ng pagbabago ng lipunan, teknolohiya, at pangangailangan ng mga mag-aaral. Sa bawat yugto ng pagbabagong ito, ang <strong>guro</strong> ay nananatiling sentral na salik sa paghubog ng kaalaman, kakayahan, at pagpapahalaga ng kabataan. Higit sa simpleng paghahatid ng aralin, ang <strong>pagtuturo</strong> ay isang sining at bokasyong nangangailangan ng malikhaing pag-iisip, patuloy na pagkatuto, at kakayahang umangkop sa iba't ibang konteksto ng pagkatuto. Sa ganitong pananaw, mahalagang linangin at paunlarin ang mga <strong> pedagogiya</strong> ng tumutugon sa dinamiko at inklusibong pangangailangan ng mga mag-aaral sa makabagong panahon.
+                </p>
               </div>
             </IonCardContent>
           </IonCard>
@@ -122,7 +123,7 @@ const Quarter1: React.FC = () => {
                   </div>
                 
                   {/* Content */}
-                  <h3 className="card-title">{aralin.title}</h3>
+                  {/* <h3 className="card-title">{aralin.title}</h3> */}
                   <p className="card-subtitle">{aralin.subtitle}</p>
                   <p className="card-description">{aralin.description}</p>
 

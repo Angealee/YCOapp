@@ -47,7 +47,7 @@ const Quarter3: React.FC = () => {
           <IonButtons slot="start">
             <IonBackButton text="Ibalik" className="modern-back-btn" />
           </IonButtons>
-          <IonTitle className="modern-title">Quarter 3</IonTitle>
+          <IonTitle className="modern-title">Pangatlong Markahan</IonTitle>
         </IonToolbar>
       </IonHeader>
 
@@ -90,10 +90,10 @@ const Quarter3: React.FC = () => {
 
                 <IonCardContent className="modern-card-content">
                   <div className="card-top">
-                    <div className="lesson-badge">Aralin {aralin.id}</div>
+                    <div className="lesson-badge">Aralin </div>
                   </div>
 
-                  <h3 className="card-title">{aralin.title}</h3>
+                  {/* <h3 className="card-title">{aralin.title}</h3> */}
                   <p className="card-subtitle">{cardSubtitle}</p>
                   <p className="card-description">{cardDescription}</p>
 
