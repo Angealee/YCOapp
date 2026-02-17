@@ -80,6 +80,8 @@ const Tabs: React.FC = () => {
           <Route exact path="/quiz" component={Quiz} />
           <Route exact path="/quiz/take/:quarter" component={Quiz} />
           <Route exact path="/pagsusulat" component={Pagsusulat} />
+          <Route exact path="/pagsusulat/:quarter" component={Pagsusulat} />
+          <Route exact path="/pagsusulat/:quarter/:aralin" component={Pagsusulat} />
           <Route exact path="/setting" component={Setting} />
               {/* Pagsusulit  */}
               <Route exact path="/pagsusulit/aralin1" component={Aralin1}/>

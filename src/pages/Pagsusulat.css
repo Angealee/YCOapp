@@ -1,0 +1,263 @@
+.pagsusulat-toolbar {
+  --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --color: white;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.pagsusulat-title {
+  font-weight: 700;
+  letter-spacing: 0.5px;
+}
+
+.pagsusulat-content {
+  --storybook-blue: #3b5bdb;
+  --storybook-violet: #7b2cbf;
+  --storybook-berry: #ff5c8a;
+  --storybook-gold: #f6c453;
+  --storybook-ink: #1f2937;
+  --storybook-ink-soft: #6b7280;
+  --card-radius: 24px;
+  --background:
+    radial-gradient(1200px 800px at 20% -10%, rgba(123, 44, 191, 0.08), transparent 60%),
+    radial-gradient(900px 700px at 90% 20%, rgba(255, 92, 138, 0.08), transparent 55%),
+    radial-gradient(700px 600px at 30% 90%, rgba(246, 196, 83, 0.1), transparent 60%),
+    linear-gradient(180deg, #fff9ef 0%, #ffffff 55%, #f7f8ff 100%);
+}
+
+.notes-page {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 0.5rem 0 2rem;
+}
+
+.quarter-cards {
+  display: grid;
+  gap: 1rem;
+}
+
+.notes-title {
+  margin: 0 0 0.25rem;
+}
+
+.notes-subtitle {
+  margin: 0 0 1rem;
+}
+
+.notes-card {
+  margin: 0;
+  border-radius: var(--card-radius);
+  background: #fff;
+  box-shadow: 0 14px 40px rgba(38, 38, 95, 0.12), 0 2px 12px rgba(38, 38, 95, 0.08);
+  border: 1px solid rgba(123, 44, 191, 0.12);
+}
+
+.quarter-note-card {
+  overflow: hidden;
+  position: relative;
+}
+
+.quarter-select-card {
+  cursor: pointer;
+}
+
+.quarter-note-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: linear-gradient(90deg, var(--storybook-blue) 0%, var(--storybook-violet) 100%);
+}
+
+.quarter-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+
+.quarter-card-title {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.quarter-card-subtitle {
+  margin: 0.2rem 0 0;
+  font-size: 0.9rem;
+  color: var(--storybook-ink-soft);
+}
+
+.quarter-card-info {
+  margin: 0.75rem 0 0;
+  font-size: 0.9rem;
+  color: var(--storybook-violet);
+  font-weight: 600;
+}
+
+.quarter-go {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  color: #fff;
+  background: linear-gradient(135deg, var(--storybook-violet) 0%, var(--storybook-blue) 100%);
+}
+
+.aralin-stage {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.aralin-stage-top {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.back-quarter-btn {
+  --color: var(--storybook-violet);
+  font-weight: 600;
+}
+
+.aralin-cards {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.aralin-select-card {
+  cursor: pointer;
+}
+
+.aralin-select-card.active {
+  border-color: rgba(123, 44, 191, 0.55);
+  box-shadow: 0 12px 30px rgba(123, 44, 191, 0.15);
+}
+
+.aralin-select-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.75rem;
+}
+
+.notes-input-item {
+  --padding-start: 0;
+  --inner-padding-end: 0;
+  --background: #faf7ff;
+  border: 1px solid rgba(123, 44, 191, 0.16);
+  border-radius: 12px;
+  margin-bottom: 0.55rem;
+}
+
+.notes-actions {
+  margin-top: 0.75rem;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.add-note-btn,
+.save-note-btn {
+  --background: linear-gradient(135deg, var(--storybook-violet) 0%, var(--storybook-blue) 100%);
+  --color: #fff;
+  --border-radius: 12px;
+  font-weight: 700;
+  text-transform: none;
+}
+
+.modal-close-btn {
+  --color: #fff;
+  font-weight: 600;
+}
+
+.modal-form-content {
+  padding-top: 1rem;
+}
+
+.form-notes-card {
+  margin-top: 0.25rem;
+}
+
+.update-note-btn {
+  --color: var(--storybook-violet);
+  --border-color: rgba(123, 44, 191, 0.5);
+}
+
+.delete-note-btn {
+  --border-color: rgba(220, 38, 38, 0.45);
+}
+
+.notes-list {
+  margin-top: 1rem;
+  display: grid;
+  gap: 0.75rem;
+}
+
+.notes-tab-switcher {
+  margin-top: 0.85rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.notes-tab-btn {
+  --border-radius: 10px;
+  --border-color: rgba(123, 44, 191, 0.35);
+  --color: var(--storybook-violet);
+}
+
+.full-note-panel {
+  margin-top: 0.85rem;
+}
+
+.notes-empty {
+  margin: 0.5rem 0 0;
+}
+
+.note-item-card {
+  margin: 0;
+  border-radius: 14px;
+  border: 1px solid rgba(123, 44, 191, 0.1);
+  box-shadow: 0 8px 24px rgba(38, 38, 95, 0.08);
+}
+
+.note-title {
+  margin: 0.2rem 0 0;
+  font-size: 1.08rem;
+  font-weight: 900;
+  color: var(--storybook-violet);
+  letter-spacing: 0.2px;
+}
+
+.note-aralin-label {
+  margin: 0;
+  font-size: 0.82rem;
+  font-weight: 600;
+  opacity: 0.9;
+}
+
+.note-meta {
+  margin: 0.4rem 0 0.65rem;
+  font-size: 0.82rem;
+  opacity: 0.75;
+}
+
+.note-content {
+  margin: 0;
+  white-space: pre-wrap;
+  line-height: 1.6;
+}
+
+.note-actions {
+  margin-top: 0.75rem;
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}

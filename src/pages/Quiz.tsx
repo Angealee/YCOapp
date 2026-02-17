@@ -33,6 +33,7 @@ import { useHistory } from 'react-router-dom';
 import { useParams } from 'react-router-dom';
 import { quarter1Quiz, QuizQuestion } from '../data/quarter1Quiz';
 import { quarter2Quiz } from '../data/quarter2Quiz';
+import { quarter3Quiz } from '../data/quarter3Quiz';
 import './Quiz.css';
 
 interface QuizResult {
@@ -95,7 +96,7 @@ const Quiz: React.FC = () => {
   const quizData = {
     1: quarter1Quiz,
     2: quarter2Quiz,
-    3: []  // Will be populated when quarter 3 quiz is created
+    3: quarter3Quiz
   };
 
   const resetQuizState = () => {
@@ -288,14 +289,14 @@ const Quiz: React.FC = () => {
               <div className="card-glow" />
               <IonCardContent className="quarter-card-content">
                 <div className="card-icon">
-                  <IonIcon icon={schoolOutline} />
+                  <IonIcon icon={schoolOutline} color='#dc2626' />
                 </div>
                 <h3 className="card-title">Unang Markahan</h3>
                 <p className="card-subtitle">Panitikang Filipino</p>
                 <p className="card-description">Bugtong, Tanaga, Salawikain, Komiks, at Tekstong Ekspositori</p>
                 <div className="card-progress">
                   <div className="progress-header">
-                    <span className="progress-label">Progreso</span>
+                    <span className="progress-label">Marka</span>
                     <span className="progress-percent">
                       {getQuarterProgressStatus(1)}
                     </span>
@@ -321,14 +322,14 @@ const Quiz: React.FC = () => {
               <div className="card-glow" />
               <IonCardContent className="quarter-card-content">
                 <div className="card-icon">
-                  <IonIcon icon={schoolOutline} />
+                  <IonIcon icon={schoolOutline}  color='#dc2626'/>
                 </div>
-                <h3 className="card-title">Ikalawang Markahan</h3>
+                <h3 className="card-title">Pangalawang Markahan</h3>
                 <p className="card-subtitle">Kuwentong Bayan at Pabula</p>
                 <p className="card-description">Alamat, Pabula, Komiks, at Brochure</p>
                 <div className="card-progress">
                   <div className="progress-header">
-                    <span className="progress-label">Progreso</span>
+                    <span className="progress-label">Marka</span>
                     <span className="progress-percent">
                       {getQuarterProgressStatus(2)}
                     </span>
@@ -347,21 +348,21 @@ const Quiz: React.FC = () => {
             </IonCard>
             
             <IonCard 
-              className="quarter-card disabled"
-              onClick={() => {}}
+              className="quarter-card"
+              onClick={() => selectQuarter(3)}
             >
               <div className="card-number">3</div>
               <div className="card-glow" />
               <IonCardContent className="quarter-card-content">
                 <div className="card-icon">
-                  <IonIcon icon={schoolOutline} />
+                  <IonIcon icon={schoolOutline}  color='#dc2626'/>
                 </div>
-                <h3 className="card-title">Ikatlong Markahan</h3>
+                <h3 className="card-title">Pangatlong Markahan</h3>
                 <p className="card-subtitle">Panitikan at Pagsusuri</p>
                 <p className="card-description">Mas malalim na pag-unawa sa teksto at biswal</p>
                 <div className="card-progress">
                   <div className="progress-header">
-                    <span className="progress-label">Progreso</span>
+                    <span className="progress-label">Marka</span>
                     <span className="progress-percent">
                       {getQuarterProgressStatus(3)}
                     </span>
@@ -374,7 +375,7 @@ const Quiz: React.FC = () => {
                   </div>
                 </div>
                 <div className="card-footer">
-                  <span className="coming-soon">Paparating na...</span>
+                  <span className="tap-hint">I-tap upang simulan →</span>
                 </div>
               </IonCardContent>
             </IonCard>

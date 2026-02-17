@@ -437,7 +437,7 @@
 .card-title {
   font-size: 1.25rem;
   font-weight: 700;
-  color: #1e293b;
+  color: #1e293b !important;
   margin: 0 0 8px 0;
 }
 

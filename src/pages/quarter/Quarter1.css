@@ -244,6 +244,8 @@
 }
 
 .reading-text {
+  flex: 1;
+  min-width: 0;
   font-size: 1.15rem;
   line-height: 1.85;
   margin: 0;
@@ -258,17 +260,19 @@
 
 .reading-layout {
   display: flex;
-  align-items: center;
-  flex-direction: row;
+  flex-direction: column;
+  align-items: flex-start;
   gap: 1rem;
 }
 
 .reading-image {
+  flex: none;
   width: 100%;
-  max-width: 350px;
-  align-self: center;
+  max-width: 420px;
+  height: auto;
+  align-self: flex-start;
   border-radius: 14px;
-  object-fit: fill;
+  object-fit: cover;
   box-shadow: 0 10px 24px rgba(38, 38, 95, 0.18);
 }
 
@@ -508,8 +512,8 @@
   }
 
   .reading-layout {
-    flex-direction: row;
-    align-items: stretch;
+    flex-direction: column;
+    align-items: flex-start;
     gap: 1.5rem;
   }
 
@@ -519,9 +523,9 @@
   }
 
   .reading-image {
-    flex: 1;
-    max-width: none;
-    min-height: 280px;
+    flex: none;
+    max-width: 520px;
+    min-height: 0;
   }
 
   .reading-section {
