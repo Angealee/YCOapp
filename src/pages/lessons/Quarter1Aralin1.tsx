@@ -6,8 +6,6 @@ import {
   IonTitle,
   IonText,
   IonCard,
-  IonCardHeader,
-  IonCardTitle,
   IonCardContent,
   IonAccordionGroup,
   IonAccordion,
@@ -42,10 +40,59 @@ import './Quarter1Aralin1.css';
 import { quarter1Lesson1 } from "../../data/quarter1Lesson1";
 import { useState } from 'react';
 
+const PUZZLE_SIZE = 3;
+
+const createShuffledTiles = (): number[] => {
+  const tiles = Array.from({ length: PUZZLE_SIZE * PUZZLE_SIZE }, (_, index) => index);
+
+  for (let i = tiles.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [tiles[i], tiles[j]] = [tiles[j], tiles[i]];
+  }
+
+  const isSolved = tiles.every((value, index) => value === index);
+  if (isSolved) {
+    [tiles[0], tiles[1]] = [tiles[1], tiles[0]];
+  }
+
+  return tiles;
+};
+
+const bugtongPuzzleImage = `data:image/svg+xml;utf8,${encodeURIComponent(`
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <linearGradient id="phone" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1f2937"/>
+      <stop offset="100%" stop-color="#111827"/>
+    </linearGradient>
+  </defs>
+  <rect width="600" height="600" fill="url(#bg)"/>
+  <circle cx="110" cy="100" r="70" fill="rgba(255,255,255,0.12)"/>
+  <circle cx="520" cy="520" r="95" fill="rgba(255,255,255,0.1)"/>
+  <rect x="200" y="90" rx="45" ry="45" width="200" height="420" fill="url(#phone)" stroke="#334155" stroke-width="6"/>
+  <rect x="222" y="132" rx="20" ry="20" width="156" height="296" fill="#38bdf8"/>
+  <rect x="230" y="140" rx="12" ry="12" width="140" height="110" fill="#93c5fd"/>
+  <rect x="230" y="262" rx="12" ry="12" width="140" height="78" fill="#60a5fa"/>
+  <rect x="230" y="350" rx="12" ry="12" width="140" height="68" fill="#2563eb"/>
+  <circle cx="300" cy="466" r="16" fill="#0ea5e9"/>
+  <rect x="272" y="106" rx="6" ry="6" width="56" height="8" fill="#475569"/>
+  <text x="300" y="560" fill="#ffffff" font-size="44" font-family="Arial, sans-serif" font-weight="700" text-anchor="middle">CELLPHONE</text>
+</svg>
+`)}`;
+
+type BugtongMode = 'read' | 'watch' | 'listen' | 'deepListen' | 'play';
+
 const Quarter1Aralin1: React.FC = () => {
-  const [isAudio, setIsAudio] = useState(false);
-  const [activeSection, setActiveSection] = useState<string>('');
+  const [bugtongMode, setBugtongMode] = useState<BugtongMode>('read');
+  const [, setActiveSection] = useState<string>('');
   const [showAnswers, setShowAnswers] = useState<{[key: number]: boolean}>({});
+  const [puzzleTiles, setPuzzleTiles] = useState<number[]>(() => createShuffledTiles());
+  const [selectedPuzzleIndex, setSelectedPuzzleIndex] = useState<number | null>(null);
+  const [puzzleMoves, setPuzzleMoves] = useState<number>(0);
   
   const bugtongSection = quarter1Lesson1.sections.find(
   section => section.id === "bugtong"
@@ -58,14 +105,36 @@ const Quarter1Aralin1: React.FC = () => {
     }));
   };
 
-  const changeState = () => {
-    setIsAudio(!isAudio);
+  const puzzleSolved = puzzleTiles.every((value, index) => value === index);
+
+  const resetPuzzle = () => {
+    setPuzzleTiles(createShuffledTiles());
+    setSelectedPuzzleIndex(null);
+    setPuzzleMoves(0);
   };
 
-  // Remove progress tracking and make all lessons accessible
-  const handleQuizStart = () => {
-    // Navigate to quiz without checking progress
-    window.location.href = '/quiz';
+  const handlePuzzleTileClick = (index: number) => {
+    if (puzzleSolved) {
+      return;
+    }
+
+    if (selectedPuzzleIndex === null) {
+      setSelectedPuzzleIndex(index);
+      return;
+    }
+
+    if (selectedPuzzleIndex === index) {
+      setSelectedPuzzleIndex(null);
+      return;
+    }
+
+    setPuzzleTiles((prev) => {
+      const nextTiles = [...prev];
+      [nextTiles[selectedPuzzleIndex], nextTiles[index]] = [nextTiles[index], nextTiles[selectedPuzzleIndex]];
+      return nextTiles;
+    });
+    setSelectedPuzzleIndex(null);
+    setPuzzleMoves((prev) => prev + 1);
   };
 
   return (
@@ -225,22 +294,44 @@ const Quarter1Aralin1: React.FC = () => {
                 {/* Interactive Chips */}
                 <div className="action-chips">
                   <IonChip 
-                    className={`modern-chip ${!isAudio ? 'active' : ''}`}
-                    onClick={() => setIsAudio(false)}
+                    className={`modern-chip ${bugtongMode === 'read' ? 'active' : ''}`}
+                    onClick={() => setBugtongMode('read')}
                   >
                     <IonIcon icon={bookOutline} />
-                    <IonLabel>Pagbabasa</IonLabel>
+                    <IonLabel>Pagbasa</IonLabel>
                   </IonChip>
                   <IonChip 
-                    className={`modern-chip ${isAudio ? 'active' : ''}`}
-                    onClick={() => setIsAudio(true)}
+                    className={`modern-chip ${bugtongMode === 'watch' ? 'active' : ''}`}
+                    onClick={() => setBugtongMode('watch')}
+                  >
+                    <IonIcon icon={playCircleOutline} />
+                    <IonLabel>Panonood</IonLabel>
+                  </IonChip>
+                  <IonChip 
+                    className={`modern-chip ${bugtongMode === 'listen' ? 'active' : ''}`}
+                    onClick={() => setBugtongMode('listen')}
                   >
                     <IonIcon icon={volumeHighOutline} />
                     <IonLabel>Pakikinig</IonLabel>
                   </IonChip>
+                  <IonChip 
+                    className={`modern-chip ${bugtongMode === 'deepListen' ? 'active' : ''}`}
+                    onClick={() => setBugtongMode('deepListen')}
+                  >
+                    <IonIcon icon={imageOutline} />
+                    <IonLabel>Palalkikinig</IonLabel>
+                  </IonChip>
+                  <IonChip 
+                    className={`modern-chip ${bugtongMode === 'play' ? 'active' : ''}`}
+                    onClick={() => setBugtongMode('play')}
+                  >
+                    <IonIcon icon={gameControllerOutline} />
+                    <IonLabel>Paglalaro</IonLabel>
+                  </IonChip>
                 </div>
 
                 {/* Bugtong Examples with Hide/Show Answers */}
+                {bugtongMode === 'read' && (
                 <div className="bugtong-examples">
                   {/* Example 1 */}
                   {bugtongSection?.examples?.map(example => (
@@ -285,10 +376,111 @@ const Quarter1Aralin1: React.FC = () => {
                     </IonCard>
                   ))}
                 </div>
+                )}
 
-                <IonButton expand="block" className="game-button">
+                {bugtongMode === 'watch' && (
+                  <IonCard className="info-card gradient-blue">
+                    <IonCardContent>
+                      <div className="card-icon">
+                        <IonIcon icon={playCircleOutline} />
+                      </div>
+                      <h1 className="card-title"><strong>Panonood</strong></h1>
+                      <p className="mode-description">
+                        Obserbahan ang pahiwatig sa bugtong at tukuyin kung anong bagay ang inilalarawan.
+                        Tingnan ang anyo, gamit, at konteksto bago sumagot.
+                      </p>
+                    </IonCardContent>
+                  </IonCard>
+                )}
+
+                {bugtongMode === 'listen' && (
+                  <IonCard className="info-card gradient-green">
+                    <IonCardContent>
+                      <div className="card-icon">
+                        <IonIcon icon={volumeHighOutline} />
+                      </div>
+                      <h1 className="card-title"><strong>Pakikinig</strong></h1>
+                      <p className="mode-description">
+                        Basahin nang malakas ang bugtong at pakinggan ang tugma at daloy ng salita.
+                        Minsan nasa ritmo at pahiwatig ang susi sa tamang sagot.
+                      </p>
+                    </IonCardContent>
+                  </IonCard>
+                )}
+
+                {bugtongMode === 'deepListen' && (
+                  <IonCard className="info-card gradient-orange">
+                    <IonCardContent>
+                      <div className="card-icon">
+                        <IonIcon icon={sparklesOutline} />
+                      </div>
+                      <h1 className="card-title"><strong>Palalkikinig</strong></h1>
+                      <p className="mode-description">
+                        Pangalawang pakikinig: ulitin ang bugtong, tukuyin ang mahahalagang salita, at ikonekta
+                        ang bawat pahiwatig sa posibleng sagot.
+                      </p>
+                    </IonCardContent>
+                  </IonCard>
+                )}
+
+                {bugtongMode === 'play' && (
+                  <IonCard className="info-card puzzle-card">
+                    <IonCardContent>
+                      <div className="card-icon">
+                        <IonIcon icon={gameControllerOutline} />
+                      </div>
+                      <h1 className="card-title"><strong>Paglalaro: Image Puzzle</strong></h1>
+                      <p className="mode-description puzzle-instructions">
+                        Ayusin ang 3x3 na piraso ng larawan. I-click ang dalawang tile para magpalit sila ng puwesto.
+                        Kapag buo na ang larawan, makikita mo ang sagot ng bugtong.
+                      </p>
+                      <div className="puzzle-meta">
+                        <IonBadge color="light">Galaw: {puzzleMoves}</IonBadge>
+                        <IonBadge color={puzzleSolved ? 'success' : 'warning'}>
+                          {puzzleSolved ? 'Solved' : 'In Progress'}
+                        </IonBadge>
+                      </div>
+                      <div className="puzzle-board" role="group" aria-label="Bugtong image puzzle">
+                        {puzzleTiles.map((tile, index) => {
+                          const x = tile % PUZZLE_SIZE;
+                          const y = Math.floor(tile / PUZZLE_SIZE);
+                          const bgPositionX = `${(x / (PUZZLE_SIZE - 1)) * 100}%`;
+                          const bgPositionY = `${(y / (PUZZLE_SIZE - 1)) * 100}%`;
+                          const isSelected = selectedPuzzleIndex === index;
+
+                          return (
+                            <button
+                              key={`tile-${index}`}
+                              type="button"
+                              className={`puzzle-tile ${isSelected ? 'selected' : ''}`}
+                              onClick={() => handlePuzzleTileClick(index)}
+                              aria-label={`Puzzle tile ${index + 1}`}
+                              style={{
+                                backgroundImage: `url("${bugtongPuzzleImage}")`,
+                                backgroundSize: `${PUZZLE_SIZE * 100}% ${PUZZLE_SIZE * 100}%`,
+                                backgroundPosition: `${bgPositionX} ${bgPositionY}`
+                              }}
+                            />
+                          );
+                        })}
+                      </div>
+                      {puzzleSolved && (
+                        <div className="puzzle-success answer-reveal animated">
+                          <IonIcon icon={checkmarkCircleOutline} />
+                          <span>Sagot sa Larawan: Cellphone</span>
+                        </div>
+                      )}
+                      <IonButton onClick={resetPuzzle} fill="solid" className="puzzle-reset-btn">
+                        <IonIcon icon={gameControllerOutline} slot="start" />
+                        I-shuffle Muli
+                      </IonButton>
+                    </IonCardContent>
+                  </IonCard>
+                )}
+
+                <IonButton expand="block" className="game-button" onClick={() => setBugtongMode('play')}>
                   <IonIcon icon={gameControllerOutline} slot="start" />
-                  Subukan ang Bugtong Laro
+                  Buksan ang Paglalaro
                   <IonIcon icon={chevronForwardOutline} slot="end" />
                 </IonButton>
               </div>
