@@ -61,7 +61,7 @@ import '@ionic/react/css/palettes/dark.class.css';
 
 /* Theme variables */
 import './theme/variables.css';
-import Aralin1 from './pages/quiz/Aralin1';
+// import Aralin1 from './pages/quiz/Aralin1';
 
 
 setupIonicReact();
@@ -84,7 +84,7 @@ const Tabs: React.FC = () => {
           <Route exact path="/pagsusulat/:quarter/:aralin" component={Pagsusulat} />
           <Route exact path="/setting" component={Setting} />
               {/* Pagsusulit  */}
-              <Route exact path="/pagsusulit/aralin1" component={Aralin1}/>
+              {/* <Route exact path="/pagsusulit/aralin1" component={Aralin1}/> */}
 
               {/* Quarter 1 */}
               <Route exact path="/quarter/1" component={Quarter1} />
