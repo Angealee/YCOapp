@@ -107,11 +107,11 @@ const Home: React.FC = () => {
                   />
                   
                   {/* Quarter Number Badge */}
-                  <div className="quarter-number-badge">
+                  {/* <div className="quarter-number-badge">
                     <span className="quarter-number">Q{q.id}</span>
-                  </div>
+                  </div> */}
                 </div>
-
+                    
                 {/* Card Content */}
                 <IonCardContent className="modern-quarter-content">
                   {/* Filipino Flag Accent */}
