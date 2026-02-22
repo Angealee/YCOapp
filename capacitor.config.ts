@@ -3,7 +3,7 @@ import type { CapacitorConfig } from '@capacitor/cli';
 const config: CapacitorConfig = {
   appId: 'com.devfaculty.ycoapp',
   appName: 'YCOapp',
-  webDir: 'build'
+  webDir: 'dist'
 };
 
 export default config;
