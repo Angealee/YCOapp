@@ -10,33 +10,33 @@ export const quarter1Aralin: Aralin[] = [
   {
     id: 1,
     title: "Aralin 1",
-    subtitle: "Kaligirang Pangkasaysayan ng Panitikan",
+    subtitle: "Bugtong",
     description:
-      "Pagkilala sa panitikan sa panahon ng katutubo gamit ang bugtong, palaisipan, tanaga at salawikain.",
+      "Pagkilala sa bugtong bilang palaisipang panitikan, kasama ang mga halimbawa at puzzle game.",
     progress: 1,
   },
   {
     id: 2,
     title: "Aralin 2",
-    subtitle: "Pagsusuring Biswal: Komiks",
+    subtitle: "Pala-isipan",
     description:
-      "Paglikha at pagsusuri ng komiks na nakatuon sa tauhan at biswal na pagsasalaysay.",
+      "Mga lohikal na tanong na humahamon sa isipan at pagpapalawak ng pag-aanalisa.",
     progress: 0.2,
   },
   {
     id: 3,
     title: "Aralin 3",
-    subtitle: "Hudhud: Epiko ng Ifugao",
+    subtitle: "Tanaga",
     description:
-      "Pag-unawa sa epiko bilang panitikang bayan gamit ang awit, larawan, at salaysay.",
+      "Pagkilala sa tanaga bilang maikling tulang Pilipino na may sukat at tugma.",
     progress: 0.3,
   },
   {
     id: 4,
     title: "Aralin 4",
-    subtitle: "Tekstong Ekspositori",
+    subtitle: "Salawikain",
     description:
-      "Pagkakatulad at pagkakaiba gamit ang malinaw na paliwanag at biswal.",
+      "Pag-unawa sa salawikain at pagkuha ng aral mula sa mga kasabihan.",
     progress: 0.1,
   },
 ];
