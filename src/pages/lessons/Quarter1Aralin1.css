@@ -879,3 +879,21 @@
     gap: 1.5rem;
   }
 }
+.video-container {
+  margin-top: 3%;
+  position: relative;
+  width: 100%;
+  height: auto;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+}
+
+.video-container video {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: contain;
+}
+
+

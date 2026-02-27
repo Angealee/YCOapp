@@ -805,6 +805,7 @@ const Quarter1Aralin1: React.FC = () => {
                     <IonIcon icon={bookOutline} />
                     <IonLabel>Pagbasa</IonLabel>
                   </IonChip>
+
                   <IonChip 
                     className={`modern-chip ${aralinMode === 'watch' ? 'active' : ''}`}
                     onClick={() => setAralinMode('watch')}
@@ -812,6 +813,7 @@ const Quarter1Aralin1: React.FC = () => {
                     <IonIcon icon={playCircleOutline} />
                     <IonLabel>Panonood</IonLabel>
                   </IonChip>
+
                   <IonChip 
                     className={`modern-chip ${aralinMode === 'listen' ? 'active' : ''}`}
                     onClick={() => setAralinMode('listen')}
@@ -883,10 +885,17 @@ const Quarter1Aralin1: React.FC = () => {
                         <IonIcon icon={playCircleOutline} />
                       </div>
                       <h1 className="card-title"><strong>Panonood</strong></h1>
-                      <p className="mode-description">
-                        Obserbahan ang pahiwatig sa bugtong at tukuyin kung anong bagay ang inilalarawan.
-                        Tingnan ang anyo, gamit, at konteksto bago sumagot.
-                      </p>
+                       {/* Content Display */}
+                      <div className="content-area">
+                        {aralinMode === 'watch' && (
+                          <div className="video-container">
+                            <video width="100%" controls>
+                              <source src="/assets/video/bugtongVid1Sample.mp4" type="video/mp4" />
+                              Your browser does not support the video tag.
+                            </video>
+                          </div>
+                        )}
+                      </div>
                     </IonCardContent>
                   </IonCard>
                 )}
