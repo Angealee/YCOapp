@@ -22,7 +22,46 @@ export const quarter1Lesson1 = {
       subtitle: "Palaisipang Panitikan",
       intro: `Ang bugtong ay isang maikling patulang palaisipan na naglalarawan 
       ng isang bagay, hayop, tao, o pangyayari sa pamamagitan ng pahiwatig o talinghaga.`,
+      
+        audioExamples: [
+          {
+            id: 1,
+            label: "Bugtong 1",
+            audioUrl: "/assets/audio/bugtong1.mp3"
+          },
+          {
+            id: 2,
+            label: "Bugtong 2",
+            audioUrl: "/assets/audio/bugtong2.mp3"
+          },
+          {
+            id: 3,
+            label: "Bugtong 3",
+            audioUrl: "/assets/audio/bugtong3.mp3"
+          },
+          {
+            id: 4,
+            label: "Bugtong 4",
+            audioUrl: "/assets/audio/bugtong4.mp3"
+          },
+          {
+            id: 5,
+            label: "Bugtong 5",
+            audioUrl: "/assets/audio/bugtong5.mp3"
+          },
+          {
+            id: 6,
+            label: "Bugtong 6",
+            audioUrl: "/assets/audio/bugtong6.mp3"
+          },
+          {
+            id: 7,
+            label: "Bugtong 7",
+            audioUrl: "/assets/audio/bugtong7.mp3"
+          }
 
+          
+        ],
       bugtongCharacteristics: [
         {
           title: "Maikli at Patula",

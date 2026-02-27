@@ -878,6 +878,7 @@ const Quarter1Aralin1: React.FC = () => {
                 </div>
                 )}
 
+                {/* Video Player */}
                 {aralinMode === 'watch' && (
                   <IonCard className="info-card gradient-blue">
                     <IonCardContent>
@@ -899,20 +900,28 @@ const Quarter1Aralin1: React.FC = () => {
                     </IonCardContent>
                   </IonCard>
                 )}
-
                 {aralinMode === 'listen' && (
-                  <IonCard className="info-card gradient-green">
-                    <IonCardContent>
-                      <div className="card-icon">
-                        <IonIcon icon={volumeHighOutline} />
-                      </div>
-                      <h1 className="card-title"><strong>Pakikinig</strong></h1>
-                      <p className="mode-description">
-                        Basahin nang malakas ang bugtong at pakinggan ang tugma at daloy ng salita.
-                        Minsan nasa ritmo at pahiwatig ang susi sa tamang sagot.
-                      </p>
-                    </IonCardContent>
-                  </IonCard>
+                  <div className="bugtong-audio-list">
+                    {bugtongSection?.audioExamples?.map(audio => (
+                      <IonCard key={audio.id} className="info-card gradient-green">
+                        <IonCardContent>
+
+                          <div className="example-label">
+                            <IonIcon icon={volumeHighOutline} />
+                            <span>{audio.label}</span>
+                          </div>
+
+                          <div className="audio-container">
+                            <audio controls preload="metadata">
+                              <source src={audio.audioUrl} type="audio/mpeg" />
+                              Your browser does not support the audio element.
+                            </audio>
+                          </div>
+
+                        </IonCardContent>
+                      </IonCard>
+                    ))}
+                  </div>
                 )}
 
                 {aralinMode === 'play' && (
