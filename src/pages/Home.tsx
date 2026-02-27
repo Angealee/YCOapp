@@ -21,7 +21,7 @@ const quarters = [
     title: 'Unang Markahan',
     subtitle: 'Panitikan at Wika',
     description: 'Bugtong, Tanaga, Komiks, Hudhud, at iba pa.',
-    image: './assets/img/q1.jpg',
+    image: './assets/img/q1.PNG',
     route: '/quarter/1',
     gradient: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
     color: '#667eea'
@@ -31,7 +31,7 @@ const quarters = [
     title: 'Pangalawang Markahan',
     subtitle: 'Kuwentong Bayan at Pabula',
     description: 'Alamat, Pabula, Komiks, at Brochure.',
-    image: './assets/img/q2.jpg',
+    image: './assets/img/q2.PNG',
     route: '/quarter/2',
     gradient: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
     color: '#f093fb'
@@ -41,7 +41,7 @@ const quarters = [
     title: 'Pangatlong Markahan',
     subtitle: 'Panitikan at Pagsusuri',
     description: 'Mas malalim na pag-unawa sa teksto at biswal.',
-    image: './assets/img/quarter3.jpg',
+    image: './assets/img/q3.PNG',
     route: '/quarter/3',
     gradient: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
     color: '#4facfe'
@@ -105,11 +105,6 @@ const Home: React.FC = () => {
                     className="quarter-overlay"
                     style={{ background: q.gradient }}
                   />
-                  
-                  {/* Quarter Number Badge */}
-                  {/* <div className="quarter-number-badge">
-                    <span className="quarter-number">Q{q.id}</span>
-                  </div> */}
                 </div>
                     
                 {/* Card Content */}
