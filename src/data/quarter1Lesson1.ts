@@ -160,6 +160,5 @@ export const quarter1Lesson1 = {
         }
       ]
     }
-
   ]
 };
