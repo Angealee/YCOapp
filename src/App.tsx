@@ -15,6 +15,7 @@ import Home from './pages/Home';
 import Quiz from './pages/Quiz';
 import Setting from './pages/Setting';
 import Pagsusulat from './pages/Pagsusulat';
+import WelcomeVideoPage from './pages/WelcomeVideoPage';
 // import '@ionic/react/css/palettes/dark.system.css';
 
 // Quarter pages
@@ -74,6 +75,11 @@ const Tabs: React.FC = () => {
   return (
     <IonTabs>
       <IonRouterOutlet>
+
+          {/* Welcome */}
+          <Route exact path="/welcome" component={WelcomeVideoPage} />
+          <Route exact path="/home" component={Home} />
+          <Redirect exact from="/" to="/home" />
 
           {/* Core Tabs */}
           <Route exact path="/home" component={Home} />

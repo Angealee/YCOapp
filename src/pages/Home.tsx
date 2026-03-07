@@ -14,6 +14,7 @@ import { chevronForwardOutline, schoolOutline } from 'ionicons/icons';
 import { useState } from 'react';
 
 import './Home.css';
+import useWelcomeGuard from '../hooks/useWelcomeGuard';
 
 const quarters = [
   {
@@ -49,8 +50,8 @@ const quarters = [
 ];
 
 const Home: React.FC = () => {
+  useWelcomeGuard();
   const [pressedId, setPressedId] = useState<number | null>(null);
-
   return (
     <IonPage>
       <IonHeader className="ion-no-border">
