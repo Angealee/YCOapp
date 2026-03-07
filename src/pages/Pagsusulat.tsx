@@ -229,7 +229,7 @@ const Pagsusulat: React.FC = () => {
           <IonText color="medium">
             <p className="notes-subtitle">
               {!currentQuarter
-                ? "Piliin muna ang quarter."
+                ? "Piliin muna ang markahan."
                 : !currentAralin
                   ? "Piliin ang aralin para makita ang notes."
                   : "Narito ang buong notes para sa napiling aralin."}
@@ -255,7 +255,7 @@ const Pagsusulat: React.FC = () => {
                         <IonIcon icon={chevronForwardOutline} />
                       </div>
                     </div>
-                    <p className="quarter-card-info">{getNoteCount(quarter)} tala sa quarter na ito</p>
+                    <p className="quarter-card-info">{getNoteCount(quarter)} tala sa markahang ito</p>
                   </IonCardContent>
                 </IonCard>
               ))}
@@ -350,7 +350,7 @@ const Pagsusulat: React.FC = () => {
         <IonModal isOpen={isCreateModalOpen} onDidDismiss={() => setIsCreateModalOpen(false)}>
           <IonHeader className="ion-no-border">
             <IonToolbar className="pagsusulat-toolbar">
-              <IonTitle className="pagsusulat-title">Dagdagan ang Tala - Quarter {createQuarter}</IonTitle>
+              <IonTitle className="pagsusulat-title">Dagdagan ang Tala - Markahan {createQuarter}</IonTitle>
               <IonButtons slot="end">
                 <IonButton className="modal-close-btn" onClick={() => setIsCreateModalOpen(false)}>
                   Close

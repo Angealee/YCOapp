@@ -69,7 +69,7 @@ const Home: React.FC = () => {
               <IonIcon icon={schoolOutline} />
             </div>
             <h1 className="home-hero-title">Mga Markahan</h1>
-            <p className="home-hero-subtitle">Piliin ang quarter upang simulan ang pagkatuto</p>
+            <p className="home-hero-subtitle">Piliin ang markahan upang simulan ang pagkatuto</p>
             
             <div className="learning-path">
               <div className="path-line" />

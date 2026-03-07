@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react';
 import { Redirect, Route, useLocation } from 'react-router-dom';
 import {
   IonApp,
@@ -69,6 +70,69 @@ setupIonicReact();
 
 const Tabs: React.FC = () => {
   const location = useLocation();
+  const hasStartedGuideRef = useRef(false);
+
+  useEffect(() => {
+    const shouldStartGuide = sessionStorage.getItem('yco_start_guide') === '1';
+    if (!shouldStartGuide || hasStartedGuideRef.current || location.pathname !== '/home') {
+      return;
+    }
+
+    hasStartedGuideRef.current = true;
+    sessionStorage.removeItem('yco_start_guide');
+
+    const timeoutId = window.setTimeout(async () => {
+      try {
+        const { driver } = await import('driver.js');
+        await import('driver.js/dist/driver.css');
+
+        const tour = driver({
+          showProgress: true,
+          animate: true,
+          allowClose: true,
+          nextBtnText: 'Susunod',
+          prevBtnText: 'Bumalik',
+          doneBtnText: 'Tapos',
+          steps: [
+            {
+              popover: {
+                title: 'Maligayang pagdating!',
+                description: 'Ito ang maikling gabay kung paano gamitin ang app.',
+              },
+            },
+            {
+              element: '[data-tour="tab-home"]',
+              popover: {
+                title: 'Markahan',
+                description: 'Dito mo makikita ang mga aralin kada markahan.',
+              },
+            },
+            {
+              element: '[data-tour="tab-quiz"]',
+              popover: {
+                title: 'Pagsusulit',
+                description: 'Dito ka magsasagot ng quiz para masubukan ang natutunan mo.',
+              },
+            },
+            {
+              element: '[data-tour="tab-writing"]', 
+              popover: {
+                title: 'Pagsusulat',
+                description: 'Dito mo magagawa ang mga gawain sa pagsulat.',
+              },
+            },
+          ],
+        });
+
+        tour.drive();
+      } catch (error) {
+        console.error('Hindi nagsimula ang gabay:', error);
+      }
+    }, 250);
+
+    return () => window.clearTimeout(timeoutId);
+  }, [location.pathname]);
+
   const hideTabBar =
     location.pathname.startsWith('/welcome') ||
     location.pathname.startsWith('/quiz/take') ||
@@ -124,13 +188,14 @@ const Tabs: React.FC = () => {
             tab="Home" 
             href="/home"
             className="modern-tab-button"
+            data-tour="tab-home"
           >
             <IonIcon 
               aria-hidden="true" 
               icon={bookSharp} 
               className="tab-icon"
             />
-            <IonLabel className="tab-label">Quarter</IonLabel>
+            <IonLabel className="tab-label">Markahan</IonLabel>
           </IonTabButton>
 
           {/* Quiz Tab */}
@@ -138,6 +203,7 @@ const Tabs: React.FC = () => {
             tab="Quiz" 
             href="/quiz"
             className="modern-tab-button"
+            data-tour="tab-quiz"
           >
             <IonIcon 
               aria-hidden="true" 
@@ -152,6 +218,7 @@ const Tabs: React.FC = () => {
             tab="Pagsusulat" 
             href="/pagsusulat"
             className="modern-tab-button"
+            data-tour="tab-writing"
           >
             <IonIcon 
               icon={pencilSharp} 

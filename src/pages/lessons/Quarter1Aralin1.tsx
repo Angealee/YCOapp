@@ -1729,7 +1729,7 @@ const Quarter1Aralin1: React.FC = () => {
                 <div className="complete-text">
                   <h3>Natapos mo ang Aralin {safeAralinId}!</h3>
                   <p>
-                    {nextAralinId ? 'Magaling! Ikaw ay handa na para sa susunod na aralin.' : 'Magaling! Natapos mo ang Quarter 1.'}
+                    {nextAralinId ? 'Magaling! Ikaw ay handa na para sa susunod na aralin.' : 'Magaling! Natapos mo ang Markahan 1.'}
                   </p>
                 </div>
                 
@@ -1741,7 +1741,7 @@ const Quarter1Aralin1: React.FC = () => {
                     onClick={() => window.location.href = '/quarter/1'}
                   >
                     <IonIcon icon={chevronBackOutline} slot="start" />
-                    Bumalik sa Quarter 1
+                    Bumalik sa Markahan 1
                   </IonButton>
                   
                   {nextAralinId ? (
@@ -1759,7 +1759,7 @@ const Quarter1Aralin1: React.FC = () => {
                       className="nav-button next-button"
                       onClick={() => window.location.href = '/quarter/1'}
                     >
-                      Bumalik sa Quarter 1
+                      Bumalik sa Markahan 1
                       <IonIcon icon={chevronForwardOutline} slot="end" />
                     </IonButton>
                   )}
