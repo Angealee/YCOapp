@@ -1,53 +1,39 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React from 'react';
 import { useHistory } from 'react-router-dom';
-import { Preferences } from '@capacitor/preferences';
 import { IonPage, IonContent, IonButton } from '@ionic/react';
 import './WelcomeVideoPage.css';
 
 const WelcomeVideoPage: React.FC = () => {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const [showSkip, setShowSkip] = useState(false);
   const history = useHistory();
 
-  useEffect(() => {
-    // Show skip button after 3 seconds
-    const timer = setTimeout(() => setShowSkip(true), 3000);
-    return () => clearTimeout(timer);
-  }, []);
-
-  const proceedToHome = async () => {
-    // Mark welcome video as seen
-    await Preferences.set({ key: 'hasSeenWelcome', value: 'true' });
+  const proceedToHome = () => {
     history.replace('/home');
-  };
-
-  const handleVideoEnd = () => {
-    proceedToHome();
   };
 
   return (
     <IonPage>
       <IonContent fullscreen className="welcome-content">
-        <div className="video-container">
-          <video
-            ref={videoRef}
-            className="welcome-video"
-            src="/assets/video/welcome.mp4"
-            autoPlay
-            playsInline
-            onEnded={handleVideoEnd}
-          />
+        <div className="welcome-layout">
+          <div className="animation-stage">
+            <video
+              className="welcome-video"
+              src="/assets/video/welcome.mp4"
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+            <div className="welcome-overlay" />
+          </div>
 
-          {showSkip && (
-            <IonButton
-              className="skip-button"
-              fill="outline"
-              color="light"
-              onClick={proceedToHome}
-            >
-              Laktawan ▶
+          <div className="action-panel">
+            <p className="welcome-eyebrow">YCO Learning App</p>
+            <h1 className="welcome-title">Pindutin at Matuto</h1>
+            <p className="welcome-subtitle">Simulan ang aralin at tuklasin ang mga gawain.</p>
+            <IonButton className="start-button" expand="block" onClick={proceedToHome}>
+              Magsimula
             </IonButton>
-          )}
+          </div>
         </div>
       </IonContent>
     </IonPage>
