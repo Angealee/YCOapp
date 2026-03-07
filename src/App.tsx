@@ -70,7 +70,9 @@ setupIonicReact();
 const Tabs: React.FC = () => {
   const location = useLocation();
   const hideTabBar =
-    location.pathname.startsWith('/quiz/take') || location.pathname.startsWith('/pagsusulit');
+    location.pathname.startsWith('/welcome') ||
+    location.pathname.startsWith('/quiz/take') ||
+    location.pathname.startsWith('/pagsusulit');
 
   return (
     <IonTabs>
@@ -79,7 +81,7 @@ const Tabs: React.FC = () => {
           {/* Welcome */}
           <Route exact path="/welcome" component={WelcomeVideoPage} />
           <Route exact path="/home" component={Home} />
-          <Redirect exact from="/" to="/home" />
+          <Redirect exact from="/" to="/welcome" />
 
           {/* Core Tabs */}
           <Route exact path="/home" component={Home} />
@@ -109,7 +111,7 @@ const Tabs: React.FC = () => {
 
 
           <Route exact path="/">
-            <Redirect to="/home" />
+            <Redirect to="/welcome" />
           </Route>
 
       </IonRouterOutlet>
