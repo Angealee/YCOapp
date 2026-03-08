@@ -18,6 +18,7 @@ import Quiz from './pages/Quiz';
 import Setting from './pages/Setting';
 import Pagsusulat from './pages/Pagsusulat';
 import WelcomeVideoPage from './pages/WelcomeVideoPage';
+import SplashIntro from './pages/SplashIntro';
 import { SplashScreen } from '@capacitor/splash-screen';
 
 import Quarter1 from './pages/quarter/Quarter1';
@@ -43,7 +44,7 @@ import './theme/variables.css';
 setupIonicReact();
 
 // ─────────────────────────────────────────────
-// TABS — all in-app screens live here
+// TABS
 // ─────────────────────────────────────────────
 const Tabs: React.FC = () => {
   const location = useLocation();
@@ -69,8 +70,8 @@ const Tabs: React.FC = () => {
           doneBtnText: 'Tapos',
           steps: [
             { popover: { title: 'Maligayang pagdating!', description: 'Ito ang maikling gabay kung paano gamitin ang app.' } },
-            { element: '[data-tour="tab-home"]',    popover: { title: 'Markahan',    description: 'Dito mo makikita ang mga aralin kada markahan.' } },
-            { element: '[data-tour="tab-quiz"]',    popover: { title: 'Pagsusulit',  description: 'Dito ka magsasagot ng quiz para masubukan ang natutunan mo.' } },
+            { element: '[data-tour="tab-home"]',    popover: { title: 'Markahan',   description: 'Dito mo makikita ang mga aralin kada markahan.' } },
+            { element: '[data-tour="tab-quiz"]',    popover: { title: 'Pagsusulit', description: 'Dito ka magsasagot ng quiz para masubukan ang natutunan mo.' } },
             { element: '[data-tour="tab-writing"]', popover: { title: 'Pagsusulat', description: 'Dito mo magagawa ang mga gawain sa pagsulat.' } },
           ],
         });
@@ -90,20 +91,19 @@ const Tabs: React.FC = () => {
   return (
     <IonTabs>
       <IonRouterOutlet>
-        <Route exact path="/home"                        component={Home} />
-        <Route exact path="/quiz"                        component={Quiz} />
-        <Route exact path="/quiz/take/:quarter"          component={Quiz} />
-        <Route exact path="/pagsusulat"                  component={Pagsusulat} />
-        <Route exact path="/pagsusulat/:quarter"         component={Pagsusulat} />
-        <Route exact path="/pagsusulat/:quarter/:aralin" component={Pagsusulat} />
-        <Route exact path="/setting"                     component={Setting} />
-        <Route exact path="/quarter/1"                   component={Quarter1} />
-        <Route exact path="/quarter/1/aralin/:id"        component={Quarter1Aralin1} />
-        <Route exact path="/quarter/2"                   component={Quarter2} />
-        <Route exact path="/quarter/2/aralin/:id"        component={Quarter2Aralin1} />
-        <Route exact path="/quarter/3"                   component={Quarter3} />
-        <Route exact path="/quarter/3/aralin/:id"        component={Quarter3Aralin} />
-        {/* Fallback inside tabs */}
+        <Route exact path="/home"                          component={Home} />
+        <Route exact path="/quiz"                          component={Quiz} />
+        <Route exact path="/quiz/take/:quarter"            component={Quiz} />
+        <Route exact path="/pagsusulat"                    component={Pagsusulat} />
+        <Route exact path="/pagsusulat/:quarter"           component={Pagsusulat} />
+        <Route exact path="/pagsusulat/:quarter/:aralin"   component={Pagsusulat} />
+        <Route exact path="/setting"                       component={Setting} />
+        <Route exact path="/quarter/1"                     component={Quarter1} />
+        <Route exact path="/quarter/1/aralin/:id"          component={Quarter1Aralin1} />
+        <Route exact path="/quarter/2"                     component={Quarter2} />
+        <Route exact path="/quarter/2/aralin/:id"          component={Quarter2Aralin1} />
+        <Route exact path="/quarter/3"                     component={Quarter3} />
+        <Route exact path="/quarter/3/aralin/:id"          component={Quarter3Aralin} />
         <Route exact path="/">
           <Redirect to="/home" />
         </Route>
@@ -131,35 +131,37 @@ const Tabs: React.FC = () => {
 
 // ─────────────────────────────────────────────
 // ROOT APP
+// Flow: / → SplashIntro → (checks sessionStorage) → /welcome or /home
 // ─────────────────────────────────────────────
 const App: React.FC = () => {
   useEffect(() => {
     setTimeout(async () => {
-      try { await SplashScreen.hide(); } catch (_) {}
+      document.body.classList.add('splash-fade');
+      setTimeout(async () => {
+        try { await SplashScreen.hide(); } catch (_) {}
+      }, 400);
     }, 1500);
   }, []);
-
-  const seenWelcome = localStorage.getItem('yco_seen_welcome') === '1';
 
   return (
     <IonApp>
       <IonReactRouter>
         {/*
-          IMPORTANT: Plain <Switch> at the root — NOT IonRouterOutlet.
-          IonRouterOutlet keeps all matched routes mounted at once,
-          which causes /welcome and Tabs to conflict and produce
-          blank content. Switch renders ONLY the first match.
+          Switch renders only the FIRST matching route.
+
+          Route order matters:
+            1. /        → SplashIntro (handles its own redirect after 2.2s)
+            2. /welcome → WelcomeVideoPage (no tab bar)
+            3. *        → Tabs (all in-app screens)
+
+          SplashIntro reads sessionStorage internally and calls
+          history.replace('/welcome') or history.replace('/home'),
+          so we do NOT need a seenWelcome check here in App anymore.
         */}
         <Switch>
-          <Route exact path="/">
-            <Redirect to={seenWelcome ? '/home' : '/welcome'} />
-          </Route>
-
-          {/* Welcome is fully outside Tabs — no tab bar, no conflicts */}
+          <Route exact path="/"        component={SplashIntro} />
           <Route exact path="/welcome" component={WelcomeVideoPage} />
-
-          {/* All other routes go to Tabs */}
-          <Route component={Tabs} />
+          <Route                       component={Tabs} />
         </Switch>
       </IonReactRouter>
     </IonApp>

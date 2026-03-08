@@ -8,17 +8,12 @@ const WelcomeVideoPage: React.FC = () => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [videoStarted, setVideoStarted] = useState(false);
 
-  // ── Autoplay fix ────────────────────────────────────────────
-  // Browsers block autoplay with audio. Strategy:
-  //   1. Start muted (browsers allow muted autoplay)
-  //   2. Unmute after 300ms silently
-  //   3. If even muted autoplay fails → show tap-to-play overlay
+  // Autoplay fix: start muted, unmute after 300ms
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
     video.muted = true;
-
     video.play()
       .then(() => {
         setTimeout(() => {
@@ -27,7 +22,6 @@ const WelcomeVideoPage: React.FC = () => {
         setVideoStarted(true);
       })
       .catch(() => {
-        // Autoplay fully blocked — user must tap
         setVideoStarted(false);
       });
   }, []);
@@ -41,11 +35,11 @@ const WelcomeVideoPage: React.FC = () => {
       .catch(() => {});
   };
 
-  // ── Navigation ──────────────────────────────────────────────
-  // FIX: set yco_seen_welcome so the guard never redirects again
-  // FIX: navigate to /home (not /app/home which doesn't exist)
   const proceedToHome = () => {
-    localStorage.setItem('yco_seen_welcome', '1');
+    // ── CHANGED: sessionStorage instead of localStorage ──────
+    // Matches SplashIntro — both use sessionStorage so the flag
+    // clears on app close and the welcome video plays again next launch.
+    sessionStorage.setItem('yco_seen_welcome', '1');
     sessionStorage.setItem('yco_start_guide', '1');
     history.replace('/home');
   };
@@ -66,7 +60,6 @@ const WelcomeVideoPage: React.FC = () => {
             />
             <div className="welcome-overlay" />
 
-            {/* Shown only when autoplay was blocked */}
             {!videoStarted && (
               <div className="tap-to-play-hint">
                 <div className="tap-to-play-icon">▶</div>
