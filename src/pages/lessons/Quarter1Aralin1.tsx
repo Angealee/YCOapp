@@ -891,7 +891,7 @@ const Quarter1Aralin1: React.FC = () => {
                         {aralinMode === 'watch' && (
                           <div className="video-container">
                             <video width="100%" controls>
-                              <source src="/assets/video/bugtongVid1Sample.mp4" type="video/mp4" />
+                              <source src="/assets/video/YcoBugtong.mp4" type="video/mp4" />
                               Your browser does not support the video tag.
                             </video>
                           </div>
