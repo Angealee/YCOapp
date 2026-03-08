@@ -39,7 +39,7 @@ import {
 
 import './Quarter1Aralin1.css';
 import { quarter1Lesson1 } from "../../data/quarter1Lesson1";
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
 
 const PUZZLE_SIZE = 3;
@@ -49,6 +49,8 @@ const playRevealSound = () => {
   audio.volume = 0.6;
   audio.play().catch(() => {}); // catch silences autoplay errors
 };
+
+
 
 type BugtongExample = {
   id: number;
@@ -138,6 +140,8 @@ const AnswerRevealWithGif: React.FC<{
     </div>
   );
 };
+
+
 
 const createShuffledTiles = (): number[] => {
   const tiles = Array.from({ length: PUZZLE_SIZE * PUZZLE_SIZE }, (_, index) => index);
@@ -302,6 +306,7 @@ const shuffleArray = <T,>(items: T[]): T[] => {
   return copy;
 };
 
+//Quarter1Aralin1 component:
 const Quarter1Aralin1: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const aralinId = Number(id);
@@ -312,7 +317,6 @@ const Quarter1Aralin1: React.FC = () => {
     3: 'tanaga',
     4: 'salawikain',
   };
-
   const selectedSectionId = sectionIdByAralin[aralinId] ?? 'bugtong';
 
   const [aralinMode, setAralinMode] = useState<AralinMode>('read');
@@ -329,6 +333,35 @@ const Quarter1Aralin1: React.FC = () => {
 
   const bugtongSection = quarter1Lesson1.sections.find((s) => s.id === 'bugtong');
 
+
+    // ✅ Add RIGHT HERE, after your existing useState lines
+  const [playingCard, setPlayingCard] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
+
+  const playCardAudio = (cardId: string, src: string) => {
+    if (playingCard === cardId) {
+      audioRef.current?.pause();
+      audioRef.current = null;
+      setPlayingCard(null);
+      return;
+    }
+    if (audioRef.current) {
+      audioRef.current.pause();
+      audioRef.current = null;
+    }
+    const audio = new Audio(src);
+    audioRef.current = audio;
+    setPlayingCard(cardId);
+    audio.play().catch(() => {
+      setPlayingCard(null);
+      audioRef.current = null;
+    });
+    audio.onended = () => {
+      setPlayingCard(null);
+      audioRef.current = null;
+    };
+  };
+  
   useEffect(() => {
     setActiveSection(selectedSectionId);
     setAralinMode('read');
@@ -631,6 +664,14 @@ const Quarter1Aralin1: React.FC = () => {
                     <IonCard className="info-card gradient-purple">
                       <IonCardContent>
                         <div className="card-icon"><IonIcon icon={sparklesOutline} /></div>
+                        {/* ── Audio button ── */}
+                      <button
+                        className={`card-audio-btn ${playingCard === 'katangian' ? 'playing' : ''}`}
+                        onClick={() => playCardAudio('katangian', '/assets/audio/katangian.mp3')}
+                      >
+                        <IonIcon icon={playingCard === 'katangian' ? volumeHighOutline : volumeHighOutline} />
+                        <span>{playingCard === 'katangian' ? 'Tumutugtog...' : 'Pakinggan'}</span>
+                      </button>
                         <h1 className="card-title"><strong>Katangian ng Bugtong</strong></h1>
                         <div className="card-list">
                           {[0,1,2,3].map((i) => (
@@ -648,7 +689,15 @@ const Quarter1Aralin1: React.FC = () => {
                     <IonCard className="info-card gradient-pink">
                       <IonCardContent>
                         <div className="card-icon"><IonIcon icon={heartOutline} /></div>
-                        <h1 className="card-title"><strong>Katangian ng Palaisipan</strong></h1>
+                        {/* ── Audio button ── */}
+                      <button
+                        className={`card-audio-btn ${playingCard === 'kahalagahan' ? 'playing' : ''}`}
+                        onClick={() => playCardAudio('kahalagahan', '/assets/audio/kahalagahan.mp3')}
+                      >
+                        <IonIcon icon={playingCard === 'kahalagahan' ? volumeHighOutline : volumeHighOutline} />
+                        <span>{playingCard === 'kahalagahan' ? 'Tumutugtog...' : 'Pakinggan'}</span>
+                      </button>
+                        <h1 className="card-title"><strong>Kahalagahan ng Bugtong</strong></h1>
                         <div className="card-list">
                           {[0,1,2,3].map((i) => (
                             <div key={i} className="list-item">
