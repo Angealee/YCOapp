@@ -41,6 +41,7 @@ import './Quarter1Aralin1.css';
 import { quarter1Lesson1 } from "../../data/quarter1Lesson1";
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
+import WordSearchFillBlankGame from "../../components/WordSearchFillBlankGame";
 
 const PUZZLE_SIZE = 3;
 
@@ -295,6 +296,8 @@ const splitLines = (text: string): string[] =>
   text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
 
 type AralinMode = 'read' | 'watch' | 'listen' | 'play';
+type BugtongPlayMode = 'image' | 'word';
+type SectionPlayMode = 'quiz' | 'word';
 type QuizItem = { id: string; prompt: string; correct: string };
 
 const shuffleArray = <T,>(items: T[]): T[] => {
@@ -330,6 +333,10 @@ const Quarter1Aralin1: React.FC = () => {
   const [quizScoreBySection, setQuizScoreBySection] = useState<Record<string, number>>({});
   const [quizCompletedBySection, setQuizCompletedBySection] = useState<Record<string, boolean>>({});
   const [quizLivesBySection, setQuizLivesBySection] = useState<Record<string, number>>({});
+  const [bugtongPlayMode, setBugtongPlayMode] = useState<BugtongPlayMode>('word');
+  const [palaisipanPlayMode, setPalaisipanPlayMode] = useState<SectionPlayMode>('quiz');
+  const [tanagaPlayMode, setTanagaPlayMode] = useState<SectionPlayMode>('quiz');
+  const [salawikainPlayMode, setSalawikainPlayMode] = useState<SectionPlayMode>('quiz');
 
   const bugtongSection = quarter1Lesson1.sections.find((s) => s.id === 'bugtong');
 
@@ -365,6 +372,10 @@ const Quarter1Aralin1: React.FC = () => {
   useEffect(() => {
     setActiveSection(selectedSectionId);
     setAralinMode('read');
+    setBugtongPlayMode('word');
+    setPalaisipanPlayMode('quiz');
+    setTanagaPlayMode('quiz');
+    setSalawikainPlayMode('quiz');
   }, [selectedSectionId]);
 
   useEffect(() => {
@@ -533,6 +544,44 @@ const Quarter1Aralin1: React.FC = () => {
       (ex) => ex && typeof ex.text === 'string' && typeof ex.answer === 'string'
     );
   }, [bugtongSection]);
+
+  const bugtongWordSearchItems = useMemo(
+    () =>
+      bugtongExamples.slice(0, 5).map((example, index) => ({
+        id: `bugtong-word-${example.id}`,
+        sentence: `Bugtong ${index + 1}: ${splitLines(example.text).join(" ")}\nSagot: {blank}`,
+        answer: example.answer,
+      })),
+    [bugtongExamples]
+  );
+
+  const palaisipanWordSearchItems = useMemo(
+    () => [
+      { id: 'pal-word-1', sentence: 'Palaisipan 1: Ang sagot ay {blank}.', answer: 'Butas' },
+      { id: 'pal-word-2', sentence: 'Palaisipan 2: Ang sagot ay {blank}.', answer: 'Tao' },
+      { id: 'pal-word-3', sentence: 'Palaisipan 3: Ang sagot ay {blank}.', answer: 'Bato' },
+    ],
+    []
+  );
+
+  const tanagaWordSearchItems = useMemo(
+    () => [
+      { id: 'tan-word-1', sentence: 'Tanaga 1: Tema ay {blank}.', answer: 'Filipino' },
+      { id: 'tan-word-2', sentence: 'Tanaga 2: Tema ay {blank}.', answer: 'Edukasyon' },
+      { id: 'tan-word-3', sentence: 'Tanaga 3: Tema ay {blank}.', answer: 'Kalikasan' },
+    ],
+    []
+  );
+
+  const salawikainWordSearchItems = useMemo(
+    () => [
+      { id: 'sal-word-1', sentence: 'Salawikain 1: Aral tungkol sa {blank}.', answer: 'Pinagmulan' },
+      { id: 'sal-word-2', sentence: 'Salawikain 2: Aral tungkol sa {blank}.', answer: 'Pagkilos' },
+      { id: 'sal-word-3', sentence: 'Salawikain 3: Aral tungkol sa {blank}.', answer: 'Pamilya' },
+      { id: 'sal-word-4', sentence: 'Salawikain 4: Aral tungkol sa {blank}.', answer: 'Pagmamahal' },
+    ],
+    []
+  );
 
   const [activePuzzleExampleId, setActivePuzzleExampleId] = useState<number>(1);
 
@@ -799,80 +848,112 @@ const Quarter1Aralin1: React.FC = () => {
 
                   {/* play puzzle */}
                   {aralinMode === 'play' && (
-                    <IonCard className="info-card puzzle-card">
-                      <IonCardContent>
-                        <div className="card-icon"><IonIcon icon={gameControllerOutline} /></div>
-                        <h1 className="card-title"><strong>Paglalaro: Image Puzzle</strong></h1>
-                        <p className="mode-description puzzle-instructions">
-                          Ayusin ang 3x3 na piraso ng larawan. I-click ang dalawang tile para magpalit sila ng puwesto.
-                        </p>
-                        {bugtongExamples.length ? (
-                          <div className="puzzle-example-chips">
-                            {bugtongExamples.map((ex) => (
-                              <IonChip key={`puzzle-ex-${ex.id}`} className={`modern-chip ${activePuzzleExampleId === ex.id ? 'active' : ''}`} onClick={() => setPuzzleExample(ex.id)}>
-                                <IonIcon icon={bookmarkSharp} />
-                                <IonLabel>{ex.label}</IonLabel>
-                              </IonChip>
-                            ))}
-                          </div>
-                        ) : null}
-                        {activePuzzleExample && (
-                          <div className="puzzle-preview">
-                            <div className="puzzle-preview-header">
-                              <IonIcon icon={imageOutline} /><span>Preview ng Larawan</span>
+                    <>
+                      <div className="action-chips">
+                        <IonChip
+                          className={`modern-chip ${bugtongPlayMode === 'image' ? 'active' : ''}`}
+                          onClick={() => setBugtongPlayMode('image')}
+                        >
+                          <IonIcon icon={imageOutline} />
+                          <IonLabel>Paglalaro 1</IonLabel>
+                        </IonChip>
+                        <IonChip
+                          className={`modern-chip ${bugtongPlayMode === 'word' ? 'active' : ''}`}
+                          onClick={() => setBugtongPlayMode('word')}
+                        >
+                          <IonIcon icon={gameControllerOutline} />
+                          <IonLabel>Paglalaro 2</IonLabel>
+                        </IonChip>
+                      </div>
+
+                      {bugtongPlayMode === 'word' && (
+                        <IonCard className="info-card puzzle-card">
+                          <IonCardContent>
+                            <WordSearchFillBlankGame
+                              title="Paglalaro 2: Hanapin ang Salita"
+                              items={bugtongWordSearchItems}
+                            />
+                          </IonCardContent>
+                        </IonCard>
+                      )}
+
+                      {bugtongPlayMode === 'image' && (
+                        <IonCard className="info-card puzzle-card">
+                          <IonCardContent>
+                            <div className="card-icon"><IonIcon icon={gameControllerOutline} /></div>
+                            <h1 className="card-title"><strong>Paglalaro 1: Image Puzzle</strong></h1>
+                            <p className="mode-description puzzle-instructions">
+                              Ayusin ang 3x3 na piraso ng larawan. I-click ang dalawang tile para magpalit sila ng puwesto.
+                            </p>
+                            {bugtongExamples.length ? (
+                              <div className="puzzle-example-chips">
+                                {bugtongExamples.map((ex) => (
+                                  <IonChip key={`puzzle-ex-${ex.id}`} className={`modern-chip ${activePuzzleExampleId === ex.id ? 'active' : ''}`} onClick={() => setPuzzleExample(ex.id)}>
+                                    <IonIcon icon={bookmarkSharp} />
+                                    <IonLabel>{ex.label}</IonLabel>
+                                  </IonChip>
+                                ))}
+                              </div>
+                            ) : null}
+                            {activePuzzleExample && (
+                              <div className="puzzle-preview">
+                                <div className="puzzle-preview-header">
+                                  <IonIcon icon={imageOutline} /><span>Preview ng Larawan</span>
+                                </div>
+                                <img className="puzzle-preview-image" src={activePuzzleImage} alt={`Preview para sa ${activePuzzleExample.label}`} loading="lazy" decoding="async" />
+                              </div>
+                            )}
+                            {activePuzzleExample?.text && (
+                              <div className="puzzle-riddle">
+                                <IonText className="intro-text">
+                                  {splitLines(activePuzzleExample.text).map((line, i) => (
+                                    <span key={`puzzle-r-${activePuzzleExample.id}-l-${i}`}>{line}<br /></span>
+                                  ))}
+                                </IonText>
+                              </div>
+                            )}
+                            <div className="puzzle-meta">
+                              <IonBadge color="light">Galaw: {puzzleMoves}</IonBadge>
+                              <IonBadge color={puzzleSolved ? 'success' : 'warning'}>{puzzleSolved ? 'Solved' : 'In Progress'}</IonBadge>
                             </div>
-                            <img className="puzzle-preview-image" src={activePuzzleImage} alt={`Preview para sa ${activePuzzleExample.label}`} loading="lazy" decoding="async" />
-                          </div>
-                        )}
-                        {activePuzzleExample?.text && (
-                          <div className="puzzle-riddle">
-                            <IonText className="intro-text">
-                              {splitLines(activePuzzleExample.text).map((line, i) => (
-                                <span key={`puzzle-r-${activePuzzleExample.id}-l-${i}`}>{line}<br /></span>
-                              ))}
-                            </IonText>
-                          </div>
-                        )}
-                        <div className="puzzle-meta">
-                          <IonBadge color="light">Galaw: {puzzleMoves}</IonBadge>
-                          <IonBadge color={puzzleSolved ? 'success' : 'warning'}>{puzzleSolved ? 'Solved' : 'In Progress'}</IonBadge>
-                        </div>
-                        <div className="puzzle-board">
-                          {puzzleTiles.map((tile, index) => {
-                            const x = tile % PUZZLE_SIZE;
-                            const y = Math.floor(tile / PUZZLE_SIZE);
-                            return (
-                              <button
-                                key={`tile-${index}`}
-                                type="button"
-                                className={`puzzle-tile ${selectedPuzzleIndex === index ? 'selected' : ''}`}
-                                onClick={() => handlePuzzleTileClick(index)}
-                                aria-label={`Puzzle tile ${index + 1}`}
-                                style={{
-                                  backgroundImage: `url("${activePuzzleImage}")`,
-                                  backgroundSize: `${PUZZLE_SIZE * 100}% ${PUZZLE_SIZE * 100}%`,
-                                  backgroundPosition: `${(x / (PUZZLE_SIZE - 1)) * 100}% ${(y / (PUZZLE_SIZE - 1)) * 100}%`,
-                                }}
-                              />
-                            );
-                          })}
-                        </div>
-                        {puzzleSolved && (
-                          <div className="puzzle-success answer-reveal animated">
-                            <IonIcon icon={checkmarkCircleOutline} />
-                            <span>Sagot: <strong>{activePuzzleExample?.answer ?? ''}</strong></span>
-                          </div>
-                        )}
-                        <div className="puzzle-actions">
-                          <IonButton onClick={resetPuzzle} fill="solid" className="puzzle-reset-btn">
-                            <IonIcon icon={gameControllerOutline} slot="start" />I-shuffle Muli
-                          </IonButton>
-                          <IonButton onClick={goToNextPuzzleExample} fill="outline" className="puzzle-next-btn">
-                            Susunod na Halimbawa<IonIcon icon={chevronForwardOutline} slot="end" />
-                          </IonButton>
-                        </div>
-                      </IonCardContent>
-                    </IonCard>
+                            <div className="puzzle-board">
+                              {puzzleTiles.map((tile, index) => {
+                                const x = tile % PUZZLE_SIZE;
+                                const y = Math.floor(tile / PUZZLE_SIZE);
+                                return (
+                                  <button
+                                    key={`tile-${index}`}
+                                    type="button"
+                                    className={`puzzle-tile ${selectedPuzzleIndex === index ? 'selected' : ''}`}
+                                    onClick={() => handlePuzzleTileClick(index)}
+                                    aria-label={`Puzzle tile ${index + 1}`}
+                                    style={{
+                                      backgroundImage: `url("${activePuzzleImage}")`,
+                                      backgroundSize: `${PUZZLE_SIZE * 100}% ${PUZZLE_SIZE * 100}%`,
+                                      backgroundPosition: `${(x / (PUZZLE_SIZE - 1)) * 100}% ${(y / (PUZZLE_SIZE - 1)) * 100}%`,
+                                    }}
+                                  />
+                                );
+                              })}
+                            </div>
+                            {puzzleSolved && (
+                              <div className="puzzle-success answer-reveal animated">
+                                <IonIcon icon={checkmarkCircleOutline} />
+                                <span>Sagot: <strong>{activePuzzleExample?.answer ?? ''}</strong></span>
+                              </div>
+                            )}
+                            <div className="puzzle-actions">
+                              <IonButton onClick={resetPuzzle} fill="solid" className="puzzle-reset-btn">
+                                <IonIcon icon={gameControllerOutline} slot="start" />I-shuffle Muli
+                              </IonButton>
+                              <IonButton onClick={goToNextPuzzleExample} fill="outline" className="puzzle-next-btn">
+                                Susunod na Halimbawa<IonIcon icon={chevronForwardOutline} slot="end" />
+                              </IonButton>
+                            </div>
+                          </IonCardContent>
+                        </IonCard>
+                      )}
+                    </>
                   )}
 
                   <IonButton expand="block" className="game-button" onClick={() => setAralinMode('play')}>
@@ -985,7 +1066,38 @@ const Quarter1Aralin1: React.FC = () => {
                       </IonCardContent>
                     </IonCard>
                   )}
-                  {aralinMode === 'play' && renderQuiz('palaisipan', 'Tanong', 'Piliin ang tamang sagot para sa bawat palaisipan.')}
+                  {aralinMode === 'play' && (
+                    <>
+                      <div className="action-chips">
+                        <IonChip
+                          className={`modern-chip ${palaisipanPlayMode === 'quiz' ? 'active' : ''}`}
+                          onClick={() => setPalaisipanPlayMode('quiz')}
+                        >
+                          <IonIcon icon={gameControllerOutline} />
+                          <IonLabel>Paglalaro 1</IonLabel>
+                        </IonChip>
+                        <IonChip
+                          className={`modern-chip ${palaisipanPlayMode === 'word' ? 'active' : ''}`}
+                          onClick={() => setPalaisipanPlayMode('word')}
+                        >
+                          <IonIcon icon={sparklesOutline} />
+                          <IonLabel>Paglalaro 2</IonLabel>
+                        </IonChip>
+                      </div>
+                      {palaisipanPlayMode === 'quiz'
+                        ? renderQuiz('palaisipan', 'Tanong', 'Piliin ang tamang sagot para sa bawat palaisipan.')
+                        : (
+                          <IonCard className="info-card puzzle-card">
+                            <IonCardContent>
+                              <WordSearchFillBlankGame
+                                title="Paglalaro 2: Hanapin ang Salita"
+                                items={palaisipanWordSearchItems}
+                              />
+                            </IonCardContent>
+                          </IonCard>
+                        )}
+                    </>
+                  )}
                 </div>
               </IonAccordion>
             )}
@@ -1078,7 +1190,38 @@ const Quarter1Aralin1: React.FC = () => {
                       </IonCardContent>
                     </IonCard>
                   )}
-                  {aralinMode === 'play' && renderQuiz('tanaga', 'Tanaga', 'Piliin ang tamang tema para sa bawat tanaga.')}
+                  {aralinMode === 'play' && (
+                    <>
+                      <div className="action-chips">
+                        <IonChip
+                          className={`modern-chip ${tanagaPlayMode === 'quiz' ? 'active' : ''}`}
+                          onClick={() => setTanagaPlayMode('quiz')}
+                        >
+                          <IonIcon icon={gameControllerOutline} />
+                          <IonLabel>Paglalaro 1</IonLabel>
+                        </IonChip>
+                        <IonChip
+                          className={`modern-chip ${tanagaPlayMode === 'word' ? 'active' : ''}`}
+                          onClick={() => setTanagaPlayMode('word')}
+                        >
+                          <IonIcon icon={createOutline} />
+                          <IonLabel>Paglalaro 2</IonLabel>
+                        </IonChip>
+                      </div>
+                      {tanagaPlayMode === 'quiz'
+                        ? renderQuiz('tanaga', 'Tanaga', 'Piliin ang tamang tema para sa bawat tanaga.')
+                        : (
+                          <IonCard className="info-card puzzle-card">
+                            <IonCardContent>
+                              <WordSearchFillBlankGame
+                                title="Paglalaro 2: Hanapin ang Salita"
+                                items={tanagaWordSearchItems}
+                              />
+                            </IonCardContent>
+                          </IonCard>
+                        )}
+                    </>
+                  )}
                 </div>
               </IonAccordion>
             )}
@@ -1168,7 +1311,38 @@ const Quarter1Aralin1: React.FC = () => {
                       </IonCardContent>
                     </IonCard>
                   )}
-                  {aralinMode === 'play' && renderQuiz('salawikain', 'Salawikain', 'Piliin ang tamang aral para sa bawat salawikain.')}
+                  {aralinMode === 'play' && (
+                    <>
+                      <div className="action-chips">
+                        <IonChip
+                          className={`modern-chip ${salawikainPlayMode === 'quiz' ? 'active' : ''}`}
+                          onClick={() => setSalawikainPlayMode('quiz')}
+                        >
+                          <IonIcon icon={gameControllerOutline} />
+                          <IonLabel>Paglalaro 1</IonLabel>
+                        </IonChip>
+                        <IonChip
+                          className={`modern-chip ${salawikainPlayMode === 'word' ? 'active' : ''}`}
+                          onClick={() => setSalawikainPlayMode('word')}
+                        >
+                          <IonIcon icon={heartOutline} />
+                          <IonLabel>Paglalaro 2</IonLabel>
+                        </IonChip>
+                      </div>
+                      {salawikainPlayMode === 'quiz'
+                        ? renderQuiz('salawikain', 'Salawikain', 'Piliin ang tamang aral para sa bawat salawikain.')
+                        : (
+                          <IonCard className="info-card puzzle-card">
+                            <IonCardContent>
+                              <WordSearchFillBlankGame
+                                title="Paglalaro 2: Hanapin ang Salita"
+                                items={salawikainWordSearchItems}
+                              />
+                            </IonCardContent>
+                          </IonCard>
+                        )}
+                    </>
+                  )}
                 </div>
               </IonAccordion>
             )}

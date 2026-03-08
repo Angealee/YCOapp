@@ -33,6 +33,7 @@ import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { quarter2LessonsById, QuarterLesson } from "../../data/quarter2Lessons";
 import "./Quarter1Aralin1.css";
+import WordSearchFillBlankGame from "../../components/WordSearchFillBlankGame";
 
 type LessonSection = Record<string, any> & {
   id?: string;
@@ -101,6 +102,32 @@ const Quarter2Aralin1: React.FC = () => {
   };
 
   const sections = (lesson?.sections ?? []) as LessonSection[];
+  const isAralin1 = aralinId === 1;
+  const aralin1WordSearchItems = useMemo(
+    () => [
+      {
+        id: "q2-a1-1",
+        sentence: "Ang {blank} ay kuwentong nagpapaliwanag ng pinagmulan ng bagay o pook.",
+        answer: "Alamat",
+      },
+      {
+        id: "q2-a1-2",
+        sentence: "Ang mga gumaganap sa kuwento ay tinatawag na {blank}.",
+        answer: "Tauhan",
+      },
+      {
+        id: "q2-a1-3",
+        sentence: "Ang lugar at panahon ng kuwento ay {blank}.",
+        answer: "Tagpuan",
+      },
+      {
+        id: "q2-a1-4",
+        sentence: "Ang sunod-sunod na pangyayari sa kuwento ay {blank}.",
+        answer: "Banghay",
+      },
+    ],
+    []
+  );
 
   return (
     <IonPage>
@@ -151,6 +178,17 @@ const Quarter2Aralin1: React.FC = () => {
         {/* Main Content */}
         {sections.length ? (
           <div className="content-wrapper">
+            {isAralin1 ? (
+              <IonCard className="info-card puzzle-card">
+                <IonCardContent>
+                  <WordSearchFillBlankGame
+                    title="Puzzle Game: Hanapin ang Salita"
+                    items={aralin1WordSearchItems}
+                  />
+                </IonCardContent>
+              </IonCard>
+            ) : null}
+
             <IonAccordionGroup className="modern-accordion-group">
               {sections.map((section, index) => {
                 const sectionKey = section.id ?? `section-${index + 1}`;
