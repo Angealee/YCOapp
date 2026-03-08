@@ -277,7 +277,7 @@ const Quiz: React.FC = () => {
         <IonContent fullscreen className="quarter-selection-content">
           <div className="selection-header">
             <h1 className="selection-title">Pumili ng Markahan</h1>
-            <p className="selection-subtitle">Pumili ng quarter para simulan ang pagsusulit</p>
+            <p className="selection-subtitle">Pumili ng markahan para simulan ang pagsusulit</p>
           </div>
           
           <div className="quarter-cards-container">
