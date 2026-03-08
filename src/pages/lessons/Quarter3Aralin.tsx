@@ -30,6 +30,7 @@ import { useMemo, useState } from "react";
 import { useParams } from "react-router-dom";
 import { quarter3LessonsById, QuarterLesson, LessonSection } from "../../data/quarter3Lessons";
 import "./Quarter1Aralin1.css";
+import WordSearchFillBlankGame from "../../components/WordSearchFillBlankGame";
 
 const iconClassByIndex = (index: number): string => {
   const classes = ["bugtong-icon", "palaisipan-icon", "tanaga-icon", "salawikain-icon"];
@@ -61,6 +62,32 @@ const Quarter3Aralin: React.FC = () => {
   );
 
   const sections: LessonSection[] = lesson?.sections ?? [];
+  const isAralin1 = aralinId === 1;
+  const aralin1WordSearchItems = useMemo(
+    () => [
+      {
+        id: "q3-a1-1",
+        sentence: "Sa panahon ng pananakop, malaki ang impluwensiya ng mga {blank}.",
+        answer: "Espanyol",
+      },
+      {
+        id: "q3-a1-2",
+        sentence: "Ginamit ang panitikan para sa pagpapalaganap ng {blank}.",
+        answer: "Kristiyanismo",
+      },
+      {
+        id: "q3-a1-3",
+        sentence: "Unang naipalaganap ang mga akdang {blank}.",
+        answer: "Panrelihiyon",
+      },
+      {
+        id: "q3-a1-4",
+        sentence: "Unti-unting napalitan ang baybayin ng alpabetong {blank}.",
+        answer: "Romano",
+      },
+    ],
+    []
+  );
 
   const getSectionMode = (sectionKey: string): "read" | "listen" | "watch" => {
     return modeBySection[sectionKey] ?? "read";
@@ -114,6 +141,17 @@ const Quarter3Aralin: React.FC = () => {
 
         {sections.length ? (
           <div className="content-wrapper">
+            {isAralin1 ? (
+              <IonCard className="info-card puzzle-card">
+                <IonCardContent>
+                  <WordSearchFillBlankGame
+                    title="Puzzle Game: Hanapin ang Salita"
+                    items={aralin1WordSearchItems}
+                  />
+                </IonCardContent>
+              </IonCard>
+            ) : null}
+
             <IonAccordionGroup
               className="modern-accordion-group"
               onIonChange={(e) => setActiveSection(e.detail.value as string)}
