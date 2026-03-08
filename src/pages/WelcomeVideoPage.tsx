@@ -36,9 +36,7 @@ const WelcomeVideoPage: React.FC = () => {
   };
 
   const proceedToHome = () => {
-    // ── CHANGED: sessionStorage instead of localStorage ──────
-    // Matches SplashIntro — both use sessionStorage so the flag
-    // clears on app close and the welcome video plays again next launch.
+    
     sessionStorage.setItem('yco_seen_welcome', '1');
     sessionStorage.setItem('yco_start_guide', '1');
     history.replace('/home');
@@ -54,7 +52,7 @@ const WelcomeVideoPage: React.FC = () => {
             <video
               ref={videoRef}
               className="welcome-video"
-              src="/assets/video/welcomeVideo.mp4"
+              src="/assets/video/revisionIntroYcoVid.mp4"
               playsInline
               preload="auto"
             />
