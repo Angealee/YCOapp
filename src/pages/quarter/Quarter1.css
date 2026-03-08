@@ -443,7 +443,7 @@ body, ion-app, ion-content {
   font-family: 'Baloo 2', cursive;
   font-size: 3.2rem;
   font-weight: 900;
-  color: rgba(26,26,46,0.08);
+  color: rgba(250, 14, 14, 0.637);
   z-index: 1;
   pointer-events: none;
   line-height: 1;
@@ -526,7 +526,7 @@ body, ion-app, ion-content {
 .card-subtitle {
   font-family: 'Nunito', sans-serif;
   font-size: 0.9rem;
-  font-weight: 700;
+  font-weight: 900;
   color: var(--purple-dk);
   margin: 0 0 0.65rem;
 }
