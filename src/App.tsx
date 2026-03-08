@@ -1,5 +1,5 @@
 import { useEffect, useRef } from 'react';
-import { Redirect, Route, useLocation } from 'react-router-dom';
+import { Redirect, Route, Switch, useLocation } from 'react-router-dom';
 import {
   IonApp,
   IonIcon,
@@ -11,37 +11,26 @@ import {
   setupIonicReact
 } from '@ionic/react';
 import { IonReactRouter } from '@ionic/react-router';
-import { ellipse, square, triangle, pencilOutline, homeSharp, createSharp, settings, settingsSharp, bookSharp, pencilSharp } from 'ionicons/icons';
+import { pencilSharp, createSharp, bookSharp } from 'ionicons/icons';
+
 import Home from './pages/Home';
 import Quiz from './pages/Quiz';
 import Setting from './pages/Setting';
 import Pagsusulat from './pages/Pagsusulat';
 import WelcomeVideoPage from './pages/WelcomeVideoPage';
-// import '@ionic/react/css/palettes/dark.system.css';
+import { SplashScreen } from '@capacitor/splash-screen';
 
-// Quarter pages
 import Quarter1 from './pages/quarter/Quarter1';
 import Quarter1Aralin1 from './pages/lessons/Quarter1Aralin1';
 import Quarter2Aralin1 from './pages/lessons/Quarter2Aralin1';
 import Quarter2 from './pages/quarter/Quarter2';
 import Quarter3 from './pages/quarter/Quarter3';
 import Quarter3Aralin from './pages/lessons/Quarter3Aralin';
-// import Quarter2Lesson from './pages/quarter/Quarter2Lesson';
-// import Quarter3 from './pages/quarter/Quarter3';
-// import Quarter3Lesson from './pages/quarter/Quarter3Lesson';
-// import Quarter4 from './pages/quarter/Quarter4';
-// import Quarter4Lesson from './pages/quarter/Quarter4Lesson';
 
-
-/* Core CSS required for Ionic components to work properly */
 import '@ionic/react/css/core.css';
-
-/* Basic CSS for apps built with Ionic */
 import '@ionic/react/css/normalize.css';
 import '@ionic/react/css/structure.css';
 import '@ionic/react/css/typography.css';
-
-/* Optional CSS utils that can be commented out */
 import '@ionic/react/css/padding.css';
 import '@ionic/react/css/float-elements.css';
 import '@ionic/react/css/text-alignment.css';
@@ -49,34 +38,20 @@ import '@ionic/react/css/text-transformation.css';
 import '@ionic/react/css/flex-utils.css';
 import '@ionic/react/css/display.css';
 import '@ionic/react/css/palettes/dark.class.css';
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
-
-/* import '@ionic/react/css/palettes/dark.always.css'; */
-/* import '@ionic/react/css/palettes/dark.class.css'; */
-
-// import '@ionic/react/css/palettes/dark.system.css';
-
-/* Theme variables */
 import './theme/variables.css';
-// import Aralin1 from './pages/quiz/Aralin1';
-
 
 setupIonicReact();
 
+// ─────────────────────────────────────────────
+// TABS — all in-app screens live here
+// ─────────────────────────────────────────────
 const Tabs: React.FC = () => {
   const location = useLocation();
   const hasStartedGuideRef = useRef(false);
 
   useEffect(() => {
     const shouldStartGuide = sessionStorage.getItem('yco_start_guide') === '1';
-    if (!shouldStartGuide || hasStartedGuideRef.current || location.pathname !== '/home') {
-      return;
-    }
+    if (!shouldStartGuide || hasStartedGuideRef.current || location.pathname !== '/home') return;
 
     hasStartedGuideRef.current = true;
     sessionStorage.removeItem('yco_start_guide');
@@ -85,7 +60,6 @@ const Tabs: React.FC = () => {
       try {
         const { driver } = await import('driver.js');
         await import('driver.js/dist/driver.css');
-
         const tour = driver({
           showProgress: true,
           animate: true,
@@ -94,39 +68,15 @@ const Tabs: React.FC = () => {
           prevBtnText: 'Bumalik',
           doneBtnText: 'Tapos',
           steps: [
-            {
-              popover: {
-                title: 'Maligayang pagdating!',
-                description: 'Ito ang maikling gabay kung paano gamitin ang app.',
-              },
-            },
-            {
-              element: '[data-tour="tab-home"]',
-              popover: {
-                title: 'Markahan',
-                description: 'Dito mo makikita ang mga aralin kada markahan.',
-              },
-            },
-            {
-              element: '[data-tour="tab-quiz"]',
-              popover: {
-                title: 'Pagsusulit',
-                description: 'Dito ka magsasagot ng quiz para masubukan ang natutunan mo.',
-              },
-            },
-            {
-              element: '[data-tour="tab-writing"]', 
-              popover: {
-                title: 'Pagsusulat',
-                description: 'Dito mo magagawa ang mga gawain sa pagsulat.',
-              },
-            },
+            { popover: { title: 'Maligayang pagdating!', description: 'Ito ang maikling gabay kung paano gamitin ang app.' } },
+            { element: '[data-tour="tab-home"]',    popover: { title: 'Markahan',    description: 'Dito mo makikita ang mga aralin kada markahan.' } },
+            { element: '[data-tour="tab-quiz"]',    popover: { title: 'Pagsusulit',  description: 'Dito ka magsasagot ng quiz para masubukan ang natutunan mo.' } },
+            { element: '[data-tour="tab-writing"]', popover: { title: 'Pagsusulat', description: 'Dito mo magagawa ang mga gawain sa pagsulat.' } },
           ],
         });
-
         tour.drive();
-      } catch (error) {
-        console.error('Hindi nagsimula ang gabay:', error);
+      } catch (e) {
+        console.error('Hindi nagsimula ang gabay:', e);
       }
     }, 250);
 
@@ -134,125 +84,86 @@ const Tabs: React.FC = () => {
   }, [location.pathname]);
 
   const hideTabBar =
-    location.pathname.startsWith('/welcome') ||
     location.pathname.startsWith('/quiz/take') ||
     location.pathname.startsWith('/pagsusulit');
 
   return (
     <IonTabs>
       <IonRouterOutlet>
-
-          {/* Welcome */}
-          <Route exact path="/welcome" component={WelcomeVideoPage} />
-          <Route exact path="/home" component={Home} />
-          <Redirect exact from="/" to="/welcome" />
-
-          {/* Core Tabs */}
-          <Route exact path="/home" component={Home} />
-          <Route exact path="/quiz" component={Quiz} />
-          <Route exact path="/quiz/take/:quarter" component={Quiz} />
-          <Route exact path="/pagsusulat" component={Pagsusulat} />
-          <Route exact path="/pagsusulat/:quarter" component={Pagsusulat} />
-          <Route exact path="/pagsusulat/:quarter/:aralin" component={Pagsusulat} />
-          <Route exact path="/setting" component={Setting} />
-              {/* Pagsusulit  */}
-              {/* <Route exact path="/pagsusulit/aralin1" component={Aralin1}/> */}
-
-              {/* Quarter 1 */}
-              <Route exact path="/quarter/1" component={Quarter1} />
-                {/* Aralin Lessons */}
-                <Route exact path="/quarter/1/aralin/:id" component={Quarter1Aralin1} />
-              {/* Quarter 2 */}
-              <Route exact path="/quarter/2" component={Quarter2} />
-              <Route exact path="/quarter/2/aralin/:id" component={Quarter2Aralin1} />
-              <Route exact path="/quarter2">
-                <Quarter2 />
-              </Route>
-
-              {/* Quarter 3 */}
-              <Route exact path="/quarter/3" component={Quarter3} />
-              <Route exact path="/quarter/3/aralin/:id" component={Quarter3Aralin} />
-
-
-          <Route exact path="/">
-            <Redirect to="/welcome" />
-          </Route>
-
+        <Route exact path="/home"                        component={Home} />
+        <Route exact path="/quiz"                        component={Quiz} />
+        <Route exact path="/quiz/take/:quarter"          component={Quiz} />
+        <Route exact path="/pagsusulat"                  component={Pagsusulat} />
+        <Route exact path="/pagsusulat/:quarter"         component={Pagsusulat} />
+        <Route exact path="/pagsusulat/:quarter/:aralin" component={Pagsusulat} />
+        <Route exact path="/setting"                     component={Setting} />
+        <Route exact path="/quarter/1"                   component={Quarter1} />
+        <Route exact path="/quarter/1/aralin/:id"        component={Quarter1Aralin1} />
+        <Route exact path="/quarter/2"                   component={Quarter2} />
+        <Route exact path="/quarter/2/aralin/:id"        component={Quarter2Aralin1} />
+        <Route exact path="/quarter/3"                   component={Quarter3} />
+        <Route exact path="/quarter/3/aralin/:id"        component={Quarter3Aralin} />
+        {/* Fallback inside tabs */}
+        <Route exact path="/">
+          <Redirect to="/home" />
+        </Route>
       </IonRouterOutlet>
 
-      {!hideTabBar ? (
+      {!hideTabBar && (
         <IonTabBar slot="bottom" className="modern-tab-bar">
-
-          {/* Home Tab */}
-          <IonTabButton 
-            tab="Home" 
-            href="/home"
-            className="modern-tab-button"
-            data-tour="tab-home"
-          >
-            <IonIcon 
-              aria-hidden="true" 
-              icon={bookSharp} 
-              className="tab-icon"
-            />
+          <IonTabButton tab="Home" href="/home" className="modern-tab-button" data-tour="tab-home">
+            <IonIcon aria-hidden="true" icon={bookSharp} className="tab-icon" />
             <IonLabel className="tab-label">Markahan</IonLabel>
           </IonTabButton>
-
-          {/* Quiz Tab */}
-          <IonTabButton 
-            tab="Quiz" 
-            href="/quiz"
-            className="modern-tab-button"
-            data-tour="tab-quiz"
-          >
-            <IonIcon 
-              aria-hidden="true" 
-              icon={createSharp} 
-              className="tab-icon"
-            />
+          <IonTabButton tab="Quiz" href="/quiz" className="modern-tab-button" data-tour="tab-quiz">
+            <IonIcon aria-hidden="true" icon={createSharp} className="tab-icon" />
             <IonLabel className="tab-label">Pagsusulit</IonLabel>
           </IonTabButton>
-        
-          {/* Pagsusulat Tab */}
-          <IonTabButton 
-            tab="Pagsusulat" 
-            href="/pagsusulat"
-            className="modern-tab-button"
-            data-tour="tab-writing"
-          >
-            <IonIcon 
-              icon={pencilSharp} 
-              className="tab-icon"
-            />
+          <IonTabButton tab="Pagsusulat" href="/pagsusulat" className="modern-tab-button" data-tour="tab-writing">
+            <IonIcon icon={pencilSharp} className="tab-icon" />
             <IonLabel className="tab-label">Pagsusulat</IonLabel>
           </IonTabButton>
-
-          {/* Setting Tab */}
-          {/* <IonTabButton 
-            tab="Setting" 
-            href="/setting"
-            className="modern-tab-button"
-          >
-            <IonIcon 
-              aria-hidden="true" 
-              icon={settingsSharp} 
-              className="tab-icon"
-            />
-            <IonLabel className="tab-label">Setting</IonLabel>
-          </IonTabButton> */}
-        
         </IonTabBar>
-      ) : null}
+      )}
     </IonTabs>
   );
 };
 
-const App: React.FC = () => (
-  <IonApp>
-    <IonReactRouter>
-      <Tabs />
-    </IonReactRouter>
-  </IonApp>
-);
+// ─────────────────────────────────────────────
+// ROOT APP
+// ─────────────────────────────────────────────
+const App: React.FC = () => {
+  useEffect(() => {
+    setTimeout(async () => {
+      try { await SplashScreen.hide(); } catch (_) {}
+    }, 1500);
+  }, []);
+
+  const seenWelcome = localStorage.getItem('yco_seen_welcome') === '1';
+
+  return (
+    <IonApp>
+      <IonReactRouter>
+        {/*
+          IMPORTANT: Plain <Switch> at the root — NOT IonRouterOutlet.
+          IonRouterOutlet keeps all matched routes mounted at once,
+          which causes /welcome and Tabs to conflict and produce
+          blank content. Switch renders ONLY the first match.
+        */}
+        <Switch>
+          <Route exact path="/">
+            <Redirect to={seenWelcome ? '/home' : '/welcome'} />
+          </Route>
+
+          {/* Welcome is fully outside Tabs — no tab bar, no conflicts */}
+          <Route exact path="/welcome" component={WelcomeVideoPage} />
+
+          {/* All other routes go to Tabs */}
+          <Route component={Tabs} />
+        </Switch>
+      </IonReactRouter>
+    </IonApp>
+  );
+};
 
 export default App;
