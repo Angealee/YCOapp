@@ -1292,3 +1292,476 @@ ion-button[expand="block"].game-button::before {
 }
 .item-audio-btn:active { transform: translateY(2px); }
 .item-audio-btn ion-icon { font-size: 1rem; }
+
+/* ============================================
+   GIF REVEAL ADDITIONS
+   Append these to the bottom of Quarter1Aralin1.css
+   Do NOT replace existing styles.
+   ============================================ */
+
+/* ─── Answer Reveal WITH GIF ─────────────────
+   A new variant of .answer-reveal that expands
+   into a card to fit the GIF above the text.
+   Used only in Pagbasa mode read cards.
+   The existing .answer-reveal pill (used in quiz)
+   is left completely unchanged.
+   ──────────────────────────────────────────── */
+/* Outer wrapper — just stacks GIF above the pill */
+.answer-reveal-gif-block {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  width: 100%;
+  margin-top: 0.25rem;
+  animation: gifRevealPop 0.45s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+}
+
+@keyframes gifRevealPop {
+  0%   { opacity: 0; transform: scale(0.75) translateY(12px); }
+  70%  { transform: scale(1.03) translateY(-3px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+
+/* GIF visibility states */
+.gif-hidden {
+  display: none;
+}
+.gif-visible {
+  display: flex;
+}
+
+/* ─── GIF Container ───────────────────────── */
+.answer-gif-wrapper {
+  width: 100%;
+  position: relative;
+  background: linear-gradient(135deg, #FF6B6B 0%, #FF4757 50%, #C0392B 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  min-height: 130px;
+}
+
+/* Decorative confetti dots behind the gif */
+.answer-gif-wrapper::before {
+  content: '🎉 ✨ 🎊 ⭐ 🎉 ✨ 🎊 ⭐ 🎉 ✨ 🎊 ⭐';
+  position: absolute;
+  top: 6px;
+  left: 0;
+  right: 0;
+  font-size: 11px;
+  letter-spacing: 6px;
+  opacity: 0.3;
+  white-space: nowrap;
+  overflow: hidden;
+  animation: ticker 8s linear infinite;
+  pointer-events: none;
+}
+
+.answer-gif-wrapper::after {
+  content: '⭐ 🌈 💡 🌟 ⭐ 🌈 💡 🌟 ⭐ 🌈 💡 🌟';
+  position: absolute;
+  bottom: 6px;
+  left: 0;
+  right: 0;
+  font-size: 11px;
+  letter-spacing: 6px;
+  opacity: 0.3;
+  white-space: nowrap;
+  overflow: hidden;
+  animation: ticker 10s linear infinite reverse;
+  pointer-events: none;
+}
+
+.answer-gif {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  border-radius: 50%;
+  border: 4px solid rgba(255, 255, 255, 0.6);
+  box-shadow:
+    0 0 0 6px rgba(255, 255, 255, 0.15),
+    0 8px 24px rgba(0, 0, 0, 0.2);
+  animation: gifBounceIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both 0.15s;
+  position: relative;
+  z-index: 1;
+  background: white;
+}
+
+@keyframes gifBounceIn {
+  0%   { opacity: 0; transform: scale(0.4) rotate(-10deg); }
+  60%  { transform: scale(1.1) rotate(4deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+
+/* .answer-reveal-text-row removed — original .answer-reveal pill is used instead */
+
+/* ─── Per-section GIF background tints ───── */
+/* Bugtong — coral (default, already set above) */
+.answer-gif-wrapper.gif-bugtong {
+  background: linear-gradient(135deg, #FF6B6B 0%, #C0392B 100%);
+}
+
+/* Palaisipan — purple */
+.answer-gif-wrapper.gif-palaisipan {
+  background: linear-gradient(135deg, #C77DFF 0%, #7B2CBF 100%);
+}
+
+/* Tanaga — green */
+.answer-gif-wrapper.gif-tanaga {
+  background: linear-gradient(135deg, #6BCB77 0%, #1B7A30 100%);
+}
+
+/* Salawikain — orange */
+.answer-gif-wrapper.gif-salawikain {
+  background: linear-gradient(135deg, #FF9F45 0%, #C0571A 100%);
+}
+
+/* ─── Hide GIF on toggle off (smooth) ────── */
+.answer-reveal-with-gif.hiding {
+  animation: gifRevealHide 0.2s ease-in forwards;
+}
+
+@keyframes gifRevealHide {
+  from { opacity: 1; transform: scale(1); }
+  to   { opacity: 0; transform: scale(0.92); }
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   EXPANDABLE ITEM — tap-to-reveal list item inside cards
+   ══════════════════════════════════════════════════════════════ */
+
+/* Override existing .list-item to allow tap behavior */
+.expandable-item {
+  cursor: pointer;
+  user-select: none;
+  -webkit-tap-highlight-color: transparent;
+  border-radius: 12px;
+  transition: background 0.15s ease;
+  padding: 0.55rem 0.5rem;
+  align-items: flex-start !important;
+}
+
+.expandable-item:active {
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.expandable-body {
+  flex: 1;
+  min-width: 0;
+}
+
+.expandable-title-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.4rem;
+}
+
+.expandable-title-row strong {
+  font-family: 'Baloo 2', cursive;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: inherit;
+  line-height: 1.4;
+  flex: 1;
+}
+
+.expand-chevron {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: inherit;
+  opacity: 0.55;
+  transition: transform 0.28s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.2s ease;
+  display: inline-block;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.expand-chevron.open {
+  transform: rotate(90deg);
+  opacity: 0.9;
+}
+
+/* Smooth expand/collapse via max-height trick */
+.expandable-desc {
+  overflow: hidden;
+  transition: max-height 0.32s cubic-bezier(0.4, 0, 0.2, 1),
+              opacity 0.25s ease,
+              margin-top 0.2s ease;
+}
+
+.expandable-desc.desc-closed {
+  max-height: 0;
+  opacity: 0;
+  margin-top: 0;
+}
+
+.expandable-desc.desc-open {
+  max-height: 200px;
+  opacity: 1;
+  margin-top: 0.35rem;
+}
+
+.expandable-desc p {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 600;
+  line-height: 1.55;
+  color: inherit;
+  opacity: 0.88;
+  margin: 0;
+  padding-bottom: 0.2rem;
+}
+
+
+/* ═══════════════════════════════════════════════════════════════
+   DEFINITION MODAL — tap card + bottom sheet modal
+   ══════════════════════════════════════════════════════════════ */
+
+/* Tappable card row */
+.defcard-tap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  background: linear-gradient(135deg, #fffde7, #fff8dc);
+  border: 2.5px solid rgba(255, 217, 61, 0.5);
+  border-radius: 18px;
+  padding: 0.9rem 1.1rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  box-shadow: 0 4px 0 rgba(255, 193, 7, 0.2), 0 6px 18px rgba(255, 217, 61, 0.12);
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+}
+
+.defcard-tap:active {
+  transform: scale(0.97);
+  box-shadow: 0 2px 0 rgba(255, 193, 7, 0.2);
+}
+
+.defcard-left {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: 1;
+  min-width: 0;
+}
+
+.defcard-icon-ring {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FFD93D, #FFC107);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 3px 0 rgba(180, 120, 0, 0.25);
+}
+
+.defcard-icon-ring ion-icon {
+  font-size: 1.2rem;
+  color: #5D4000;
+}
+
+.defcard-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.defcard-title {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.defcard-subtitle {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.defcard-title {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1rem;
+  font-weight: 800;
+  color: #1a1a2e;
+  line-height: 1.2;
+}
+
+.defcard-subtitle {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: #7A5800;
+  opacity: 0.85;
+}
+
+.defcard-hint {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  flex-shrink: 0;
+}
+
+.defcard-hint span:first-child {
+  display: none;
+}
+
+.defcard-finger {
+  font-size: 1.1rem;
+  animation: defFingerBounce 1.4s ease-in-out infinite;
+}
+
+@keyframes defFingerBounce {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(-4px); }
+}
+
+/* Bottom sheet modal */
+.definition-modal {
+  --border-radius: 28px 28px 0 0;
+}
+
+.defmodal-content {
+  padding: 0 1.4rem 2rem;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+  min-height: 100%;
+}
+
+.defmodal-handle {
+  width: 40px;
+  height: 5px;
+  border-radius: 99px;
+  background: rgba(0, 0, 0, 0.15);
+  margin: 0.9rem auto 0.4rem;
+  flex-shrink: 0;
+}
+
+/* ── Splash image hero ── */
+.defmodal-splash-wrap {
+  position: relative;
+  width: auto;
+  height: auto;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.defmodal-splash-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center top;
+  display: block;
+  border-radius: 40px 40px 0 0;
+}
+
+/* Gradient overlay so text/badge reads cleanly over image */
+.defmodal-splash-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0,0,0,0.08) 0%,
+    rgba(255, 107, 107, 0.35) 70%,
+    rgba(255, 107, 107, 0.7) 100%
+  );
+}
+
+/* Icon badge pinned to bottom-left of image */
+.defmodal-splash-badge {
+  position: absolute;
+  bottom: -20px;
+  left: 1.3rem;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FFD93D, #FFC107);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 0 rgba(180,120,0,0.3), 0 6px 16px rgba(255,193,7,0.35);
+  border: 3px solid #ffffff;
+  z-index: 5;
+}
+
+.defmodal-splash-badge ion-icon {
+  font-size: 1.35rem;
+  color: #5D4000;
+}
+
+.defmodal-header {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+}
+
+.defmodal-icon-ring {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #FFD93D, #FFC107);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-shadow: 0 4px 0 rgba(180, 120, 0, 0.25);
+}
+
+.defmodal-icon-ring ion-icon {
+  font-size: 1.35rem;
+  color: #5D4000;
+}
+
+.defmodal-title {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #1a1a2e;
+  margin: 0;
+  line-height: 1.2;
+}
+
+.defmodal-subtitle {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #888;
+  margin: 2px 0 0;
+}
+
+.defmodal-divider {
+  height: 2px;
+  background: linear-gradient(90deg, #FFD93D, rgba(255,217,61,0.1));
+  border-radius: 2px;
+  flex-shrink: 0;
+}
+
+.defmodal-body {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.97rem;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.65;
+  margin: 0;
+}
+
+.defmodal-close-btn {
+  --background: #FF6B6B;
+  --background-activated: #C0392B;
+  --border-radius: 14px;
+  font-family: 'Baloo 2', cursive;
+  font-weight: 800;
+  margin-top: 0.4rem;
+}
