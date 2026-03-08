@@ -231,7 +231,7 @@ export const quarter3Quiz: QuizQuestion[] = [
   },
   {
     id: 20,
-    question: "Ano ang pinakamainam na paglalarawan sa Quarter 3 na aralin?",
+    question: "Ano ang pinakamainam na paglalarawan sa Markahan 3 na aralin?",
     options: [
       "Puro modernong social media posts lamang",
       "Pag-aaral ng tradisyonal na anyong pampanitikan at pagsusuri ng impormasyon",
@@ -239,6 +239,6 @@ export const quarter3Quiz: QuizQuestion[] = [
       "Eksklusibong pag-aaral ng banyagang panitikan"
     ],
     correctAnswer: 1,
-    explanation: "Nakatuon ang Quarter 3 sa tradisyonal na panitikan at mapanuring pag-unawa sa balita."
+    explanation: "Nakatuon ang Markahan 3 sa tradisyonal na panitikan at mapanuring pag-unawa sa balita."
   }
 ];
