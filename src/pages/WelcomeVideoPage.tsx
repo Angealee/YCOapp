@@ -18,9 +18,8 @@ const WelcomeVideoPage: React.FC = () => {
           <div className="animation-stage">
             <video
               className="welcome-video"
-              src="/assets/video/welcome.mp4"
+              src="/assets/video/welcomeVideo.mp4"
               autoPlay
-              muted
               loop
               playsInline
             />
