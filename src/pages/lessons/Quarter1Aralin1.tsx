@@ -408,6 +408,8 @@ const Quarter1Aralin1: React.FC = () => {
   const [palaisipanPlayMode, setPalaisipanPlayMode] = useState<SectionPlayMode>('quiz');
   const [tanagaPlayMode, setTanagaPlayMode] = useState<SectionPlayMode>('quiz');
   const [salawikainPlayMode, setSalawikainPlayMode] = useState<SectionPlayMode>('quiz');
+  const [playingCard, setPlayingCard] = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const bugtongSection = quarter1Lesson1.sections.find((s) => s.id === 'bugtong');
 
