@@ -16,7 +16,8 @@ import {
   IonChip,
   IonBackButton,
   IonButtons,
-  IonBadge
+  IonBadge,
+  IonModal
 } from '@ionic/react';
 
 import {
@@ -47,10 +48,8 @@ const PUZZLE_SIZE = 3;
 const playRevealSound = () => {
   const audio = new Audio('/assets/audio/reveal.mp3');
   audio.volume = 0.6;
-  audio.play().catch(() => {}); // catch silences autoplay errors
+  audio.play().catch(() => {});
 };
-
-
 
 type BugtongExample = {
   id: number;
@@ -60,65 +59,39 @@ type BugtongExample = {
 };
 
 // ─── GIF map per section ──────────────────────────────────────────────────────
-// Place your own GIFs in public/assets/gif/ and update these paths.
-// Fallback: free Tenor/Giphy embed URLs (no login needed for img src).
-// Each section gets a different celebratory reaction.
 const SECTION_GIFS: Record<string, { src: string; alt: string; bgClass: string }> = {
-  bugtong: {
-    src: 'https://media.tenor.com/YKMVQSJdBsIAAAAi/light-bulb-idea.gif',
-    alt: 'Lightbulb idea!',
-    bgClass: 'gif-bugtong',
-  },
-  palaisipan: {
-    src: 'https://media.tenor.com/2LTWBKbS1KYAAAAC/thinking-hmm.gif',
-    alt: 'Thinking face!',
-    bgClass: 'gif-palaisipan',
-  },
-  tanaga: {
-    src: 'https://media.tenor.com/eFPFHSN4rHcAAAAC/clapping-minions.gif',
-    alt: 'Clapping!',
-    bgClass: 'gif-tanaga',
-  },
-  salawikain: {
-    src: 'https://media.tenor.com/2aJoAFhxqjcAAAAC/heart-love.gif',
-    alt: 'Heart!',
-    bgClass: 'gif-salawikain',
-  },
+  bugtong:    { src: '/assets/gif/Yelo.gif',   alt: 'Bugtong sagot!',    bgClass: 'gif-bugtong' },
+  palaisipan: { src: '/assets/gif/isip.gif',   alt: 'Palaisipan sagot!', bgClass: 'gif-palaisipan' },
+  tanaga:     { src: '/assets/gif/Liham.gif',  alt: 'Tanaga tema!',      bgClass: 'gif-tanaga' },
+  salawikain: { src: '/assets/gif/Orasan.gif', alt: 'Salawikain aral!',  bgClass: 'gif-salawikain' },
 };
 
-// Per-answer GIFs for Bugtong — keyed by answer text (lowercase), matches your data file exactly
 const BUGTONG_ANSWER_GIFS: Record<string, string> = {
   cellphone:  '/assets/gif/Cellphone.gif',
-  kalendaryo: '/assets/gif/Orasan.gif',   // no kalendaryo.gif — Yelo is closest
-  tubig:      '/assets/gif/Yelo.gif',   // no tubig.gif — fallback
-  aklat:      '/assets/gif/Liham.gif',  // no aklat.gif — Liham (letter/page) is closest
+  kalendaryo: '/assets/gif/Orasan.gif',
+  tubig:      '/assets/gif/Yelo.gif',
+  aklat:      '/assets/gif/Liham.gif',
   radyo:      '/assets/gif/Radyo.gif',
   suklay:     '/assets/gif/Suklay.gif',
   anino:      '/assets/gif/Anino.gif',
 };
 
-// ─── Answer Reveal WITH GIF component ─────────────────────────────────────────
-// Replaces the plain .answer-reveal pill in Pagbasa/read mode only.
-// Quiz reveal pills use the original .answer-reveal.animated unchanged.
+// ─── Answer Reveal WITH GIF ───────────────────────────────────────────────────
 const AnswerRevealWithGif: React.FC<{
   sectionId: string;
   icon: string;
   label: string;
   answer?: string;
-  
 }> = ({ sectionId, icon, label, answer }) => {
   const gif = SECTION_GIFS[sectionId] ?? SECTION_GIFS['bugtong'];
-  // For bugtong, use the specific answer GIF if available
   const gifSrc = (sectionId === 'bugtong' && answer)
     ? (BUGTONG_ANSWER_GIFS[answer.trim().toLowerCase()] ?? gif.src)
     : gif.src;
-
   const [gifLoaded, setGifLoaded] = useState(false);
   const [gifError, setGifError] = useState(false);
 
   return (
     <div className="answer-reveal-gif-block">
-      {/* GIF banner — hidden until loaded, invisible if error */}
       {!gifError && (
         <div className={`answer-gif-wrapper ${gif.bgClass} ${gifLoaded ? 'gif-visible' : 'gif-hidden'}`}>
           <img
@@ -132,7 +105,6 @@ const AnswerRevealWithGif: React.FC<{
           />
         </div>
       )}
-      {/* Original yellow pill — ALWAYS shown, preserves original design */}
       <div className="answer-reveal animated">
         <IonIcon icon={icon} />
         <span>{label}</span>
@@ -141,7 +113,109 @@ const AnswerRevealWithGif: React.FC<{
   );
 };
 
+// ─── DefinitionModal ──────────────────────────────────────────────────────────
+// CHANGE 1: Tap the card → IonModal bottom sheet slides up with definition text.
+// Always shows title + hint. Reusable across other lessons.
+const DefinitionModal: React.FC<{
+  cardTitle: string;
+  cardSubtitle: string;
+  icon: string;
+  definition: string;
+  tapHint?: string;
+}> = ({ cardTitle, cardSubtitle, icon, definition, tapHint }) => {
+  const [open, setOpen] = useState(false);
 
+  return (
+    <>
+      {/* Tappable card row — always visible */}
+      <div className="defcard-tap" onClick={() => setOpen(true)}>
+        <div className="defcard-left">
+          <div className="defcard-icon-ring">
+            <IonIcon icon={icon} />
+          </div>
+          <div className="defcard-text">
+            <strong className="defcard-title">{cardTitle}</strong>
+            <span className="defcard-subtitle">{cardSubtitle}</span>
+          </div>
+        </div>
+        <div className="defcard-hint">
+          <span>{tapHint ?? 'I-tap para basahin'}</span>
+          <span className="defcard-finger">👆</span>
+        </div>
+      </div>
+
+      {/* Bottom sheet modal */}
+      <IonModal
+        isOpen={open}
+        onDidDismiss={() => setOpen(false)}
+        breakpoints={[0, 0.55, 0.85]}
+        initialBreakpoint={0.55}
+        className="definition-modal"
+      >
+        <div className="defmodal-content">
+          <div className="defmodal-handle" />
+          <div className="defmodal-header">
+            <div className="defmodal-icon-ring">
+              <IonIcon icon={icon} />
+            </div>
+            <div>
+              <h2 className="defmodal-title">{cardTitle}</h2>
+              <p className="defmodal-subtitle">{cardSubtitle}</p>
+            </div>
+          </div>
+          <div className="defmodal-divider" />
+          <p className="defmodal-body">{definition}</p>
+          <IonButton
+            expand="block"
+            className="defmodal-close-btn"
+            onClick={() => setOpen(false)}
+          >
+            Nakuha ko na! ✅
+          </IonButton>
+
+          {/* Splash image hero */}
+          <div className="defmodal-splash-wrap">
+            <img
+              src="/assets/img/questionSplash.PNG"
+              alt="Question splash"
+              className="defmodal-splash-img"
+            />
+            <div className="defmodal-splash-overlay" />
+          </div>
+        </div>
+      </IonModal>
+    </>
+  );
+};
+
+// ─── ExpandableItem ───────────────────────────────────────────────────────────
+// CHANGES 2 & 3: Tap to expand/collapse a numbered item inside info cards.
+// Keeps existing .list-item / .item-number design intact.
+interface ExpandableItemProps {
+  number: number;
+  title: string;
+  description: string;
+}
+const ExpandableItem: React.FC<ExpandableItemProps> = ({ number, title, description }) => {
+  const [expanded, setExpanded] = useState(false);
+  return (
+    <div
+      className={`list-item expandable-item ${expanded ? 'expanded' : ''}`}
+      onClick={() => setExpanded((v) => !v)}
+    >
+      <span className="item-number">{number}</span>
+      <div className="expandable-body">
+        <div className="expandable-title-row">
+          <strong>{title}</strong>
+          <span className={`expand-chevron ${expanded ? 'open' : ''}`}>›</span>
+        </div>
+        <div className={`expandable-desc ${expanded ? 'desc-open' : 'desc-closed'}`}>
+          <p>{description}</p>
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const createShuffledTiles = (): number[] => {
   const tiles = Array.from({ length: PUZZLE_SIZE * PUZZLE_SIZE }, (_, index) => index);
@@ -150,9 +224,7 @@ const createShuffledTiles = (): number[] => {
     [tiles[i], tiles[j]] = [tiles[j], tiles[i]];
   }
   const isSolved = tiles.every((value, index) => value === index);
-  if (isSolved) {
-    [tiles[0], tiles[1]] = [tiles[1], tiles[0]];
-  }
+  if (isSolved) { [tiles[0], tiles[1]] = [tiles[1], tiles[0]]; }
   return tiles;
 };
 
@@ -306,7 +378,6 @@ const shuffleArray = <T,>(items: T[]): T[] => {
   return copy;
 };
 
-//Quarter1Aralin1 component:
 const Quarter1Aralin1: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const aralinId = Number(id);
@@ -319,24 +390,21 @@ const Quarter1Aralin1: React.FC = () => {
   };
   const selectedSectionId = sectionIdByAralin[aralinId] ?? 'bugtong';
 
-  const [aralinMode, setAralinMode] = useState<AralinMode>('read');
+  const [aralinMode, setAralinMode]       = useState<AralinMode>('read');
   const [activeSection, setActiveSection] = useState<string>(selectedSectionId);
-  const [showAnswers, setShowAnswers] = useState<{ [key: number]: boolean }>({});
-  const [puzzleTiles, setPuzzleTiles] = useState<number[]>(() => createShuffledTiles());
+  const [showAnswers, setShowAnswers]     = useState<{ [key: number]: boolean }>({});
+  const [puzzleTiles, setPuzzleTiles]     = useState<number[]>(() => createShuffledTiles());
   const [selectedPuzzleIndex, setSelectedPuzzleIndex] = useState<number | null>(null);
-  const [puzzleMoves, setPuzzleMoves] = useState<number>(0);
-  const [quizSelections, setQuizSelections] = useState<Record<string, string>>({});
-  const [quizIndexBySection, setQuizIndexBySection] = useState<Record<string, number>>({});
-  const [quizScoreBySection, setQuizScoreBySection] = useState<Record<string, number>>({});
+  const [puzzleMoves, setPuzzleMoves]     = useState<number>(0);
+  const [quizSelections, setQuizSelections]           = useState<Record<string, string>>({});
+  const [quizIndexBySection, setQuizIndexBySection]   = useState<Record<string, number>>({});
+  const [quizScoreBySection, setQuizScoreBySection]   = useState<Record<string, number>>({});
   const [quizCompletedBySection, setQuizCompletedBySection] = useState<Record<string, boolean>>({});
-  const [quizLivesBySection, setQuizLivesBySection] = useState<Record<string, number>>({});
+  const [quizLivesBySection, setQuizLivesBySection]   = useState<Record<string, number>>({});
+  const [playingCard, setPlayingCard]     = useState<string | null>(null);
+  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const bugtongSection = quarter1Lesson1.sections.find((s) => s.id === 'bugtong');
-
-
-    // ✅ Add RIGHT HERE, after your existing useState lines
-  const [playingCard, setPlayingCard] = useState<string | null>(null);
-  const audioRef = useRef<HTMLAudioElement | null>(null);
 
   const playCardAudio = (cardId: string, src: string) => {
     if (playingCard === cardId) {
@@ -345,23 +413,14 @@ const Quarter1Aralin1: React.FC = () => {
       setPlayingCard(null);
       return;
     }
-    if (audioRef.current) {
-      audioRef.current.pause();
-      audioRef.current = null;
-    }
+    if (audioRef.current) { audioRef.current.pause(); audioRef.current = null; }
     const audio = new Audio(src);
     audioRef.current = audio;
     setPlayingCard(cardId);
-    audio.play().catch(() => {
-      setPlayingCard(null);
-      audioRef.current = null;
-    });
-    audio.onended = () => {
-      setPlayingCard(null);
-      audioRef.current = null;
-    };
+    audio.play().catch(() => { setPlayingCard(null); audioRef.current = null; });
+    audio.onended = () => { setPlayingCard(null); audioRef.current = null; };
   };
-  
+
   useEffect(() => {
     setActiveSection(selectedSectionId);
     setAralinMode('read');
@@ -382,7 +441,7 @@ const Quarter1Aralin1: React.FC = () => {
       { id: 'pal-3', prompt: 'Ano ang bagay na kahit puno pa ay hindi tumatanda?', correct: 'Bato' },
     ],
     tanaga: [
-      { id: 'tan-1', prompt: 'Ano ang tema ng tanagang: "Wika\'y ating yaman..."?', correct: 'Pagmamahal sa Wikang Filipino' },
+      { id: 'tan-1', prompt: "Ano ang tema ng tanagang: \"Wika'y ating yaman...\"?", correct: 'Pagmamahal sa Wikang Filipino' },
       { id: 'tan-2', prompt: 'Ano ang tema ng tanagang: "Kabataan ng bayan..."?', correct: 'Edukasyon at Kinabukasan' },
       { id: 'tan-3', prompt: 'Ano ang tema ng tanagang: "Kalikasan ay yaman..."?', correct: 'Pangangalaga sa Kalikasan' },
     ],
@@ -441,15 +500,15 @@ const Quarter1Aralin1: React.FC = () => {
   };
 
   const renderQuiz = (sectionKey: string, labelPrefix: string, description: string) => {
-    const items = quizDataBySection[sectionKey] ?? [];
+    const items       = quizDataBySection[sectionKey] ?? [];
     const currentIndex = quizIndexBySection[sectionKey] ?? 0;
     const currentItem = items[currentIndex];
-    const total = items.length;
-    const completed = !!quizCompletedBySection[sectionKey];
-    const score = quizScoreBySection[sectionKey] ?? 0;
-    const lives = quizLivesBySection[sectionKey] ?? 2;
-    const isGameOver = lives <= 0 && !completed;
-    const isLastItem = currentIndex + 1 >= total;
+    const total       = items.length;
+    const completed   = !!quizCompletedBySection[sectionKey];
+    const score       = quizScoreBySection[sectionKey] ?? 0;
+    const lives       = quizLivesBySection[sectionKey] ?? 2;
+    const isGameOver  = lives <= 0 && !completed;
+    const isLastItem  = currentIndex + 1 >= total;
 
     return (
       <IonCard className="info-card gradient-orange">
@@ -483,7 +542,7 @@ const Quarter1Aralin1: React.FC = () => {
               </p>
               <div className="quiz-options">
                 {(quizOptionsByKey[`${sectionKey}-${currentItem.id}`] ?? [currentItem.correct]).map((option) => {
-                  const key = `${sectionKey}-${currentItem.id}`;
+                  const key      = `${sectionKey}-${currentItem.id}`;
                   const selected = quizSelections[key];
                   const isSelected = selected === option;
                   return (
@@ -541,7 +600,10 @@ const Quarter1Aralin1: React.FC = () => {
     return found ?? bugtongExamples[0];
   }, [activePuzzleExampleId, bugtongExamples]);
 
-  const activePuzzleImage = useMemo(() => createBugtongPuzzleImage(activePuzzleExample?.answer ?? ''), [activePuzzleExample?.answer]);
+  const activePuzzleImage = useMemo(
+    () => createBugtongPuzzleImage(activePuzzleExample?.answer ?? ''),
+    [activePuzzleExample?.answer]
+  );
 
   const activePuzzleIndex = useMemo(() => {
     if (!activePuzzleExample) return -1;
@@ -550,14 +612,11 @@ const Quarter1Aralin1: React.FC = () => {
 
   const puzzleSolved = puzzleTiles.every((value, index) => value === index);
 
-  const resetPuzzle = () => { setPuzzleTiles(createShuffledTiles()); setSelectedPuzzleIndex(null); setPuzzleMoves(0); };
-
-  const setPuzzleExample = (exampleId: number) => { setActivePuzzleExampleId(exampleId); resetPuzzle(); };
-
+  const resetPuzzle        = () => { setPuzzleTiles(createShuffledTiles()); setSelectedPuzzleIndex(null); setPuzzleMoves(0); };
+  const setPuzzleExample   = (id: number) => { setActivePuzzleExampleId(id); resetPuzzle(); };
   const goToNextPuzzleExample = () => {
     if (!bugtongExamples.length) return;
-    const current = activePuzzleIndex >= 0 ? activePuzzleIndex : 0;
-    const next = (current + 1) % bugtongExamples.length;
+    const next = (activePuzzleIndex >= 0 ? activePuzzleIndex + 1 : 1) % bugtongExamples.length;
     setPuzzleExample(bugtongExamples[next].id);
   };
 
@@ -566,9 +625,9 @@ const Quarter1Aralin1: React.FC = () => {
     if (selectedPuzzleIndex === null) { setSelectedPuzzleIndex(index); return; }
     if (selectedPuzzleIndex === index) { setSelectedPuzzleIndex(null); return; }
     setPuzzleTiles((prev) => {
-      const nextTiles = [...prev];
-      [nextTiles[selectedPuzzleIndex], nextTiles[index]] = [nextTiles[index], nextTiles[selectedPuzzleIndex]];
-      return nextTiles;
+      const next = [...prev];
+      [next[selectedPuzzleIndex], next[index]] = [next[index], next[selectedPuzzleIndex]];
+      return next;
     });
     setSelectedPuzzleIndex(null);
     setPuzzleMoves((prev) => prev + 1);
@@ -576,20 +635,19 @@ const Quarter1Aralin1: React.FC = () => {
 
   const toggleAnswer = (id: number) => {
     setShowAnswers((prev) => {
-      const isCurrentlyShown = !!prev[id];
-      if (!isCurrentlyShown) playRevealSound();
+      const isShown = !!prev[id];
+      if (!isShown) playRevealSound();
       return { ...prev, [id]: !prev[id] };
     });
   };
-  
 
   const heroTitle = useMemo(() => {
     switch (selectedSectionId) {
-      case 'bugtong':     return 'Bugtong';
-      case 'palaisipan':  return 'Pala-isipan';
-      case 'tanaga':      return 'Tanaga';
-      case 'salawikain':  return 'Salawikain';
-      default:            return quarter1Lesson1.meta.title;
+      case 'bugtong':    return 'Bugtong';
+      case 'palaisipan': return 'Pala-isipan';
+      case 'tanaga':     return 'Tanaga';
+      case 'salawikain': return 'Salawikain';
+      default:           return quarter1Lesson1.meta.title;
     }
   }, [selectedSectionId]);
 
@@ -601,7 +659,7 @@ const Quarter1Aralin1: React.FC = () => {
     return quarter1Lesson1.meta.description;
   }, [selectedSectionId, bugtongSection?.intro]);
 
-  const totalAralin = 4;
+  const totalAralin  = 4;
   const safeAralinId = Number.isFinite(aralinId) && aralinId >= 1 && aralinId <= totalAralin ? aralinId : 1;
   const nextAralinId = safeAralinId < totalAralin ? safeAralinId + 1 : null;
 
@@ -644,7 +702,7 @@ const Quarter1Aralin1: React.FC = () => {
             onIonChange={(e) => setActiveSection((e.detail.value as string) ?? '')}
           >
 
-            {/* ── BUGTONG ── */}
+            {/* ══ BUGTONG ══════════════════════════════════════════ */}
             {selectedSectionId === 'bugtong' && (
               <IonAccordion value="bugtong" className="modern-accordion">
                 <IonItem slot="header" className="accordion-header" lines="none">
@@ -656,58 +714,74 @@ const Quarter1Aralin1: React.FC = () => {
                     </div>
                   </div>
                 </IonItem>
+
                 <div className="accordion-content" slot="content">
-                  <div className="content-intro">
-                    <IonText className="intro-text">{bugtongSection?.intro}</IonText>
-                  </div>
+
+                  {/* ── CHANGE 1: Definition card → tap opens modal ── */}
+                  <DefinitionModal
+                    cardTitle="Ano ang Bugtong?"
+                    cardSubtitle="Pindutin para basahin"
+                    icon={bulbOutline}
+                    definition={bugtongSection?.intro ?? ''}
+                    tapHint="I-tap para basahin ang kahulugan"
+                  />
+
                   <div className="info-cards-grid">
+
+                    {/* ── CHANGE 2: Katangian — tap each item to expand ── */}
                     <IonCard className="info-card gradient-purple">
                       <IonCardContent>
                         <div className="card-icon"><IonIcon icon={sparklesOutline} /></div>
-                        {/* ── Audio button ── */}
-                      <button
-                        className={`card-audio-btn ${playingCard === 'katangian' ? 'playing' : ''}`}
-                        onClick={() => playCardAudio('katangian', '/assets/audio/katangian.mp3')}
-                      >
-                        <IonIcon icon={playingCard === 'katangian' ? volumeHighOutline : volumeHighOutline} />
-                        <span>{playingCard === 'katangian' ? 'Tumutugtog...' : 'Pakinggan'}</span>
-                      </button>
+                        <button
+                          className={`card-audio-btn ${playingCard === 'katangian' ? 'playing' : ''}`}
+                          onClick={() => playCardAudio('katangian', '/assets/audio/katangian.mp3')}
+                        >
+                          <IonIcon icon={volumeHighOutline} />
+                          <span>{playingCard === 'katangian' ? 'Tumutugtog...' : 'Pakinggan'}</span>
+                        </button>
                         <h1 className="card-title"><strong>Katangian ng Bugtong</strong></h1>
                         <div className="card-list">
-                          {[0,1,2,3].map((i) => (
-                            <div key={i} className="list-item">
-                              <span className="item-number">{i+1}</span>
-                              <div>
-                                <strong>{bugtongSection?.bugtongCharacteristics?.[i]?.title}</strong>
-                                <p>{bugtongSection?.bugtongCharacteristics?.[i]?.description}</p>
-                              </div>
-                            </div>
-                          ))}
+                          {[0, 1, 2, 3].map((i) => {
+                            const item = bugtongSection?.bugtongCharacteristics?.[i];
+                            if (!item) return null;
+                            return (
+                              <ExpandableItem
+                                key={i}
+                                number={i + 1}
+                                title={item.title}
+                                description={item.description}
+                              />
+                            );
+                          })}
                         </div>
                       </IonCardContent>
                     </IonCard>
+
+                    {/* ── CHANGE 3: Kahalagahan — tap each item to expand ── */}
                     <IonCard className="info-card gradient-pink">
                       <IonCardContent>
                         <div className="card-icon"><IonIcon icon={heartOutline} /></div>
-                        {/* ── Audio button ── */}
-                      <button
-                        className={`card-audio-btn ${playingCard === 'kahalagahan' ? 'playing' : ''}`}
-                        onClick={() => playCardAudio('kahalagahan', '/assets/audio/kahalagahan.mp3')}
-                      >
-                        <IonIcon icon={playingCard === 'kahalagahan' ? volumeHighOutline : volumeHighOutline} />
-                        <span>{playingCard === 'kahalagahan' ? 'Tumutugtog...' : 'Pakinggan'}</span>
-                      </button>
+                        <button
+                          className={`card-audio-btn ${playingCard === 'kahalagahan' ? 'playing' : ''}`}
+                          onClick={() => playCardAudio('kahalagahan', '/assets/audio/kahalagahan.mp3')}
+                        >
+                          <IonIcon icon={volumeHighOutline} />
+                          <span>{playingCard === 'kahalagahan' ? 'Tumutugtog...' : 'Pakinggan'}</span>
+                        </button>
                         <h1 className="card-title"><strong>Kahalagahan ng Bugtong</strong></h1>
                         <div className="card-list">
-                          {[0,1,2,3].map((i) => (
-                            <div key={i} className="list-item">
-                              <span className="item-number">{i+1}</span>
-                              <div>
-                                <strong>{bugtongSection?.bugtongImportance?.[i]?.title}</strong>
-                                <p>{bugtongSection?.bugtongImportance?.[i]?.description}</p>
-                              </div>
-                            </div>
-                          ))}
+                          {[0, 1, 2, 3, 4].map((i) => {
+                            const item = bugtongSection?.bugtongImportance?.[i];
+                            if (!item) return null;
+                            return (
+                              <ExpandableItem
+                                key={i}
+                                number={i + 1}
+                                title={item.title}
+                                description={item.description}
+                              />
+                            );
+                          })}
                         </div>
                       </IonCardContent>
                     </IonCard>
@@ -715,7 +789,7 @@ const Quarter1Aralin1: React.FC = () => {
 
                   {/* Mode chips */}
                   <div className="action-chips">
-                    {(['read','watch','listen','play'] as AralinMode[]).map((mode) => (
+                    {(['read', 'watch', 'listen', 'play'] as AralinMode[]).map((mode) => (
                       <IonChip key={mode} className={`modern-chip ${aralinMode === mode ? 'active' : ''}`} onClick={() => setAralinMode(mode)}>
                         <IonIcon icon={mode === 'read' ? bookOutline : mode === 'watch' ? playCircleOutline : mode === 'listen' ? volumeHighOutline : gameControllerOutline} />
                         <IonLabel>{mode === 'read' ? 'Pagbasa' : mode === 'watch' ? 'Panonood' : mode === 'listen' ? 'Pakikinig' : 'Paglalaro'}</IonLabel>
@@ -723,7 +797,7 @@ const Quarter1Aralin1: React.FC = () => {
                     ))}
                   </div>
 
-                  {/* ── READ: Bugtong examples with GIF reveal ── */}
+                  {/* Pagbasa */}
                   {aralinMode === 'read' && (
                     <div className="bugtong-examples">
                       {bugtongSection?.examples?.map((example) => (
@@ -745,7 +819,6 @@ const Quarter1Aralin1: React.FC = () => {
                                   {showAnswers[example.id] ? 'Itago ang Sagot' : 'Ipakita ang Sagot'}
                                 </IonButton>
                               </div>
-                              {/* ── GIF REVEAL (replaces plain pill) ── */}
                               {showAnswers[example.id] && (
                                 <AnswerRevealWithGif
                                   sectionId="bugtong"
@@ -761,7 +834,7 @@ const Quarter1Aralin1: React.FC = () => {
                     </div>
                   )}
 
-                  {/* watch */}
+                  {/* Panonood */}
                   {aralinMode === 'watch' && (
                     <IonCard className="info-card gradient-blue">
                       <IonCardContent>
@@ -776,7 +849,7 @@ const Quarter1Aralin1: React.FC = () => {
                     </IonCard>
                   )}
 
-                  {/* listen */}
+                  {/* Pakikinig */}
                   {aralinMode === 'listen' && (
                     <div className="bugtong-audio-list">
                       {bugtongSection?.audioExamples?.map((audio) => (
@@ -797,7 +870,7 @@ const Quarter1Aralin1: React.FC = () => {
                     </div>
                   )}
 
-                  {/* play puzzle */}
+                  {/* Paglalaro — Image Puzzle */}
                   {aralinMode === 'play' && (
                     <IonCard className="info-card puzzle-card">
                       <IonCardContent>
@@ -884,7 +957,7 @@ const Quarter1Aralin1: React.FC = () => {
               </IonAccordion>
             )}
 
-            {/* ── PALAISIPAN ── */}
+            {/* ══ PALAISIPAN ═══════════════════════════════════════ */}
             {selectedSectionId === 'palaisipan' && (
               <IonAccordion value="palaisipan" className="modern-accordion">
                 <IonItem slot="header" className="accordion-header" lines="none">
@@ -907,13 +980,14 @@ const Quarter1Aralin1: React.FC = () => {
                       <div className="card-icon"><IonIcon icon={sparklesOutline} /></div>
                       <h1 className="card-title"><strong>Katangian ng Palaisipan</strong></h1>
                       <div className="card-list">
-                        {['May halong palaisipan at paglalarawan – kadalasan ay patula o may malikhaing pahayag.',
+                        {[
+                          'May halong palaisipan at paglalarawan – kadalasan ay patula o may malikhaing pahayag.',
                           'Hindi literal ang sagot – kailangan gumamit ng isip at malikhain.',
                           'Nagpapakita ng lohika at kaalaman sa wika – nakatutulong sa pagpapatalas ng isip.',
                           'Maikli at madaling tandaan – kadalasang may ritmo o sukat.',
                         ].map((text, i) => (
                           <div key={i} className="list-item">
-                            <span className="item-number">{i+1}</span>
+                            <span className="item-number">{i + 1}</span>
                             <div><p>{text}</p></div>
                           </div>
                         ))}
@@ -921,9 +995,8 @@ const Quarter1Aralin1: React.FC = () => {
                     </IonCardContent>
                   </IonCard>
 
-                  {/* Mode chips */}
                   <div className="action-chips">
-                    {(['read','watch','listen','play'] as AralinMode[]).map((mode) => (
+                    {(['read', 'watch', 'listen', 'play'] as AralinMode[]).map((mode) => (
                       <IonChip key={mode} className={`modern-chip ${aralinMode === mode ? 'active' : ''}`} onClick={() => setAralinMode(mode)}>
                         <IonIcon icon={mode === 'read' ? bookOutline : mode === 'watch' ? playCircleOutline : mode === 'listen' ? volumeHighOutline : gameControllerOutline} />
                         <IonLabel>{mode === 'read' ? 'Pagbasa' : mode === 'watch' ? 'Panonood' : mode === 'listen' ? 'Pakikinig' : 'Paglalaro'}</IonLabel>
@@ -931,7 +1004,6 @@ const Quarter1Aralin1: React.FC = () => {
                     ))}
                   </div>
 
-                  {/* ── READ: Palaisipan with GIF reveal ── */}
                   {aralinMode === 'read' && (
                     <div className="palaisipan-examples">
                       {[
@@ -954,11 +1026,7 @@ const Quarter1Aralin1: React.FC = () => {
                                 </IonButton>
                               </div>
                               {showAnswers[item.id] && (
-                                <AnswerRevealWithGif
-                                  sectionId="palaisipan"
-                                  icon={sparklesOutline}
-                                  label={`Sagot: ${item.answer}`}
-                                />
+                                <AnswerRevealWithGif sectionId="palaisipan" icon={sparklesOutline} label={`Sagot: ${item.answer}`} />
                               )}
                             </div>
                           </IonCardContent>
@@ -966,7 +1034,6 @@ const Quarter1Aralin1: React.FC = () => {
                       ))}
                     </div>
                   )}
-
                   {aralinMode === 'watch' && (
                     <IonCard className="info-card gradient-blue">
                       <IonCardContent>
@@ -990,7 +1057,7 @@ const Quarter1Aralin1: React.FC = () => {
               </IonAccordion>
             )}
 
-            {/* ── TANAGA ── */}
+            {/* ══ TANAGA ═══════════════════════════════════════════ */}
             {selectedSectionId === 'tanaga' && (
               <IonAccordion value="tanaga" className="modern-accordion">
                 <IonItem slot="header" className="accordion-header" lines="none">
@@ -1006,9 +1073,8 @@ const Quarter1Aralin1: React.FC = () => {
                   <div className="content-intro">
                     <IonText className="intro-text">Ang tanaga ay apat na taludtod na tula na may pitong pantig bawat linya (7-7-7-7) at may tugma.</IonText>
                   </div>
-
                   <div className="action-chips">
-                    {(['read','watch','listen','play'] as AralinMode[]).map((mode) => (
+                    {(['read', 'watch', 'listen', 'play'] as AralinMode[]).map((mode) => (
                       <IonChip key={mode} className={`modern-chip ${aralinMode === mode ? 'active' : ''}`} onClick={() => setAralinMode(mode)}>
                         <IonIcon icon={mode === 'read' ? bookOutline : mode === 'watch' ? playCircleOutline : mode === 'listen' ? volumeHighOutline : gameControllerOutline} />
                         <IonLabel>{mode === 'read' ? 'Pagbasa' : mode === 'watch' ? 'Panonood' : mode === 'listen' ? 'Pakikinig' : 'Paglalaro'}</IonLabel>
@@ -1016,14 +1082,13 @@ const Quarter1Aralin1: React.FC = () => {
                     ))}
                   </div>
 
-                  {/* ── READ: Tanaga with GIF reveal ── */}
                   {aralinMode === 'read' && (
                     <>
                       <div className="tanaga-examples">
                         {[
-                          { id: 8,  label: 'Tanaga 1', poem: ["Wika'y ating yaman,","Sa puso'y pinagyayaman;","Sa bawat salitang bigkas,","Pagka-Pilipino'y lantad."], tema: 'Pagmamahal sa Wikang Filipino' },
-                          { id: 9,  label: 'Tanaga 2', poem: ["Kabataan ng bayan,","Mag-aral nang mabuti;","Sa hinaharap mong buhay,","Ikaw ang magiging liwanag."], tema: 'Edukasyon at Kinabukasan' },
-                          { id: 10, label: 'Tanaga 3', poem: ["Kalikasan ay yaman,","Alagaan natin ito;","Para sa susunod na henerasyon,","Magiging masaganang buhay."], tema: 'Pangangalaga sa Kalikasan' },
+                          { id: 8,  label: 'Tanaga 1', poem: ["Wika'y ating yaman,", "Sa puso'y pinagyayaman;", "Sa bawat salitang bigkas,", "Pagka-Pilipino'y lantad."], tema: 'Pagmamahal sa Wikang Filipino' },
+                          { id: 9,  label: 'Tanaga 2', poem: ["Kabataan ng bayan,", "Mag-aral nang mabuti;", "Sa hinaharap mong buhay,", "Ikaw ang magiging liwanag."], tema: 'Edukasyon at Kinabukasan' },
+                          { id: 10, label: 'Tanaga 3', poem: ["Kalikasan ay yaman,", "Alagaan natin ito;", "Para sa susunod na henerasyon,", "Magiging masaganang buhay."], tema: 'Pangangalaga sa Kalikasan' },
                         ].map((item) => (
                           <IonCard key={item.id} className="example-card gradient-green">
                             <IonCardContent>
@@ -1041,11 +1106,7 @@ const Quarter1Aralin1: React.FC = () => {
                                   </IonButton>
                                 </div>
                                 {showAnswers[item.id] && (
-                                  <AnswerRevealWithGif
-                                    sectionId="tanaga"
-                                    icon={createOutline}
-                                    label={`Tema: ${item.tema}`}
-                                  />
+                                  <AnswerRevealWithGif sectionId="tanaga" icon={createOutline} label={`Tema: ${item.tema}`} />
                                 )}
                               </div>
                             </IonCardContent>
@@ -1059,7 +1120,6 @@ const Quarter1Aralin1: React.FC = () => {
                       </IonButton>
                     </>
                   )}
-
                   {aralinMode === 'watch' && (
                     <IonCard className="info-card gradient-blue">
                       <IonCardContent>
@@ -1083,7 +1143,7 @@ const Quarter1Aralin1: React.FC = () => {
               </IonAccordion>
             )}
 
-            {/* ── SALAWIKAIN ── */}
+            {/* ══ SALAWIKAIN ════════════════════════════════════════ */}
             {selectedSectionId === 'salawikain' && (
               <IonAccordion value="salawikain" className="modern-accordion">
                 <IonItem slot="header" className="accordion-header" lines="none">
@@ -1099,9 +1159,8 @@ const Quarter1Aralin1: React.FC = () => {
                   <div className="content-intro">
                     <IonText className="intro-text">Ang salawikain at kasabihan ay mga pahayag ng karunungan na nagmumula sa karanasan ng mga Pilipino.</IonText>
                   </div>
-
                   <div className="action-chips">
-                    {(['read','watch','listen','play'] as AralinMode[]).map((mode) => (
+                    {(['read', 'watch', 'listen', 'play'] as AralinMode[]).map((mode) => (
                       <IonChip key={mode} className={`modern-chip ${aralinMode === mode ? 'active' : ''}`} onClick={() => setAralinMode(mode)}>
                         <IonIcon icon={mode === 'read' ? bookOutline : mode === 'watch' ? playCircleOutline : mode === 'listen' ? volumeHighOutline : gameControllerOutline} />
                         <IonLabel>{mode === 'read' ? 'Pagbasa' : mode === 'watch' ? 'Panonood' : mode === 'listen' ? 'Pakikinig' : 'Paglalaro'}</IonLabel>
@@ -1109,7 +1168,6 @@ const Quarter1Aralin1: React.FC = () => {
                     ))}
                   </div>
 
-                  {/* ── READ: Salawikain with GIF reveal ── */}
                   {aralinMode === 'read' && (
                     <>
                       <div className="salawikain-examples">
@@ -1131,11 +1189,7 @@ const Quarter1Aralin1: React.FC = () => {
                                   </IonButton>
                                 </div>
                                 {showAnswers[item.id] && (
-                                  <AnswerRevealWithGif
-                                    sectionId="salawikain"
-                                    icon={heartOutline}
-                                    label={`Aral: ${item.aral}`}
-                                  />
+                                  <AnswerRevealWithGif sectionId="salawikain" icon={heartOutline} label={`Aral: ${item.aral}`} />
                                 )}
                               </div>
                             </IonCardContent>
@@ -1149,7 +1203,6 @@ const Quarter1Aralin1: React.FC = () => {
                       </IonButton>
                     </>
                   )}
-
                   {aralinMode === 'watch' && (
                     <IonCard className="info-card gradient-blue">
                       <IonCardContent>
