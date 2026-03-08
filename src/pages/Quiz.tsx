@@ -14,19 +14,19 @@ import {
   IonProgressBar,
   IonIcon,
   IonAlert,
-  IonFab,
-  IonFabButton,
-  IonList,
-  IonItem,
 } from '@ionic/react';
-import { 
-  playCircleOutline, 
-  checkmarkCircle, 
-  closeCircle, 
-  refresh, 
+import {
+  playCircleOutline,
+  checkmarkCircle,
+  closeCircle,
+  refresh,
   arrowBackOutline,
   schoolOutline,
-  trophyOutline
+  trophyOutline,
+  helpCircleOutline,
+  bookOutline,
+  ribbonOutline,
+  alertCircleOutline,
 } from 'ionicons/icons';
 import { useState, useEffect } from 'react';
 import { useHistory } from 'react-router-dom';
@@ -43,6 +43,13 @@ interface QuizResult {
   date: string;
 }
 
+// Per-quarter visual theme config
+const quarterTheme = {
+  1: { color: '#FF6B6B', dk: '#C0392B', emoji: '📖', label: 'Panitikang Filipino', gradient: 'linear-gradient(145deg, #FF6B6B, #C0392B)' },
+  2: { color: '#4D96FF', dk: '#1565C0', emoji: '🌿', label: 'Kuwentong Bayan at Pabula', gradient: 'linear-gradient(145deg, #4D96FF, #1565C0)' },
+  3: { color: '#C77DFF', dk: '#7B2CBF', emoji: '🎭', label: 'Panitikan at Pagsusuri', gradient: 'linear-gradient(145deg, #C77DFF, #7B2CBF)' },
+};
+
 const Quiz: React.FC = () => {
   const history = useHistory();
   const { quarter } = useParams<{ quarter?: string }>();
@@ -56,48 +63,27 @@ const Quiz: React.FC = () => {
   const [showBackConfirm, setShowBackConfirm] = useState(false);
   const [showQuarterSelection, setShowQuarterSelection] = useState(true);
   const [selectedQuarter, setSelectedQuarter] = useState<number | null>(null);
-  
-  // Function to get progress for a specific quarter
-  const getQuarterProgress = (quarter: number) => {
-    const progressData = localStorage.getItem(`quarter${quarter}Progress`);
-    if (progressData) {
-      try {
-        const progress = JSON.parse(progressData);
-        return Math.round(progress.percentage) || 0;
-      } catch (e) {
-        return 0;
-      }
-    }
+
+  const getQuarterProgress = (q: number) => {
+    const d = localStorage.getItem(`quarter${q}Progress`);
+    if (d) { try { return Math.round(JSON.parse(d).percentage) || 0; } catch { return 0; } }
     return 0;
   };
-  
-  // Function to get progress status for a specific quarter
-  const getQuarterProgressStatus = (quarter: number) => {
-    const progressData = localStorage.getItem(`quarter${quarter}Progress`);
-    if (progressData) {
+
+  const getQuarterProgressStatus = (q: number) => {
+    const d = localStorage.getItem(`quarter${q}Progress`);
+    if (d) {
       try {
-        const progress = JSON.parse(progressData);
-        const percentage = Math.round(progress.percentage);
-        if (percentage === 100) {
-          return 'Nakumpleto';
-        } else if (percentage > 0) {
-          return `${percentage}% Kumpletado`;
-        } else {
-          return 'Hindi pa nasimulan';
-        }
-      } catch (e) {
+        const pct = Math.round(JSON.parse(d).percentage);
+        if (pct === 100) return 'Nakumpleto ✓';
+        if (pct > 0)     return `${pct}% Kumpletado`;
         return 'Hindi pa nasimulan';
-      }
+      } catch { return 'Hindi pa nasimulan'; }
     }
     return 'Hindi pa nasimulan';
   };
-  
-  // Quiz data for different quarters (placeholder for now)
-  const quizData = {
-    1: quarter1Quiz,
-    2: quarter2Quiz,
-    3: quarter3Quiz
-  };
+
+  const quizData = { 1: quarter1Quiz, 2: quarter2Quiz, 3: quarter3Quiz };
 
   const resetQuizState = () => {
     setCurrentQuestionIndex(0);
@@ -109,9 +95,6 @@ const Quiz: React.FC = () => {
     setShowQuarterSelection(true);
   };
 
-  // Drive quiz mode from the URL:
-  // - /quiz => quarter selection (tab bar visible)
-  // - /quiz/take/:quarter => taking quiz (tab bar hidden via App.tsx)
   useEffect(() => {
     if (routeQuarter && Number.isFinite(routeQuarter)) {
       setCurrentQuestionIndex(0);
@@ -123,47 +106,39 @@ const Quiz: React.FC = () => {
       setShowQuarterSelection(false);
       return;
     }
-
-    // Back to selection
     resetQuizState();
   }, [routeQuarter]);
-  
-  // Load quiz results for the selected quarter (only in take mode)
+
   useEffect(() => {
     if (!selectedQuarter || showQuarterSelection) return;
-
-    const savedResults = localStorage.getItem(`quarter${selectedQuarter}QuizResults`);
-    if (savedResults) {
-      const results: QuizResult = JSON.parse(savedResults);
-      if (results && results.answers) {
+    const saved = localStorage.getItem(`quarter${selectedQuarter}QuizResults`);
+    if (saved) {
+      const r: QuizResult = JSON.parse(saved);
+      if (r?.answers) {
         setQuizCompleted(true);
-        setSelectedAnswers(results.answers.map((a) => a.selectedOption));
+        setSelectedAnswers(r.answers.map(a => a.selectedOption));
       }
       return;
     }
-
     setQuizCompleted(false);
     setSelectedAnswers([]);
   }, [selectedQuarter, showQuarterSelection]);
-  
-  const getQuizForQuarter = (quarter: number | null): QuizQuestion[] => {
-    const selected = quizData[(quarter ?? 1) as keyof typeof quizData];
-    return (selected && selected.length ? selected : quarter1Quiz) as QuizQuestion[];
+
+  const getQuizForQuarter = (q: number | null): QuizQuestion[] => {
+    const sel = quizData[(q ?? 1) as keyof typeof quizData];
+    return (sel?.length ? sel : quarter1Quiz) as QuizQuestion[];
   };
 
-  // Shuffle questions when component mounts
   useEffect(() => {
     if (!quizCompleted && !showQuarterSelection && shuffledQuestions.length === 0) {
       shuffleQuestions(selectedQuarter ?? 1);
     }
   }, [quizCompleted, showQuarterSelection, selectedQuarter, shuffledQuestions.length]);
-  
-  const selectQuarter = (quarter: number) => {
-    history.push(`/quiz/take/${quarter}`);
-  };
-  
-  const shuffleQuestions = (quarter: number) => {
-    const quiz = getQuizForQuarter(quarter);
+
+  const selectQuarter = (q: number) => history.push(`/quiz/take/${q}`);
+
+  const shuffleQuestions = (q: number) => {
+    const quiz = getQuizForQuarter(q);
     const shuffled = [...quiz].sort(() => Math.random() - 0.5);
     setShuffledQuestions(shuffled);
     setSelectedAnswers(new Array(shuffled.length).fill(null));
@@ -171,535 +146,471 @@ const Quiz: React.FC = () => {
     setShowResults(false);
     setQuizCompleted(false);
   };
-  
-  const handleAnswerSelect = (optionIndex: number) => {
-    const newSelectedAnswers = [...selectedAnswers];
-    newSelectedAnswers[currentQuestionIndex] = optionIndex;
-    setSelectedAnswers(newSelectedAnswers);
+
+  const handleAnswerSelect = (i: number) => {
+    const a = [...selectedAnswers];
+    a[currentQuestionIndex] = i;
+    setSelectedAnswers(a);
   };
-  
+
   const handleNextQuestion = () => {
-    if (currentQuestionIndex < shuffledQuestions.length - 1) {
+    if (currentQuestionIndex < shuffledQuestions.length - 1)
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-    }
   };
-  
+
   const handlePreviousQuestion = () => {
-    if (currentQuestionIndex > 0) {
+    if (currentQuestionIndex > 0)
       setCurrentQuestionIndex(currentQuestionIndex - 1);
-    }
   };
-  
+
   const calculateScore = (): QuizResult => {
     let score = 0;
-    const answers = shuffledQuestions.map((question, index) => {
-      const selectedOption = selectedAnswers[index];
-      const isCorrect = selectedOption !== null && selectedOption === question.correctAnswer;
-      
-      if (isCorrect) {
-        score++;
-      }
-      
-      return {
-        questionId: question.id,
-        selectedOption,
-        isCorrect
-      };
+    const answers = shuffledQuestions.map((q, i) => {
+      const sel = selectedAnswers[i];
+      const isCorrect = sel !== null && sel === q.correctAnswer;
+      if (isCorrect) score++;
+      return { questionId: q.id, selectedOption: sel, isCorrect };
     });
-    
-    return {
-      score,
-      total: shuffledQuestions.length,
-      answers,
-      date: new Date().toISOString()
-    };
+    return { score, total: shuffledQuestions.length, answers, date: new Date().toISOString() };
   };
-  
+
   const handleSubmitQuiz = () => {
     const results = calculateScore();
-    // Save results with quarter identifier
     localStorage.setItem(`quarter${selectedQuarter || 1}QuizResults`, JSON.stringify(results));
-    
-    // Calculate and save progress for the quarter
     if (selectedQuarter) {
-      const progressPercentage = (results.score / results.total) * 100;
       localStorage.setItem(`quarter${selectedQuarter}Progress`, JSON.stringify({
-        score: results.score,
-        total: results.total,
-        percentage: progressPercentage,
+        score: results.score, total: results.total,
+        percentage: (results.score / results.total) * 100,
         date: new Date().toISOString()
       }));
     }
-    
     setQuizCompleted(true);
     setShowResults(true);
   };
-  
-  const handleRetakeQuiz = () => {
-    setShowRetakeAlert(true);
-  };
-  
-  const confirmRetakeQuiz = () => {
-    shuffleQuestions(selectedQuarter ?? 1);
-    setShowRetakeAlert(false);
-  };
 
-  const requestBackNavigation = () => {
-    setShowBackConfirm(true);
-  };
+  const requestBackNavigation = () => setShowBackConfirm(true);
 
   const confirmBackNavigation = () => {
     setShowBackConfirm(false);
     resetQuizState();
-    if (routeQuarter) {
-      history.replace('/quiz');
-      return;
-    }
+    if (routeQuarter) { history.replace('/quiz'); return; }
     history.goBack();
   };
 
+  // ── BACK ALERT (reused) ──
+  const BackAlert = (
+    <IonAlert
+      isOpen={showBackConfirm}
+      onDidDismiss={() => setShowBackConfirm(false)}
+      header="Babalik ka na ba?"
+      message="Kapag bumalik ka, mawawala ang kasalukuyang progreso sa pagsusulit."
+      buttons={[
+        { text: 'Manatili', role: 'cancel' },
+        { text: 'Bumalik', handler: confirmBackNavigation },
+      ]}
+    />
+  );
+
+  // ════════════════════════════════════════
+  // SCREEN 1 — Quarter Selection
+  // ════════════════════════════════════════
   if (showQuarterSelection) {
-    // Quarter selection screen
     return (
       <IonPage>
         <IonHeader className="ion-no-border">
-          <IonToolbar className="modern-toolbar">
-            {/* <IonButtons slot="start">
-              <IonButton fill="clear" className="modern-back-btn" onClick={requestBackNavigation}>
-                <IonIcon icon={arrowBackOutline} slot="start" />
-                Ibalik
-              </IonButton>
-            </IonButtons> */}
-            <IonTitle className="modern-title">Pagsusulit</IonTitle>
+          <IonToolbar className="quiz-toolbar">
+            <IonTitle className="quiz-toolbar-title">Pagsusulit</IonTitle>
           </IonToolbar>
         </IonHeader>
-        
-        <IonContent fullscreen className="quarter-selection-content">
-          <div className="selection-header">
-            <h1 className="selection-title">Pumili ng Markahan</h1>
-            <p className="selection-subtitle">Pumili ng markahan para simulan ang pagsusulit</p>
-          </div>
-          
-          <div className="quarter-cards-container">
-            <IonCard 
-              className="quarter-card"
-              onClick={() => selectQuarter(1)}
-            >
-              <div className="card-number">1</div>
-              <div className="card-glow" />
-              <IonCardContent className="quarter-card-content">
-                <div className="card-icon">
-                  <IonIcon icon={schoolOutline} color='#dc2626' />
-                </div>
-                <h3 className="card-title">Unang Markahan</h3>
-                <p className="card-subtitle">Panitikang Filipino</p>
-                <p className="card-description">Bugtong, Tanaga, Salawikain, Komiks, at Tekstong Ekspositori</p>
-                <div className="card-progress">
-                  <div className="progress-header">
-                    <span className="progress-label">Marka</span>
-                    <span className="progress-percent">
-                      {getQuarterProgressStatus(1)}
-                    </span>
-                  </div>
-                  <div className="progress-bar-wrapper">
-                    <IonProgressBar
-                      value={getQuarterProgress(1) / 100}
-                      className="modern-progress"
-                    />
-                  </div>
-                </div>
-                <div className="card-footer">
-                  <span className="tap-hint">I-tap upang simulan →</span>
-                </div>
-              </IonCardContent>
-            </IonCard>
-            
-            <IonCard 
-              className="quarter-card"
-              onClick={() => selectQuarter(2)}
-            >
-              <div className="card-number">2</div>
-              <div className="card-glow" />
-              <IonCardContent className="quarter-card-content">
-                <div className="card-icon">
-                  <IonIcon icon={schoolOutline}  color='#dc2626'/>
-                </div>
-                <h3 className="card-title">Pangalawang Markahan</h3>
-                <p className="card-subtitle">Kuwentong Bayan at Pabula</p>
-                <p className="card-description">Alamat, Pabula, Komiks, at Brochure</p>
-                <div className="card-progress">
-                  <div className="progress-header">
-                    <span className="progress-label">Marka</span>
-                    <span className="progress-percent">
-                      {getQuarterProgressStatus(2)}
-                    </span>
-                  </div>
-                  <div className="progress-bar-wrapper">
-                    <IonProgressBar
-                      value={getQuarterProgress(2) / 100}
-                      className="modern-progress"
-                    />
-                  </div>
-                </div>
-                <div className="card-footer">
-                  <span className="tap-hint">I-tap upang simulan →</span>
-                </div>
-              </IonCardContent>
-            </IonCard>
-            
-            <IonCard 
-              className="quarter-card"
-              onClick={() => selectQuarter(3)}
-            >
-              <div className="card-number">3</div>
-              <div className="card-glow" />
-              <IonCardContent className="quarter-card-content">
-                <div className="card-icon">
-                  <IonIcon icon={schoolOutline}  color='#dc2626'/>
-                </div>
-                <h3 className="card-title">Pangatlong Markahan</h3>
-                <p className="card-subtitle">Panitikan at Pagsusuri</p>
-                <p className="card-description">Mas malalim na pag-unawa sa teksto at biswal</p>
-                <div className="card-progress">
-                  <div className="progress-header">
-                    <span className="progress-label">Marka</span>
-                    <span className="progress-percent">
-                      {getQuarterProgressStatus(3)}
-                    </span>
-                  </div>
-                  <div className="progress-bar-wrapper">
-                    <IonProgressBar
-                      value={getQuarterProgress(3) / 100}
-                      className="modern-progress"
-                    />
-                  </div>
-                </div>
-                <div className="card-footer">
-                  <span className="tap-hint">I-tap upang simulan →</span>
-                </div>
-              </IonCardContent>
-            </IonCard>
+
+        <IonContent fullscreen className="quiz-page-content">
+
+          {/* Hero */}
+          <div className="quiz-hero">
+            <div className="quiz-hero-blob quiz-hero-blob--1" />
+            <div className="quiz-hero-blob quiz-hero-blob--2" />
+            <div className="quiz-hero-inner">
+              <div className="quiz-hero-icon">
+                <IonIcon icon={helpCircleOutline} />
+              </div>
+              <h1 className="quiz-hero-title">Pagsusulit</h1>
+              <p className="quiz-hero-subtitle">Pumili ng Markahan para Simulan</p>
+            </div>
           </div>
 
-          <IonAlert
-            isOpen={showBackConfirm}
-            onDidDismiss={() => setShowBackConfirm(false)}
-            header={'Babalik ka na ba?'}
-            message={
-              'Kapag bumalik ka, mawawala ang kasalukuyang progreso sa pagsusulit. ' +
-              'Kapag sinimulan mo ulit, magsisimula ito muli sa unang tanong.'
-            }
-            buttons={[
-              { text: 'Manatili', role: 'cancel' },
-              { text: 'Bumalik', handler: confirmBackNavigation },
-            ]}
-          />
+          {/* Quarter Cards */}
+          <div className="qsel-grid">
+            {([1, 2, 3] as const).map((q, idx) => {
+              const theme = quarterTheme[q];
+              const descriptions = [
+                'Bugtong, Tanaga, Salawikain, Komiks, at Tekstong Ekspositori',
+                'Alamat, Pabula, Komiks, at Brochure',
+                'Mas malalim na pag-unawa sa teksto at biswal',
+              ];
+              const titles = ['Unang Markahan', 'Pangalawang Markahan', 'Pangatlong Markahan'];
+              const pct = getQuarterProgress(q);
+
+              return (
+                <IonCard
+                  key={q}
+                  className="qsel-card"
+                  style={{ animationDelay: `${idx * 100}ms`, '--qsel-accent': theme.color, '--qsel-dk': theme.dk } as React.CSSProperties}
+                  onClick={() => selectQuarter(q)}
+                  button
+                >
+                  {/* colored top bar */}
+                  <div className="qsel-accent-bar" style={{ background: theme.gradient }} />
+                  <div className="qsel-card-glow" />
+                  <div className="qsel-ghost-num">{q}</div>
+
+                  <IonCardContent className="qsel-card-body">
+                    <div className="qsel-top-row">
+                      <div className="qsel-emoji-bubble" style={{ background: theme.gradient }}>
+                        {theme.emoji}
+                      </div>
+                      <div className="qsel-badge">Markahan {q}</div>
+                    </div>
+
+                    <h3 className="qsel-title">{titles[idx]}</h3>
+                    <p className="qsel-subtitle">{theme.label}</p>
+                    <p className="qsel-desc">{descriptions[idx]}</p>
+
+                    {/* Progress */}
+                    <div className="qsel-progress-wrap">
+                      <div className="qsel-progress-labels">
+                        <span className="qsel-progress-label">Marka</span>
+                        <span className="qsel-progress-status" style={{ color: theme.color }}>
+                          {getQuarterProgressStatus(q)}
+                        </span>
+                      </div>
+                      <div className="qsel-progress-track">
+                        <div
+                          className="qsel-progress-fill"
+                          style={{ width: `${pct}%`, background: theme.gradient }}
+                        />
+                      </div>
+                    </div>
+
+                    <div className="qsel-footer">
+                      <span className="qsel-tap-hint" style={{ color: theme.color }}>
+                        I-tap upang simulan →
+                      </span>
+                    </div>
+                  </IonCardContent>
+                </IonCard>
+              );
+            })}
+          </div>
+
+          <div className="quiz-bottom-space" />
+          {BackAlert}
         </IonContent>
       </IonPage>
     );
   }
-  
+
+  // ════════════════════════════════════════
+  // SCREEN 2 — Loading
+  // ════════════════════════════════════════
   if (shuffledQuestions.length === 0 && !quizCompleted) {
     return (
       <IonPage>
         <IonHeader className="ion-no-border">
-          <IonToolbar className="modern-toolbar">
+          <IonToolbar className="quiz-toolbar">
             <IonButtons slot="start">
-              <IonButton fill="clear" className="modern-back-btn" onClick={requestBackNavigation}>
-                <IonIcon icon={arrowBackOutline} slot="start" />
-                Ibalik
+              <IonButton fill="clear" className="quiz-back-btn" onClick={requestBackNavigation}>
+                <IonIcon icon={arrowBackOutline} slot="start" /> Ibalik
               </IonButton>
             </IonButtons>
-            <IonTitle className="modern-title">Pagsusulit</IonTitle>
+            <IonTitle className="quiz-toolbar-title">Pagsusulit</IonTitle>
           </IonToolbar>
         </IonHeader>
-        <IonContent fullscreen className="quiz-loading">
-          <div className="loading-container">
-            <IonIcon icon={playCircleOutline} className="loading-icon" />
-            <h2>Ini-load ang pagsusulit...</h2>
+        <IonContent fullscreen className="quiz-page-content">
+          <div className="quiz-loading-wrap">
+            <div className="quiz-loading-icon">⏳</div>
+            <p className="quiz-loading-text">Ini-load ang pagsusulit...</p>
           </div>
-
-          <IonAlert
-            isOpen={showBackConfirm}
-            onDidDismiss={() => setShowBackConfirm(false)}
-            header={'Babalik ka na ba?'}
-            message={
-              'Kapag bumalik ka, mawawala ang kasalukuyang progreso sa pagsusulit. ' +
-              'Kapag sinimulan mo ulit, magsisimula ito muli sa unang tanong.'
-            }
-            buttons={[
-              { text: 'Manatili', role: 'cancel' },
-              { text: 'Bumalik', handler: confirmBackNavigation },
-            ]}
-          />
+          {BackAlert}
         </IonContent>
       </IonPage>
     );
   }
-  
-  if (showResults || quizCompleted) {
-    // Show results screen
-    const results: QuizResult = quizCompleted 
-      ? JSON.parse(localStorage.getItem(`quarter${selectedQuarter || 1}QuizResults`) || '{"score": 0, "total": 0, "answers": []}')
-      : calculateScore();
-    
-    const percentage = Math.round((results.score / results.total) * 100);
-    
-      return (
-        <IonPage>
-          <IonHeader className="ion-no-border">
-            <IonToolbar className="modern-toolbar">
-              <IonButtons slot="start">
-                <IonButton fill="clear" className="modern-back-btn" onClick={requestBackNavigation}>
-                  <IonIcon icon={arrowBackOutline} slot="start" />
-                  Ibalik
-                </IonButton>
-              </IonButtons>
-              <IonTitle className="modern-title">Pagsusulit - Resulta</IonTitle>
 
-            </IonToolbar>
-          </IonHeader>
-        
-        <IonContent fullscreen className="results-content">
-          <div className="results-container">
-            <div className="percentage-circle">
-              <svg viewBox="0 0 100 100" className="circle-svg">
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="45"
-                  fill="none"
-                  stroke="#e0e0e0"
-                  strokeWidth="8"
-                />
-                <circle
-                  cx="50"
-                  cy="50"
-                  r="45"
-                  fill="none"
-                  stroke={percentage >= 75 ? '#10dc60' : percentage >= 50 ? '#ffd500' : '#ff4c4c'}
-                  strokeWidth="8"
-                  strokeLinecap="round"
-                  strokeDasharray={`${2 * Math.PI * 45}`}
-                  strokeDashoffset={`${2 * Math.PI * 45 * (1 - percentage / 100)}`}
-                  transform="rotate(-90 50 50)"
-                />
-              </svg>
-              <div className="percentage-text">{percentage}%</div>
+  // ════════════════════════════════════════
+  // SCREEN 3 — Results
+  // ════════════════════════════════════════
+  if (showResults || quizCompleted) {
+    const results: QuizResult = quizCompleted
+      ? JSON.parse(localStorage.getItem(`quarter${selectedQuarter || 1}QuizResults`) || '{"score":0,"total":0,"answers":[]}')
+      : calculateScore();
+    const pct = Math.round((results.score / results.total) * 100);
+    const theme = quarterTheme[(selectedQuarter || 1) as keyof typeof quarterTheme];
+
+    const resultConfig = pct >= 75
+      ? { emoji: '🏆', label: 'Mahusay!',         color: '#6BCB77', shadow: 'rgba(107,203,119,0.35)' }
+      : pct >= 50
+      ? { emoji: '⭐', label: 'Magaling!',         color: '#FFD93D', shadow: 'rgba(255,217,61,0.35)'  }
+      : { emoji: '📚', label: 'Patuloy na Mag-aral!', color: '#FF6B6B', shadow: 'rgba(255,107,107,0.35)' };
+
+    const circumference = 2 * Math.PI * 45;
+
+    return (
+      <IonPage>
+        <IonHeader className="ion-no-border">
+          <IonToolbar className="quiz-toolbar">
+            <IonButtons slot="start">
+              <IonButton fill="clear" className="quiz-back-btn" onClick={requestBackNavigation}>
+                <IonIcon icon={arrowBackOutline} slot="start" /> Ibalik
+              </IonButton>
+            </IonButtons>
+            <IonTitle className="quiz-toolbar-title">Resulta</IonTitle>
+          </IonToolbar>
+        </IonHeader>
+
+        <IonContent fullscreen className="quiz-page-content">
+          {/* Result Hero */}
+          <div className="result-hero" style={{ background: theme.gradient }}>
+            <div className="quiz-hero-blob quiz-hero-blob--1" />
+            <div className="quiz-hero-blob quiz-hero-blob--2" />
+            <div className="result-hero-inner">
+              {/* SVG circle */}
+              <div className="result-circle-wrap">
+                <svg viewBox="0 0 100 100" className="result-circle-svg">
+                  <circle cx="50" cy="50" r="45" fill="none" stroke="rgba(255,255,255,0.2)" strokeWidth="7" />
+                  <circle
+                    cx="50" cy="50" r="45" fill="none"
+                    stroke="white" strokeWidth="7"
+                    strokeLinecap="round"
+                    strokeDasharray={circumference}
+                    strokeDashoffset={circumference * (1 - pct / 100)}
+                    transform="rotate(-90 50 50)"
+                    style={{ transition: 'stroke-dashoffset 1s ease' }}
+                  />
+                </svg>
+                <div className="result-circle-text">
+                  <span className="result-pct">{pct}%</span>
+                  <span className="result-pct-label">Marka</span>
+                </div>
+              </div>
+
+              <div className="result-emoji">{resultConfig.emoji}</div>
+              <h2 className="result-label">{resultConfig.label}</h2>
+              <p className="result-score-text">
+                Nakakuha ng <strong>{results.score}</strong> sa <strong>{results.total}</strong> tanong
+              </p>
             </div>
-            
-            <div className="results-summary">
-              <h2>{percentage >= 75 ? 'Mahusay!' : percentage >= 50 ? 'Magaling!' : 'Patuloy na Pag-aaral'}</h2>
-              <p>Nakakuha ka ng <strong>{results.score}</strong> sa <strong>{results.total}</strong> na tanong</p>
-            </div>
-            
-            <div className="result-buttons-container">
-              <IonButton 
-                expand="block" 
+          </div>
+
+          <div className="quiz-body-wrap">
+            {/* Action buttons */}
+            <div className="result-actions">
+              <IonButton
+                expand="block"
                 fill="outline"
-                className="back-to-selection-button"
-                onClick={() => {
-                  resetQuizState();
-                  history.replace('/quiz');
-                }}
+                className="result-btn-outline"
+                style={{ '--outline-color': theme.color } as React.CSSProperties}
+                onClick={() => { resetQuizState(); history.replace('/quiz'); }}
               >
                 <IonIcon icon={arrowBackOutline} slot="start" />
                 Pumili ng Ibang Markahan
               </IonButton>
-              
-              <IonButton 
-                expand="block" 
-                className="retake-button"
-                onClick={handleRetakeQuiz}
+              <IonButton
+                expand="block"
+                className="result-btn-primary"
+                style={{ '--btn-bg': theme.gradient, '--btn-shadow': theme.color + '55' } as React.CSSProperties}
+                onClick={() => setShowRetakeAlert(true)}
               >
-                <IonIcon icon={refresh} slot="start" />
+                <IonIcon icon={bookOutline} slot="start" />
                 Umuwi sa Aralin
               </IonButton>
             </div>
-            
-            <div className="review-section">
-              <h3>Review ng Mga Sagot</h3>
-              {results.answers.map((answer, index) => {
-                const question = shuffledQuestions.find(q => q.id === answer.questionId);
-                if (!question) return null;
-                
-                return (
-                  <IonCard key={question.id} className="answer-review-card">
-                    <IonCardContent>
-                      <div className="question-number">#{index + 1}</div>
-                      <h4>{question.question}</h4>
-                      
-                      <div className="correct-answer">
-                        <IonIcon icon={checkmarkCircle} color="success" />
-                        <strong>Tama: </strong> {question.options[question.correctAnswer]}
-                      </div>
-                      
-                      {answer.selectedOption !== null && answer.selectedOption !== question.correctAnswer && (
-                        <div className="incorrect-answer">
-                          <IonIcon icon={closeCircle} color="danger" />
-                          <strong>Sagot Mo: </strong> {question.options[answer.selectedOption]}
-                        </div>
-                      )}
-                      
-                      {answer.selectedOption === null && (
-                        <div className="no-answer">
-                          <IonIcon icon={closeCircle} color="warning" />
-                          <strong>Walang sagot</strong>
-                        </div>
-                      )}
-                      
-                      {question.explanation && (
-                        <p className="explanation">{question.explanation}</p>
-                      )}
-                    </IonCardContent>
-                  </IonCard>
-                );
-              })}
-            </div>
-          </div>
-        </IonContent>
-        
-        <IonAlert
-          isOpen={showRetakeAlert}
-          onDidDismiss={() => setShowRetakeAlert(false)}
-          header={'Umuwi sa Aralin'}
-          message={'Gusto mo bang umuwi sa Aralin 1?'}
-          buttons={[{
-            text: 'Hindi',
-            role: 'cancel'
-          }, {
-            text: 'Oo',
-            handler: () => {
-              window.location.href = `/quarter/${selectedQuarter || 1}/aralin/1`;
-            }
-          }]}
-        />
 
-        <IonAlert
-          isOpen={showBackConfirm}
-          onDidDismiss={() => setShowBackConfirm(false)}
-          header={'Babalik ka na ba?'}
-          message={
-            'Kapag bumalik ka, mawawala ang kasalukuyang progreso sa pagsusulit. ' +
-            'Kapag sinimulan mo ulit, magsisimula ito muli sa unang tanong.'
-          }
-          buttons={[
-            { text: 'Manatili', role: 'cancel' },
-            { text: 'Bumalik', handler: confirmBackNavigation },
-          ]}
-        />
+            {/* Review section */}
+            <div className="review-section-label">
+              <IonIcon icon={trophyOutline} />
+              <span>Review ng Mga Sagot</span>
+            </div>
+
+            {results.answers.map((answer, index) => {
+              const question = shuffledQuestions.find(q => q.id === answer.questionId);
+              if (!question) return null;
+              return (
+                <IonCard key={question.id} className="review-card" style={{ animationDelay: `${index * 40}ms` } as React.CSSProperties}>
+                  <IonCardContent className="review-card-body">
+                    <div className="review-q-num">#{index + 1}</div>
+                    <p className="review-question">{question.question}</p>
+
+                    <div className="review-answer review-answer--correct">
+                      <IonIcon icon={checkmarkCircle} />
+                      <span><strong>Tama:</strong> {question.options[question.correctAnswer]}</span>
+                    </div>
+
+                    {answer.selectedOption !== null && answer.selectedOption !== question.correctAnswer && (
+                      <div className="review-answer review-answer--wrong">
+                        <IonIcon icon={closeCircle} />
+                        <span><strong>Sagot Mo:</strong> {question.options[answer.selectedOption]}</span>
+                      </div>
+                    )}
+
+                    {answer.selectedOption === null && (
+                      <div className="review-answer review-answer--none">
+                        <IonIcon icon={alertCircleOutline} />
+                        <span><strong>Walang sagot</strong></span>
+                      </div>
+                    )}
+
+                    {question.explanation && (
+                      <p className="review-explanation">{question.explanation}</p>
+                    )}
+                  </IonCardContent>
+                </IonCard>
+              );
+            })}
+          </div>
+
+          <div className="quiz-bottom-space" />
+
+          <IonAlert
+            isOpen={showRetakeAlert}
+            onDidDismiss={() => setShowRetakeAlert(false)}
+            header="Umuwi sa Aralin"
+            message="Gusto mo bang umuwi sa Aralin 1?"
+            buttons={[
+              { text: 'Hindi', role: 'cancel' },
+              { text: 'Oo', handler: () => { window.location.href = `/quarter/${selectedQuarter || 1}/aralin/1`; } },
+            ]}
+          />
+          {BackAlert}
+        </IonContent>
       </IonPage>
     );
   }
-  
-  // Show quiz question
+
+  // ════════════════════════════════════════
+  // SCREEN 4 — Quiz Question
+  // ════════════════════════════════════════
   const currentQuestion = shuffledQuestions[currentQuestionIndex];
-  const progress = ((currentQuestionIndex + 1) / shuffledQuestions.length) * 100;
-  
+  const progressPct = ((currentQuestionIndex + 1) / shuffledQuestions.length) * 100;
+  const theme = quarterTheme[(selectedQuarter || 1) as keyof typeof quarterTheme];
+  const answeredCount = selectedAnswers.filter(a => a !== null).length;
+
   return (
     <IonPage>
       <IonHeader className="ion-no-border">
-        <IonToolbar className="modern-toolbar">
+        <IonToolbar className="quiz-toolbar">
           <IonButtons slot="start">
-            <IonButton fill="clear" className="modern-back-btn" onClick={requestBackNavigation}>
-              <IonIcon icon={arrowBackOutline} slot="start" />
-              Ibalik
+            <IonButton fill="clear" className="quiz-back-btn" onClick={requestBackNavigation}>
+              <IonIcon icon={arrowBackOutline} slot="start" /> Ibalik
             </IonButton>
           </IonButtons>
-          <IonTitle className="modern-title">Pagsusulit</IonTitle>
-
+          <IonTitle className="quiz-toolbar-title">Pagsusulit</IonTitle>
         </IonToolbar>
       </IonHeader>
-      
-      <IonContent fullscreen className="quiz-content">
-        <div className="quiz-header">
-          <div className="progress-container">
-            <div className="question-counter">
-              #{currentQuestionIndex + 1} ng {shuffledQuestions.length}
-            </div>
-            <IonProgressBar value={progress / 100} className="quiz-progress" />
+
+      <IonContent fullscreen className="quiz-page-content">
+
+        {/* Progress strip */}
+        <div className="quiz-progress-strip">
+          <div className="quiz-progress-info">
+            <span className="quiz-q-counter">
+              Tanong {currentQuestionIndex + 1} <span className="quiz-q-total">/ {shuffledQuestions.length}</span>
+            </span>
+            <span className="quiz-answered-badge" style={{ background: theme.gradient }}>
+              {answeredCount} nasagot
+            </span>
+          </div>
+          <div className="quiz-progress-track">
+            <div
+              className="quiz-progress-fill"
+              style={{ width: `${progressPct}%`, background: theme.gradient }}
+            />
           </div>
         </div>
-        
-        <div className="question-container">
-          <IonCard className="question-card">
-            <IonCardContent>
-              <h3>{currentQuestion.question}</h3>
-              
+
+        {/* Question card */}
+        <div className="quiz-body-wrap">
+          <IonCard className="quiz-question-card">
+            <div className="quiz-q-accent" style={{ background: theme.gradient }} />
+            <IonCardContent className="quiz-question-body">
+              <div className="quiz-q-badge" style={{ background: theme.gradient }}>
+                #{currentQuestionIndex + 1}
+              </div>
+              <p className="quiz-question-text">{currentQuestion.question}</p>
+
               <IonRadioGroup
                 value={selectedAnswers[currentQuestionIndex]?.toString()}
-                onIonChange={(e) => handleAnswerSelect(parseInt(e.detail.value))}
+                onIonChange={e => handleAnswerSelect(parseInt(e.detail.value))}
               >
-                {currentQuestion.options.map((option, index) => (
-                  <div key={index} className="option-wrapper">
-                    <IonCard 
-                      className={`option-card ${selectedAnswers[currentQuestionIndex] === index ? 'selected' : ''}`}
-                      onClick={() => handleAnswerSelect(index)}
+                {currentQuestion.options.map((option, idx) => {
+                  const isSelected = selectedAnswers[currentQuestionIndex] === idx;
+                  return (
+                    <div
+                      key={idx}
+                      className={`quiz-option ${isSelected ? 'quiz-option--selected' : ''}`}
+                      style={isSelected ? { '--opt-accent': theme.color, '--opt-bg': theme.color + '18', borderColor: theme.color } as React.CSSProperties : {}}
+                      onClick={() => handleAnswerSelect(idx)}
                     >
-                      <IonCardContent className="option-card-content">
-                        <IonRadio
-                          slot="start"
-                          value={index.toString()}
-                          className="option-radio"
-                        />
-                        <IonLabel className="option-label">{option}</IonLabel>
-                      </IonCardContent>
-                    </IonCard>
-                  </div>
-                ))}
+                      <div className={`quiz-option-dot ${isSelected ? 'quiz-option-dot--active' : ''}`}
+                        style={isSelected ? { background: theme.gradient } as React.CSSProperties : {}}
+                      >
+                        {isSelected && <span>✓</span>}
+                      </div>
+                      <IonLabel className="quiz-option-label">{option}</IonLabel>
+                      <IonRadio value={idx.toString()} className="quiz-option-radio-hidden" />
+                    </div>
+                  );
+                })}
               </IonRadioGroup>
             </IonCardContent>
           </IonCard>
-        </div>
-        
-        <div className="navigation-container">
-          <div className="nav-buttons">
-            <IonButton 
-              fill="clear" 
-              disabled={currentQuestionIndex === 0}
+
+          {/* Navigation */}
+          <div className="quiz-nav">
+            <button
+              className={`quiz-nav-prev ${currentQuestionIndex === 0 ? 'quiz-nav-prev--disabled' : ''}`}
               onClick={handlePreviousQuestion}
+              disabled={currentQuestionIndex === 0}
             >
-              <IonIcon icon={arrowBackOutline} slot="start" />
-              Previous
-            </IonButton>
-            
+              ← Nakaraan
+            </button>
+
             {currentQuestionIndex < shuffledQuestions.length - 1 ? (
-              <IonButton 
-                expand="block" 
+              <button
+                className="quiz-nav-next"
+                style={{ background: selectedAnswers[currentQuestionIndex] !== null ? theme.gradient : undefined } as React.CSSProperties}
                 onClick={handleNextQuestion}
                 disabled={selectedAnswers[currentQuestionIndex] === null}
               >
-                Sunod
-                <IonIcon icon={playCircleOutline} slot="end" />
-              </IonButton>
+                Susunod →
+              </button>
             ) : (
-              <IonButton 
-                expand="block" 
+              <button
+                className="quiz-nav-submit"
                 onClick={handleSubmitQuiz}
-                disabled={selectedAnswers.some(answer => answer === null)}
-                color="success"
+                disabled={selectedAnswers.some(a => a === null)}
               >
-                Isumite ang Pagsusulit
-                <IonIcon icon={checkmarkCircle} slot="end" />
-              </IonButton>
+                <IonIcon icon={checkmarkCircle} />
+                Isumite
+              </button>
             )}
           </div>
-        </div>
-      </IonContent>
 
-      <IonAlert
-        isOpen={showBackConfirm}
-        onDidDismiss={() => setShowBackConfirm(false)}
-        header={'Babalik ka na ba?'}
-        message={
-          'Kapag bumalik ka, mawawala ang kasalukuyang progreso sa pagsusulit. ' +
-          'Kapag sinimulan mo ulit, magsisimula ito muli sa unang tanong.'
-        }
-        buttons={[
-          { text: 'Manatili', role: 'cancel' },
-          { text: 'Bumalik', handler: confirmBackNavigation },
-        ]}
-      />
+          {/* Dot progress indicators */}
+          <div className="quiz-dot-row">
+            {shuffledQuestions.map((_, i) => (
+              <div
+                key={i}
+                className={`quiz-dot ${i === currentQuestionIndex ? 'quiz-dot--current' : selectedAnswers[i] !== null ? 'quiz-dot--done' : ''}`}
+                style={i === currentQuestionIndex ? { background: theme.color } as React.CSSProperties : selectedAnswers[i] !== null ? { background: theme.color + '88' } as React.CSSProperties : {}}
+                onClick={() => setCurrentQuestionIndex(i)}
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="quiz-bottom-space" />
+        {BackAlert}
+      </IonContent>
     </IonPage>
   );
 };

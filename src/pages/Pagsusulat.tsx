@@ -15,7 +15,16 @@ import {
   IonText,
   IonIcon,
 } from "@ionic/react";
-import { addOutline, arrowBackOutline, chevronForwardOutline, createOutline, trashOutline } from "ionicons/icons";
+import {
+  addOutline,
+  arrowBackOutline,
+  chevronForwardOutline,
+  createOutline,
+  trashOutline,
+  documentTextOutline,
+  bookOutline,
+  closeOutline,
+} from "ionicons/icons";
 import { useMemo, useState } from "react";
 import { useHistory, useParams } from "react-router-dom";
 import { quarter1Aralin } from "../data/quarter1AralinCards";
@@ -23,10 +32,7 @@ import { quarter2Aralin } from "../data/quarter2AralinCards";
 import { quarter3Aralin } from "../data/quarter3AralinCards";
 import "./Pagsusulat.css";
 
-type AralinNoteOption = {
-  id: number;
-  label: string;
-};
+type AralinNoteOption = { id: number; label: string };
 
 const quarterAralinMap: Record<number, AralinNoteOption[]> = {
   1: quarter1Aralin.map((item) => ({ id: item.id, label: `${item.title}: ${item.subtitle}` })),
@@ -34,10 +40,10 @@ const quarterAralinMap: Record<number, AralinNoteOption[]> = {
   3: quarter3Aralin.map((item) => ({ id: item.id, label: `${item.title}: ${item.subtitle}` })),
 };
 
-const quarterMeta: Record<number, { title: string; subtitle: string }> = {
-  1: { title: "Unang Markahan", subtitle: "Panitikan at Wika" },
-  2: { title: "Pangalawang Markahan", subtitle: "Kuwentong Bayan at Pabula" },
-  3: { title: "Pangatlong Markahan", subtitle: "Panitikan at Pagsusuri" },
+const quarterMeta: Record<number, { title: string; subtitle: string; emoji: string; gradient: string; color: string; dk: string }> = {
+  1: { title: "Unang Markahan",       subtitle: "Panitikan at Wika",              emoji: "📖", gradient: "linear-gradient(145deg,#FF6B6B,#C0392B)", color: "#FF6B6B", dk: "#C0392B" },
+  2: { title: "Pangalawang Markahan", subtitle: "Kuwentong Bayan at Pabula",      emoji: "🌿", gradient: "linear-gradient(145deg,#4D96FF,#1565C0)", color: "#4D96FF", dk: "#1565C0" },
+  3: { title: "Pangatlong Markahan",  subtitle: "Panitikan at Pagsusuri",         emoji: "🎭", gradient: "linear-gradient(145deg,#C77DFF,#7B2CBF)", color: "#C77DFF", dk: "#7B2CBF" },
 };
 
 type Note = {
@@ -51,80 +57,67 @@ type Note = {
 };
 
 const NOTES_KEY = "pagsusulat-notes";
+const createNoteId = (): string => `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
 
-const createNoteId = (): string =>
-  `${Date.now()}-${Math.random().toString(36).slice(2, 9)}`;
-
-type PagsusulatRouteParams = {
-  quarter?: string;
-  aralin?: string;
-};
+type PagsusulatRouteParams = { quarter?: string; aralin?: string };
 
 const Pagsusulat: React.FC = () => {
   const history = useHistory();
   const { quarter, aralin } = useParams<PagsusulatRouteParams>();
 
   const currentQuarter = useMemo<number | null>(() => {
-    const parsedQuarter = Number(quarter);
-    return Number.isFinite(parsedQuarter) && quarterMeta[parsedQuarter] ? parsedQuarter : null;
+    const p = Number(quarter);
+    return Number.isFinite(p) && quarterMeta[p] ? p : null;
   }, [quarter]);
 
   const currentAralin = useMemo<number | null>(() => {
     if (!currentQuarter) return null;
-    const parsedAralin = Number(aralin);
-    if (!Number.isFinite(parsedAralin)) return null;
-    const exists = (quarterAralinMap[currentQuarter] ?? []).some((item) => item.id === parsedAralin);
-    return exists ? parsedAralin : null;
+    const p = Number(aralin);
+    if (!Number.isFinite(p)) return null;
+    const exists = (quarterAralinMap[currentQuarter] ?? []).some((item) => item.id === p);
+    return exists ? p : null;
   }, [aralin, currentQuarter]);
 
   const [notes, setNotes] = useState<Note[]>(() => {
-    const rawNotes = localStorage.getItem(NOTES_KEY);
-    if (!rawNotes) return [];
-    try {
-      const parsed = JSON.parse(rawNotes) as Note[];
-      return Array.isArray(parsed) ? parsed : [];
-    } catch {
-      return [];
-    }
+    const raw = localStorage.getItem(NOTES_KEY);
+    if (!raw) return [];
+    try { const p = JSON.parse(raw) as Note[]; return Array.isArray(p) ? p : []; }
+    catch { return []; }
   });
-  const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
-  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState<boolean>(false);
+
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [deleteTarget, setDeleteTarget] = useState<Note | null>(null);
 
-  const [createQuarter, setCreateQuarter] = useState<number>(1);
-  const [createAralin, setCreateAralin] = useState<number>(1);
-  const [newTitle, setNewTitle] = useState<string>("");
-  const [newContent, setNewContent] = useState<string>("");
+  const [createQuarter, setCreateQuarter] = useState(1);
+  const [createAralin,  setCreateAralin]  = useState(1);
+  const [newTitle,      setNewTitle]      = useState("");
+  const [newContent,    setNewContent]    = useState("");
 
-  const [editId, setEditId] = useState<string>("");
-  const [editTitle, setEditTitle] = useState<string>("");
-  const [editContent, setEditContent] = useState<string>("");
+  const [editId,      setEditId]      = useState("");
+  const [editTitle,   setEditTitle]   = useState("");
+  const [editContent, setEditContent] = useState("");
 
-  const persistNotes = (nextNotes: Note[]) => {
-    setNotes(nextNotes);
-    localStorage.setItem(NOTES_KEY, JSON.stringify(nextNotes));
+  const persistNotes = (next: Note[]) => {
+    setNotes(next);
+    localStorage.setItem(NOTES_KEY, JSON.stringify(next));
   };
 
-  const selectedAralinOptions = useMemo<AralinNoteOption[]>(() => {
-    if (!currentQuarter) return [];
-    return quarterAralinMap[currentQuarter] ?? [];
-  }, [currentQuarter]);
+  const selectedAralinOptions = useMemo<AralinNoteOption[]>(
+    () => (!currentQuarter ? [] : quarterAralinMap[currentQuarter] ?? []),
+    [currentQuarter]
+  );
 
-  const getAralinLabel = (quarter: number, aralinId: number): string => {
-    const aralin = (quarterAralinMap[quarter] ?? []).find((item) => item.id === aralinId);
-    return aralin ? aralin.label : `Aralin ${aralinId}`;
-  };
+  const getAralinLabel = (q: number, aId: number) =>
+    (quarterAralinMap[q] ?? []).find((i) => i.id === aId)?.label ?? `Aralin ${aId}`;
 
-  const getNoteCount = (quarter: number, aralinId?: number): number => {
-    return notes.filter((note) =>
-      aralinId ? note.quarter === quarter && note.aralin === aralinId : note.quarter === quarter
-    ).length;
-  };
+  const getNoteCount = (q: number, aId?: number) =>
+    notes.filter((n) => (aId ? n.quarter === q && n.aralin === aId : n.quarter === q)).length;
 
   const filteredNotes = useMemo<Note[]>(() => {
     if (!currentQuarter || !currentAralin) return [];
     return notes
-      .filter((note) => note.quarter === currentQuarter && note.aralin === currentAralin)
+      .filter((n) => n.quarter === currentQuarter && n.aralin === currentAralin)
       .sort((a, b) => b.updatedAt - a.updatedAt);
   }, [currentAralin, currentQuarter, notes]);
 
@@ -132,308 +125,353 @@ const Pagsusulat: React.FC = () => {
     if (!currentQuarter || !currentAralin) return;
     setCreateQuarter(currentQuarter);
     setCreateAralin(currentAralin);
-    setNewTitle("");
-    setNewContent("");
+    setNewTitle(""); setNewContent("");
     setIsCreateModalOpen(true);
   };
 
   const onCreateNote = () => {
     if (!newTitle.trim() || !newContent.trim()) return;
-
-    const timestamp = Date.now();
-    const nextNotes: Note[] = [
-      ...notes,
-      {
-        id: createNoteId(),
-        quarter: createQuarter,
-        aralin: createAralin,
-        title: newTitle.trim(),
-        content: newContent.trim(),
-        createdAt: timestamp,
-        updatedAt: timestamp,
-      },
-    ];
-
-    persistNotes(nextNotes);
+    const ts = Date.now();
+    persistNotes([...notes, {
+      id: createNoteId(), quarter: createQuarter, aralin: createAralin,
+      title: newTitle.trim(), content: newContent.trim(), createdAt: ts, updatedAt: ts,
+    }]);
     setIsCreateModalOpen(false);
   };
 
   const onOpenUpdateModal = (note: Note) => {
-    setEditId(note.id);
-    setEditTitle(note.title);
-    setEditContent(note.content);
+    setEditId(note.id); setEditTitle(note.title); setEditContent(note.content);
     setIsUpdateModalOpen(true);
   };
 
   const onUpdateNote = () => {
     if (!editId || !editTitle.trim() || !editContent.trim()) return;
-
-    const nextNotes = notes.map((note) =>
-      note.id === editId
-        ? {
-            ...note,
-            title: editTitle.trim(),
-            content: editContent.trim(),
-            updatedAt: Date.now(),
-          }
-        : note
-    );
-
-    persistNotes(nextNotes);
+    persistNotes(notes.map((n) =>
+      n.id === editId ? { ...n, title: editTitle.trim(), content: editContent.trim(), updatedAt: Date.now() } : n
+    ));
     setIsUpdateModalOpen(false);
   };
 
   const onConfirmDelete = () => {
     if (!deleteTarget) return;
-
-    const nextNotes = notes.filter((note) => note.id !== deleteTarget.id);
-    persistNotes(nextNotes);
+    persistNotes(notes.filter((n) => n.id !== deleteTarget.id));
     setDeleteTarget(null);
   };
 
-  const formatDate = (value: number): string => {
-    return new Date(value).toLocaleString();
-  };
+  const formatDate = (v: number) => new Date(v).toLocaleString();
 
-  const onSelectQuarter = (quarterValue: number) => {
-    history.push(`/pagsusulat/${quarterValue}`);
-  };
+  const onSelectQuarter = (q: number) => history.push(`/pagsusulat/${q}`);
+  const onSelectAralin  = (aId: number) => { if (!currentQuarter) return; history.push(`/pagsusulat/${currentQuarter}/${aId}`); };
+  const onBackToQuarters = () => history.push("/pagsusulat");
+  const onBackToAralin   = () => { if (!currentQuarter) return; history.push(`/pagsusulat/${currentQuarter}`); };
 
-  const onSelectAralin = (aralinId: number) => {
-    if (!currentQuarter) return;
-    history.push(`/pagsusulat/${currentQuarter}/${aralinId}`);
-  };
-
-  const onBackToQuarters = () => {
-    history.push("/pagsusulat");
-  };
-
-  const onBackToAralin = () => {
-    if (!currentQuarter) return;
-    history.push(`/pagsusulat/${currentQuarter}`);
-  };
+  // ── Modal toolbar helper ──
+  const ModalToolbar = ({ title, onClose }: { title: string; onClose: () => void }) => (
+    <IonHeader className="ion-no-border">
+      <IonToolbar className="pag-modal-toolbar">
+        <IonTitle className="pag-modal-title">{title}</IonTitle>
+        <IonButtons slot="end">
+          <IonButton fill="clear" className="pag-modal-close" onClick={onClose}>
+            <IonIcon icon={closeOutline} />
+          </IonButton>
+        </IonButtons>
+      </IonToolbar>
+    </IonHeader>
+  );
 
   return (
     <IonPage>
       <IonHeader className="ion-no-border">
-        <IonToolbar className="pagsusulat-toolbar">
-          <IonTitle className="pagsusulat-title">Pagsusulat</IonTitle>
+        <IonToolbar className="pag-toolbar">
+          <IonTitle className="pag-toolbar-title">Pagsusulat</IonTitle>
         </IonToolbar>
       </IonHeader>
 
-      <IonContent fullscreen className="ion-padding pagsusulat-content">
-        <div className="notes-page">
-          <h2 className="notes-title">
-            {currentQuarter ? `Mga Tala - ${quarterMeta[currentQuarter].title}` : "Mga Tala"}
-          </h2>
-          <IonText color="medium">
-            <p className="notes-subtitle">
-              {!currentQuarter
-                ? "Piliin muna ang markahan."
-                : !currentAralin
-                  ? "Piliin ang aralin para makita ang notes."
-                  : "Narito ang buong notes para sa napiling aralin."}
-            </p>
-          </IonText>
+      <IonContent fullscreen className="pag-content">
 
-          {!currentQuarter ? (
-            <div className="quarter-cards">
-              {[1, 2, 3].map((quarter) => (
-                <IonCard
-                  className="notes-card quarter-note-card quarter-select-card"
-                  key={quarter}
-                  button
-                  onClick={() => onSelectQuarter(quarter)}
-                >
-                  <IonCardContent>
-                    <div className="quarter-card-header">
-                      <div>
-                        <h3 className="quarter-card-title">{quarterMeta[quarter].title}</h3>
-                        <p className="quarter-card-subtitle">{quarterMeta[quarter].subtitle}</p>
-                      </div>
-                      <div className="quarter-go">
-                        <IonIcon icon={chevronForwardOutline} />
-                      </div>
-                    </div>
-                    <p className="quarter-card-info">{getNoteCount(quarter)} tala sa markahang ito</p>
-                  </IonCardContent>
-                </IonCard>
-              ))}
+        {/* ── Hero ── */}
+        <div className="pag-hero">
+          <div className="pag-hero-blob pag-hero-blob--1" />
+          <div className="pag-hero-blob pag-hero-blob--2" />
+          <div className="pag-hero-inner">
+            <div className="pag-hero-icon">
+              <IonIcon icon={documentTextOutline} />
             </div>
-          ) : !currentAralin ? (
-            <div className="aralin-stage">
-              <div className="aralin-stage-top">
-                <IonButton fill="clear" className="back-quarter-btn" onClick={onBackToQuarters}>
-                  <IonIcon slot="start" icon={arrowBackOutline} />
-                  Ibalik
-                </IonButton>
-              </div>
+            <h1 className="pag-hero-title">
+              {currentQuarter
+                ? currentAralin
+                  ? "Mga Tala"
+                  : quarterMeta[currentQuarter].title
+                : "Pagsusulat"}
+            </h1>
+            <p className="pag-hero-subtitle">
+              {!currentQuarter
+                ? "Piliin ang markahan para magsimula"
+                : !currentAralin
+                  ? "Piliin ang aralin para makita ang mga tala"
+                  : getAralinLabel(currentQuarter, currentAralin)}
+            </p>
+          </div>
+        </div>
 
-              <div className="aralin-cards">
-                {selectedAralinOptions.map((aralin) => (
+        <div className="pag-body">
+
+          {/* ════ SCREEN 1: Quarter selection ════ */}
+          {!currentQuarter && (
+            <div className="pag-quarter-grid">
+              {([1, 2, 3] as const).map((q, idx) => {
+                const meta  = quarterMeta[q];
+                const count = getNoteCount(q);
+                return (
                   <IonCard
-                    key={aralin.id}
-                    className="notes-card aralin-select-card"
+                    key={q}
+                    className="pag-quarter-card"
+                    style={{ animationDelay: `${idx * 90}ms`, "--pag-accent": meta.color, "--pag-dk": meta.dk } as React.CSSProperties}
                     button
-                    onClick={() => onSelectAralin(aralin.id)}
+                    onClick={() => onSelectQuarter(q)}
                   >
-                    <IonCardContent>
-                      <div className="aralin-select-header">
-                        <p className="note-aralin-label">{aralin.label}</p>
+                    <div className="pag-card-accent-bar" style={{ background: meta.gradient }} />
+                    <div className="pag-card-glow" />
+                    <div className="pag-ghost-num">{q}</div>
+
+                    <IonCardContent className="pag-quarter-body">
+                      <div className="pag-quarter-top">
+                        <div className="pag-emoji-bubble" style={{ background: meta.gradient }}>
+                          {meta.emoji}
+                        </div>
+                        <div className="pag-markahan-badge">Markahan {q}</div>
+                      </div>
+
+                      <h3 className="pag-quarter-title">{meta.title}</h3>
+                      <p className="pag-quarter-sub">{meta.subtitle}</p>
+
+                      <div className="pag-quarter-footer">
+                        <span className="pag-note-count" style={{ color: meta.color }}>
+                          📝 {count} tala
+                        </span>
+                        <div className="pag-go-circle" style={{ background: meta.gradient }}>
+                          <IonIcon icon={chevronForwardOutline} />
+                        </div>
                       </div>
                     </IonCardContent>
                   </IonCard>
-                ))}
+                );
+              })}
+            </div>
+          )}
+
+          {/* ════ SCREEN 2: Aralin selection ════ */}
+          {currentQuarter && !currentAralin && (
+            <div className="pag-aralin-stage">
+              <button className="pag-back-btn" onClick={onBackToQuarters}>
+                <IonIcon icon={arrowBackOutline} /> Ibalik
+              </button>
+
+              <div className="pag-aralin-grid">
+                {selectedAralinOptions.map((ar, idx) => {
+                  const meta  = quarterMeta[currentQuarter];
+                  const count = getNoteCount(currentQuarter, ar.id);
+                  return (
+                    <IonCard
+                      key={ar.id}
+                      className="pag-aralin-card"
+                      style={{ animationDelay: `${idx * 50}ms`, "--pag-accent": meta.color } as React.CSSProperties}
+                      button
+                      onClick={() => onSelectAralin(ar.id)}
+                    >
+                      <div className="pag-aralin-accent" style={{ background: meta.gradient }} />
+                      <IonCardContent className="pag-aralin-body">
+                        <div className="pag-aralin-row">
+                          <div className="pag-aralin-num-bubble" style={{ background: meta.gradient }}>
+                            {ar.id}
+                          </div>
+                          <p className="pag-aralin-label">{ar.label}</p>
+                          <div className="pag-aralin-chevron" style={{ color: meta.color }}>
+                            <IonIcon icon={chevronForwardOutline} />
+                          </div>
+                        </div>
+                        {count > 0 && (
+                          <span className="pag-aralin-count" style={{ color: meta.color }}>
+                            📝 {count} tala
+                          </span>
+                        )}
+                      </IonCardContent>
+                    </IonCard>
+                  );
+                })}
               </div>
             </div>
-          ) : (
-            <IonCard className="notes-card quarter-note-card">
-              <IonCardContent>
-                <div className="aralin-stage-top">
-                  <IonButton fill="clear" className="back-quarter-btn" onClick={onBackToAralin}>
-                    <IonIcon slot="start" icon={arrowBackOutline} />
-                    Ibalik
-                  </IonButton>
-                </div>
+          )}
 
-                <div className="quarter-card-header">
-                  <h3 className="quarter-card-title">{getAralinLabel(currentQuarter, currentAralin)}</h3>
-                  <IonButton size="small" className="add-note-btn" onClick={onOpenCreateModal}>
-                    <IonIcon slot="start" icon={addOutline} />
-                    I-dagdag
-                  </IonButton>
-                </div>
+          {/* ════ SCREEN 3: Notes list ════ */}
+          {currentQuarter && currentAralin && (
+            <div className="pag-notes-stage">
+              <button className="pag-back-btn" onClick={onBackToAralin}>
+                <IonIcon icon={arrowBackOutline} /> Ibalik
+              </button>
 
-                <div className="notes-list">
-                  {filteredNotes.length === 0 ? (
-                    <IonText color="medium">
-                      <p className="notes-empty">Walang tala sa napiling aralin.</p>
-                    </IonText>
-                  ) : (
-                    filteredNotes.map((note) => (
-                      <IonCard key={note.id} className="note-item-card">
-                        <IonCardContent>
-                          <h4 className="note-title">Tala: {note.title}</h4>
-                          <p className="note-meta">Na-update: {formatDate(note.updatedAt)}</p>
-                          <p className="note-content">{note.content}</p>
-                          <div className="note-actions">
-                            <IonButton
-                              fill="outline"
-                              size="small"
-                              className="update-note-btn"
+              {/* Add note button */}
+              <button
+                className="pag-add-btn"
+                style={{ background: quarterMeta[currentQuarter].gradient } as React.CSSProperties}
+                onClick={onOpenCreateModal}
+              >
+                <IonIcon icon={addOutline} />
+                <span>Magdagdag ng Tala</span>
+              </button>
+
+              {/* Empty state */}
+              {filteredNotes.length === 0 && (
+                <div className="pag-empty-state">
+                  <div className="pag-empty-emoji">📝</div>
+                  <p className="pag-empty-text">Walang tala pa sa aralin na ito.</p>
+                  <p className="pag-empty-hint">I-tap ang button sa itaas para magsimulang magsulat!</p>
+                </div>
+              )}
+
+              {/* Note cards */}
+              <div className="pag-notes-list">
+                {filteredNotes.map((note, idx) => {
+                  const meta = quarterMeta[currentQuarter];
+                  return (
+                    <IonCard
+                      key={note.id}
+                      className="pag-note-card"
+                      style={{ animationDelay: `${idx * 60}ms`, "--pag-accent": meta.color } as React.CSSProperties}
+                    >
+                      <div className="pag-note-accent-bar" style={{ background: meta.gradient }} />
+                      <IonCardContent className="pag-note-body">
+                        <div className="pag-note-header">
+                          <div>
+                            <h4 className="pag-note-title">{note.title}</h4>
+                            <p className="pag-note-meta">
+                              🕐 {formatDate(note.updatedAt)}
+                            </p>
+                          </div>
+                          <div className="pag-note-actions">
+                            <button
+                              className="pag-action-btn pag-action-btn--edit"
+                              style={{ "--action-color": meta.color, "--action-dk": meta.dk } as React.CSSProperties}
                               onClick={() => onOpenUpdateModal(note)}
                             >
-                              <IonIcon slot="start" icon={createOutline} />
-                              I-edit
-                            </IonButton>
-                            <IonButton
-                              color="danger"
-                              fill="outline"
-                              size="small"
-                              className="delete-note-btn"
+                              <IonIcon icon={createOutline} />
+                            </button>
+                            <button
+                              className="pag-action-btn pag-action-btn--delete"
                               onClick={() => setDeleteTarget(note)}
                             >
-                              <IonIcon slot="start" icon={trashOutline} />
-                              Burahin
-                            </IonButton>
+                              <IonIcon icon={trashOutline} />
+                            </button>
                           </div>
-                        </IonCardContent>
-                      </IonCard>
-                    ))
-                  )}
-                </div>
-              </IonCardContent>
-            </IonCard>
+                        </div>
+                        <p className="pag-note-content">{note.content}</p>
+                      </IonCardContent>
+                    </IonCard>
+                  );
+                })}
+              </div>
+            </div>
           )}
         </div>
 
+        <div className="pag-bottom-space" />
+
+        {/* ════ CREATE MODAL ════ */}
         <IonModal isOpen={isCreateModalOpen} onDidDismiss={() => setIsCreateModalOpen(false)}>
-          <IonHeader className="ion-no-border">
-            <IonToolbar className="pagsusulat-toolbar">
-              <IonTitle className="pagsusulat-title">Dagdagan ang Tala - Markahan {createQuarter}</IonTitle>
-              <IonButtons slot="end">
-                <IonButton className="modal-close-btn" onClick={() => setIsCreateModalOpen(false)}>
-                  Close
-                </IonButton>
-              </IonButtons>
-            </IonToolbar>
-          </IonHeader>
-          <IonContent className="ion-padding pagsusulat-content modal-form-content">
-            <IonCard className="notes-card form-notes-card">
-              <IonCardContent>
-                <p className="note-aralin-label">{getAralinLabel(createQuarter, createAralin)}</p>
-                <div className="notes-input-item">
-                  <p className="note-aralin-label">Pamagat</p>
-                  <IonInput value={newTitle} onIonInput={(e) => setNewTitle(e.detail.value ?? "")} />
-                </div>
-                <div className="notes-input-item">
-                  <p className="note-aralin-label">Nilalaman</p>
-                  <IonTextarea
-                    value={newContent}
-                    onIonInput={(e) => setNewContent(e.detail.value ?? "")}
-                    rows={10}
-                    autoGrow
-                  />
-                </div>
-                <div className="notes-actions">
-                  <IonButton
-                    className="save-note-btn"
-                    onClick={onCreateNote}
-                    disabled={!newTitle.trim() || !newContent.trim()}
-                  >
-                    I-dagdag
-                  </IonButton>
-                </div>
-              </IonCardContent>
-            </IonCard>
+          <ModalToolbar title={`Bagong Tala — Markahan ${createQuarter}`} onClose={() => setIsCreateModalOpen(false)} />
+          <IonContent className="pag-modal-content">
+            <div className="pag-modal-body">
+              <p className="pag-modal-aralin-label">
+                <IonIcon icon={bookOutline} />
+                {getAralinLabel(createQuarter, createAralin)}
+              </p>
+
+              <div className="pag-form-group">
+                <label className="pag-form-label">Pamagat</label>
+                <IonInput
+                  className="pag-form-input"
+                  value={newTitle}
+                  placeholder="Ilagay ang pamagat..."
+                  onIonInput={(e) => setNewTitle(e.detail.value ?? "")}
+                />
+              </div>
+
+              <div className="pag-form-group">
+                <label className="pag-form-label">Nilalaman</label>
+                <IonTextarea
+                  className="pag-form-textarea"
+                  value={newContent}
+                  placeholder="Isulat ang iyong tala dito..."
+                  onIonInput={(e) => setNewContent(e.detail.value ?? "")}
+                  rows={10}
+                  autoGrow
+                />
+              </div>
+
+              <button
+                className="pag-save-btn"
+                style={(!newTitle.trim() || !newContent.trim())
+                  ? {}
+                  : { background: quarterMeta[createQuarter].gradient } as React.CSSProperties}
+                onClick={onCreateNote}
+                disabled={!newTitle.trim() || !newContent.trim()}
+              >
+                <IonIcon icon={addOutline} />
+                I-dagdag ang Tala
+              </button>
+            </div>
           </IonContent>
         </IonModal>
 
+        {/* ════ UPDATE MODAL ════ */}
         <IonModal isOpen={isUpdateModalOpen} onDidDismiss={() => setIsUpdateModalOpen(false)}>
-          <IonHeader className="ion-no-border">
-            <IonToolbar className="pagsusulat-toolbar">
-              <IonTitle className="pagsusulat-title">I-edit ang Tala</IonTitle>
-              <IonButtons slot="end">
-                <IonButton className="modal-close-btn" onClick={() => setIsUpdateModalOpen(false)}>
-                  Close
-                </IonButton>
-              </IonButtons>
-            </IonToolbar>
-          </IonHeader>
-          <IonContent className="ion-padding pagsusulat-content modal-form-content">
-            <IonCard className="notes-card form-notes-card">
-              <IonCardContent>
-                <div className="notes-input-item">
-                  <p className="note-aralin-label">Pamagat</p>
-                  <IonInput value={editTitle} onIonInput={(e) => setEditTitle(e.detail.value ?? "")} />
-                </div>
-                <div className="notes-input-item">
-                  <p className="note-aralin-label">Nilalaman</p>
-                  <IonTextarea
-                    value={editContent}
-                    onIonInput={(e) => setEditContent(e.detail.value ?? "")}
-                    rows={10}
-                    autoGrow
-                  />
-                </div>
-                <div className="notes-actions">
-                  <IonButton
-                    className="save-note-btn"
-                    onClick={onUpdateNote}
-                    disabled={!editTitle.trim() || !editContent.trim()}
-                  >
-                    I-edit
-                  </IonButton>
-                </div>
-              </IonCardContent>
-            </IonCard>
+          <ModalToolbar title="I-edit ang Tala" onClose={() => setIsUpdateModalOpen(false)} />
+          <IonContent className="pag-modal-content">
+            <div className="pag-modal-body">
+              <div className="pag-form-group">
+                <label className="pag-form-label">Pamagat</label>
+                <IonInput
+                  className="pag-form-input"
+                  value={editTitle}
+                  placeholder="Ilagay ang pamagat..."
+                  onIonInput={(e) => setEditTitle(e.detail.value ?? "")}
+                />
+              </div>
+
+              <div className="pag-form-group">
+                <label className="pag-form-label">Nilalaman</label>
+                <IonTextarea
+                  className="pag-form-textarea"
+                  value={editContent}
+                  placeholder="Isulat ang iyong tala dito..."
+                  onIonInput={(e) => setEditContent(e.detail.value ?? "")}
+                  rows={10}
+                  autoGrow
+                />
+              </div>
+
+              <button
+                className="pag-save-btn"
+                style={(!editTitle.trim() || !editContent.trim())
+                  ? {}
+                  : currentQuarter
+                    ? { background: quarterMeta[currentQuarter].gradient } as React.CSSProperties
+                    : {}}
+                onClick={onUpdateNote}
+                disabled={!editTitle.trim() || !editContent.trim()}
+              >
+                <IonIcon icon={createOutline} />
+                I-save ang Pagbabago
+              </button>
+            </div>
           </IonContent>
         </IonModal>
 
+        {/* ════ DELETE ALERT ════ */}
         <IonAlert
           isOpen={!!deleteTarget}
           header="Burahin ang Tala"
-          message="Sigurado ka bang buburahin ang note na ito?"
+          message="Sigurado ka bang buburahin ang tala na ito?"
           onDidDismiss={() => setDeleteTarget(null)}
           buttons={[
             { text: "Kanselahin", role: "cancel" },

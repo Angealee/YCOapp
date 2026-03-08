@@ -8,6 +8,7 @@ const WelcomeVideoPage: React.FC = () => {
 
   const proceedToHome = () => {
     sessionStorage.setItem('yco_start_guide', '1');
+    localStorage.setItem('yco_start_guide', '1');
     history.replace('/home');
   };
 
