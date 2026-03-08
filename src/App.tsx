@@ -128,11 +128,6 @@ const Tabs: React.FC = () => {
     </IonTabs>
   );
 };
-
-// ─────────────────────────────────────────────
-// ROOT APP
-// Flow: / → SplashIntro → (checks sessionStorage) → /welcome or /home
-// ─────────────────────────────────────────────
 const App: React.FC = () => {
   useEffect(() => {
     setTimeout(async () => {
@@ -146,18 +141,6 @@ const App: React.FC = () => {
   return (
     <IonApp>
       <IonReactRouter>
-        {/*
-          Switch renders only the FIRST matching route.
-
-          Route order matters:
-            1. /        → SplashIntro (handles its own redirect after 2.2s)
-            2. /welcome → WelcomeVideoPage (no tab bar)
-            3. *        → Tabs (all in-app screens)
-
-          SplashIntro reads sessionStorage internally and calls
-          history.replace('/welcome') or history.replace('/home'),
-          so we do NOT need a seenWelcome check here in App anymore.
-        */}
         <Switch>
           <Route exact path="/"        component={SplashIntro} />
           <Route exact path="/welcome" component={WelcomeVideoPage} />
