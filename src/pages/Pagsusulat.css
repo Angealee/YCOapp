@@ -1,263 +1,611 @@
-.pagsusulat-toolbar {
-  --background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+/* ============================================
+   PAGSUSULAT PAGE — YCO App
+   Design system: Baloo 2 + Nunito
+   Matching Quarter1.css + Quiz.css language
+   ============================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;500;600;700;800;900&family=Nunito:wght@400;500;600;700;800;900&display=swap');
+
+/* ─── Toolbar ─────────────────────────────── */
+.pag-toolbar {
+  --background: #FF6B6B;
   --color: white;
-  padding-top: 8px;
-  padding-bottom: 8px;
-  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+  padding: 6px 0;
+  position: relative;
+  overflow: hidden;
+  box-shadow: none;
+  border-bottom: none;
 }
 
-.pagsusulat-title {
-  font-weight: 700;
-  letter-spacing: 0.5px;
+/* Ticker strip */
+.pag-toolbar::before {
+  content: '✏️ 🌈 📝 🎉 ✏️ 🌈 📝 🎉 ✏️ 🌈 📝 🎉 ✏️ 🌈 📝 🎉 ✏️ 🌈 📝 🎉';
+  position: absolute;
+  top: 2px; left: 0; right: 0;
+  font-size: 9px;
+  letter-spacing: 4px;
+  opacity: 0.22;
+  white-space: nowrap;
+  overflow: hidden;
+  animation: pagTicker 14s linear infinite;
+  pointer-events: none;
+}
+@keyframes pagTicker {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
 }
 
-.pagsusulat-content {
-  --storybook-blue: #3b5bdb;
-  --storybook-violet: #7b2cbf;
-  --storybook-berry: #ff5c8a;
-  --storybook-gold: #f6c453;
-  --storybook-ink: #1f2937;
-  --storybook-ink-soft: #6b7280;
-  --card-radius: 24px;
-  --background:
-    radial-gradient(1200px 800px at 20% -10%, rgba(123, 44, 191, 0.08), transparent 60%),
-    radial-gradient(900px 700px at 90% 20%, rgba(255, 92, 138, 0.08), transparent 55%),
-    radial-gradient(700px 600px at 30% 90%, rgba(246, 196, 83, 0.1), transparent 60%),
-    linear-gradient(180deg, #fff9ef 0%, #ffffff 55%, #f7f8ff 100%);
+.pag-toolbar-title {
+  font-family: 'Baloo 2', cursive;
+  font-weight: 800;
+  font-size: 1.1rem;
+  letter-spacing: 0.3px;
+  text-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  color: white;
 }
 
-.notes-page {
-  max-width: 860px;
-  margin: 0 auto;
-  padding: 0.5rem 0 2rem;
+/* ─── Modal toolbar ───────────────────────── */
+.pag-modal-toolbar {
+  --background: #FF6B6B;
+  --color: white;
+  padding: 6px 0;
+}
+.pag-modal-title {
+  font-family: 'Baloo 2', cursive;
+  font-weight: 800;
+  font-size: 1rem;
+  color: white;
+}
+.pag-modal-close {
+  --color: white;
+  font-size: 1.4rem;
 }
 
-.quarter-cards {
-  display: grid;
+/* ─── Page Background ─────────────────────── */
+.pag-content {
+  --background: #FFFBF0;
+  background-image:
+    radial-gradient(circle at 15% 20%, rgba(255,107,107,0.07) 0%, transparent 50%),
+    radial-gradient(circle at 85% 80%, rgba(77,150,255,0.07) 0%, transparent 50%);
+  font-family: 'Nunito', sans-serif;
+}
+
+/* ─── Hero ────────────────────────────────── */
+.pag-hero {
+  position: relative;
+  padding: 2.5rem 1.5rem 4.5rem;
+  margin-bottom: -2rem;
+  overflow: hidden;
+  background: linear-gradient(145deg, #FF6B6B 0%, #FF4757 40%, #C0392B 100%);
+  text-align: center;
+  color: white;
+}
+
+.pag-hero-blob {
+  position: absolute;
+  border-radius: 50%;
+  pointer-events: none;
+}
+.pag-hero-blob--1 {
+  width: 280px; height: 280px;
+  top: -80px; left: -60px;
+  background: radial-gradient(circle, rgba(255,217,61,0.28) 0%, transparent 70%);
+  animation: pagBlobFloat 7s ease-in-out infinite;
+}
+.pag-hero-blob--2 {
+  width: 200px; height: 200px;
+  bottom: -60px; right: -40px;
+  background: radial-gradient(circle, rgba(255,255,255,0.18) 0%, transparent 70%);
+  animation: pagBlobFloat 5s ease-in-out infinite reverse;
+}
+@keyframes pagBlobFloat {
+  0%,100% { transform: translate(0,0) scale(1); }
+  50%      { transform: translate(-12px,-16px) scale(1.08); }
+}
+
+.pag-hero-inner { position: relative; z-index: 2; }
+
+.pag-hero-icon {
+  display: inline-flex;
+  align-items: center; justify-content: center;
+  width: 84px; height: 84px;
+  background: rgba(255,255,255,0.22);
+  backdrop-filter: blur(12px);
+  border-radius: 50%;
+  border: 3px solid rgba(255,255,255,0.45);
+  margin-bottom: 1rem;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  animation: pagHeroPulse 2.5s ease-in-out infinite;
+  color: white;
+}
+.pag-hero-icon ion-icon { font-size: 2.4rem; }
+@keyframes pagHeroPulse {
+  0%,100% { transform: scale(1);    box-shadow: 0 8px 25px rgba(0,0,0,0.15), 0 0 0 0 rgba(255,255,255,0.3); }
+  50%      { transform: scale(1.06); box-shadow: 0 8px 25px rgba(0,0,0,0.15), 0 0 0 12px rgba(255,255,255,0); }
+}
+
+.pag-hero-title {
+  font-family: 'Baloo 2', cursive;
+  font-size: 2.1rem; font-weight: 900;
+  margin: 0 0 0.4rem;
+  text-shadow: 0 3px 12px rgba(0,0,0,0.2);
+}
+.pag-hero-subtitle {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.95rem; font-weight: 600;
+  opacity: 0.88;
+  margin: 0;
+  padding: 0 1rem;
+  line-height: 1.4;
+}
+
+/* ─── Body wrapper ────────────────────────── */
+.pag-body {
+  padding: 1.4rem 1rem 0;
+}
+
+/* ─── Quarter Cards ───────────────────────── */
+.pag-quarter-grid {
+  display: flex;
+  flex-direction: column;
   gap: 1rem;
 }
 
-.notes-title {
-  margin: 0 0 0.25rem;
-}
-
-.notes-subtitle {
-  margin: 0 0 1rem;
-}
-
-.notes-card {
-  margin: 0;
-  border-radius: var(--card-radius);
-  background: #fff;
-  box-shadow: 0 14px 40px rgba(38, 38, 95, 0.12), 0 2px 12px rgba(38, 38, 95, 0.08);
-  border: 1px solid rgba(123, 44, 191, 0.12);
-}
-
-.quarter-note-card {
-  overflow: hidden;
+.pag-quarter-card {
   position: relative;
-}
-
-.quarter-select-card {
+  margin: 0;
+  border-radius: 22px;
+  background: white;
+  box-shadow: 0 6px 0 rgba(0,0,0,0.09), 0 8px 24px rgba(0,0,0,0.08);
+  border: 2.5px solid rgba(0,0,0,0.06);
+  overflow: hidden;
   cursor: pointer;
+  animation: pagSlideUp 0.5s cubic-bezier(0.4,0,0.2,1) backwards;
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
+}
+@keyframes pagSlideUp {
+  from { opacity: 0; transform: translateY(24px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+.pag-quarter-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 0 rgba(0,0,0,0.07), 0 16px 40px rgba(255,107,107,0.15);
+}
+.pag-quarter-card:active {
+  transform: translateY(4px);
+  box-shadow: 0 2px 0 rgba(0,0,0,0.09);
 }
 
-.quarter-note-card::before {
-  content: "";
+/* Card shared elements */
+.pag-card-accent-bar { height: 6px; width: 100%; }
+
+.pag-card-glow {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 5px;
-  background: linear-gradient(90deg, var(--storybook-blue) 0%, var(--storybook-violet) 100%);
+  top: -50%; left: -50%;
+  width: 200%; height: 200%;
+  background: radial-gradient(circle, rgba(255,107,107,0.08) 0%, transparent 70%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.pag-quarter-card:hover .pag-card-glow { opacity: 1; }
+
+.pag-ghost-num {
+  position: absolute;
+  top: 0.5rem; right: 1rem;
+  font-family: 'Baloo 2', cursive;
+  font-size: 4rem; font-weight: 900;
+  color: rgba(250,14,14,0.08);
+  line-height: 1;
+  pointer-events: none;
+  z-index: 1;
 }
 
-.quarter-card-header {
+.pag-quarter-body {
+  padding: 1.2rem 1.4rem 1.4rem;
+  position: relative; z-index: 2;
+}
+
+.pag-quarter-top {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 0.75rem;
-  flex-wrap: wrap;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.8rem;
 }
 
-.quarter-card-title {
-  margin: 0;
-  font-size: 1.1rem;
-  font-weight: 700;
+.pag-emoji-bubble {
+  width: 50px; height: 50px;
+  border-radius: 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.6rem;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.12);
+  flex-shrink: 0;
 }
 
-.quarter-card-subtitle {
-  margin: 0.2rem 0 0;
-  font-size: 0.9rem;
-  color: var(--storybook-ink-soft);
+.pag-markahan-badge {
+  display: inline-block;
+  padding: 0.35rem 0.9rem;
+  background: linear-gradient(135deg, #FF6B6B, #C0392B);
+  color: white;
+  border-radius: 50px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.72rem; font-weight: 800;
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  box-shadow: 0 4px 0 rgba(192,57,43,0.3), 0 6px 14px rgba(255,107,107,0.25);
 }
 
-.quarter-card-info {
-  margin: 0.75rem 0 0;
-  font-size: 0.9rem;
-  color: var(--storybook-violet);
-  font-weight: 600;
+.pag-quarter-title {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.2rem; font-weight: 800;
+  color: #1A1A2E;
+  margin: 0 0 0.25rem;
+}
+.pag-quarter-sub {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.85rem; font-weight: 600;
+  color: #4A4A6A;
+  margin: 0 0 0.9rem;
 }
 
-.quarter-go {
+.pag-quarter-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 0.7rem;
+  border-top: 2px solid #F5F5FC;
+}
+.pag-note-count {
+  font-family: 'Baloo 2', cursive;
+  font-size: 0.85rem; font-weight: 800;
+}
+.pag-go-circle {
+  width: 34px; height: 34px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  color: white;
+  font-size: 1rem;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+}
+
+/* ─── Back button ─────────────────────────── */
+.pag-back-btn {
   display: inline-flex;
   align-items: center;
-  justify-content: center;
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  color: #fff;
-  background: linear-gradient(135deg, var(--storybook-violet) 0%, var(--storybook-blue) 100%);
-}
-
-.aralin-stage {
-  display: grid;
-  gap: 0.9rem;
-}
-
-.aralin-stage-top {
-  display: flex;
-  justify-content: flex-start;
-}
-
-.back-quarter-btn {
-  --color: var(--storybook-violet);
-  font-weight: 600;
-}
-
-.aralin-cards {
-  display: grid;
-  gap: 0.75rem;
-}
-
-.aralin-select-card {
+  gap: 6px;
+  background: white;
+  border: 2px solid #EEEEf5;
+  border-radius: 12px;
+  padding: 8px 16px;
+  font-family: 'Baloo 2', cursive;
+  font-size: 0.88rem; font-weight: 800;
+  color: #4A4A6A;
   cursor: pointer;
+  margin-bottom: 1rem;
+  transition: all 0.2s;
+  box-shadow: 0 3px 0 rgba(0,0,0,0.07);
+}
+.pag-back-btn:hover {
+  border-color: #D0D0E0;
+  transform: translateX(-3px);
+}
+.pag-back-btn:active { transform: translateY(2px); }
+.pag-back-btn ion-icon { font-size: 1rem; }
+
+/* ─── Aralin selection ────────────────────── */
+.pag-aralin-stage { display: flex; flex-direction: column; }
+
+.pag-aralin-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-.aralin-select-card.active {
-  border-color: rgba(123, 44, 191, 0.55);
-  box-shadow: 0 12px 30px rgba(123, 44, 191, 0.15);
+.pag-aralin-card {
+  position: relative;
+  margin: 0;
+  border-radius: 18px;
+  background: white;
+  box-shadow: 0 4px 0 rgba(0,0,0,0.07), 0 6px 16px rgba(0,0,0,0.07);
+  border: 2px solid rgba(0,0,0,0.05);
+  overflow: hidden;
+  cursor: pointer;
+  animation: pagSlideUp 0.4s cubic-bezier(0.4,0,0.2,1) backwards;
+  transition: transform 0.18s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.18s;
 }
+.pag-aralin-card:hover {
+  transform: translateX(5px);
+  box-shadow: 0 4px 0 rgba(0,0,0,0.07), 0 8px 22px rgba(255,107,107,0.12);
+}
+.pag-aralin-card:active { transform: scale(0.98); }
 
-.aralin-select-header {
+.pag-aralin-accent { height: 4px; width: 100%; }
+
+.pag-aralin-body { padding: 12px 14px; }
+
+.pag-aralin-row {
   display: flex;
   align-items: center;
-  justify-content: flex-start;
-  gap: 0.75rem;
+  gap: 10px;
 }
 
-.notes-input-item {
-  --padding-start: 0;
-  --inner-padding-end: 0;
-  --background: #faf7ff;
-  border: 1px solid rgba(123, 44, 191, 0.16);
-  border-radius: 12px;
-  margin-bottom: 0.55rem;
+.pag-aralin-num-bubble {
+  width: 34px; height: 34px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  color: white;
+  font-family: 'Baloo 2', cursive;
+  font-size: 0.9rem; font-weight: 900;
+  flex-shrink: 0;
+  box-shadow: 0 3px 0 rgba(0,0,0,0.12);
 }
 
-.notes-actions {
-  margin-top: 0.75rem;
+.pag-aralin-label {
+  flex: 1;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.88rem; font-weight: 700;
+  color: #1A1A2E;
+  line-height: 1.3;
+  margin: 0;
+}
+
+.pag-aralin-chevron {
+  font-size: 1.1rem;
+  flex-shrink: 0;
+  transition: transform 0.2s;
+}
+.pag-aralin-card:hover .pag-aralin-chevron { transform: translateX(3px); }
+
+.pag-aralin-count {
+  font-family: 'Baloo 2', cursive;
+  font-size: 0.72rem; font-weight: 800;
+  margin-top: 6px;
+  display: block;
+  padding-left: 44px;
+}
+
+/* ─── Notes stage ─────────────────────────── */
+.pag-notes-stage { display: flex; flex-direction: column; }
+
+.pag-add-btn {
   display: flex;
-  justify-content: flex-start;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 14px;
+  border: none;
+  border-radius: 16px;
+  color: white;
+  font-family: 'Baloo 2', cursive;
+  font-size: 1rem; font-weight: 800;
+  cursor: pointer;
+  margin-bottom: 1rem;
+  box-shadow: 0 6px 0 rgba(192,57,43,0.3), 0 10px 24px rgba(255,107,107,0.25);
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
+}
+.pag-add-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 9px 0 rgba(192,57,43,0.25), 0 14px 30px rgba(255,107,107,0.3);
+}
+.pag-add-btn:active {
+  transform: translateY(3px);
+  box-shadow: 0 2px 0 rgba(192,57,43,0.3);
+}
+.pag-add-btn ion-icon { font-size: 1.2rem; }
+
+/* ─── Empty state ─────────────────────────── */
+.pag-empty-state {
+  text-align: center;
+  padding: 3rem 1rem;
+  background: white;
+  border-radius: 22px;
+  border: 2.5px dashed #EEEEf5;
+  margin-bottom: 1rem;
+}
+.pag-empty-emoji { font-size: 3rem; margin-bottom: 0.75rem; }
+.pag-empty-text {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.1rem; font-weight: 800;
+  color: #1A1A2E; margin: 0 0 0.3rem;
+}
+.pag-empty-hint {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.85rem; font-weight: 600;
+  color: #7A7A9A; margin: 0;
 }
 
-.add-note-btn,
-.save-note-btn {
-  --background: linear-gradient(135deg, var(--storybook-violet) 0%, var(--storybook-blue) 100%);
-  --color: #fff;
-  --border-radius: 12px;
-  font-weight: 700;
-  text-transform: none;
-}
-
-.modal-close-btn {
-  --color: #fff;
-  font-weight: 600;
-}
-
-.modal-form-content {
-  padding-top: 1rem;
-}
-
-.form-notes-card {
-  margin-top: 0.25rem;
-}
-
-.update-note-btn {
-  --color: var(--storybook-violet);
-  --border-color: rgba(123, 44, 191, 0.5);
-}
-
-.delete-note-btn {
-  --border-color: rgba(220, 38, 38, 0.45);
-}
-
-.notes-list {
-  margin-top: 1rem;
-  display: grid;
-  gap: 0.75rem;
-}
-
-.notes-tab-switcher {
-  margin-top: 0.85rem;
+/* ─── Note cards ──────────────────────────── */
+.pag-notes-list {
   display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.notes-tab-btn {
-  --border-radius: 10px;
-  --border-color: rgba(123, 44, 191, 0.35);
-  --color: var(--storybook-violet);
-}
-
-.full-note-panel {
-  margin-top: 0.85rem;
-}
-
-.notes-empty {
-  margin: 0.5rem 0 0;
-}
-
-.note-item-card {
+.pag-note-card {
+  position: relative;
   margin: 0;
-  border-radius: 14px;
-  border: 1px solid rgba(123, 44, 191, 0.1);
-  box-shadow: 0 8px 24px rgba(38, 38, 95, 0.08);
+  border-radius: 20px;
+  background: white;
+  box-shadow: 0 5px 0 rgba(0,0,0,0.08), 0 8px 22px rgba(0,0,0,0.08);
+  border: 2px solid rgba(0,0,0,0.05);
+  overflow: hidden;
+  animation: pagSlideUp 0.4s cubic-bezier(0.4,0,0.2,1) backwards;
 }
 
-.note-title {
-  margin: 0.2rem 0 0;
-  font-size: 1.08rem;
-  font-weight: 900;
-  color: var(--storybook-violet);
-  letter-spacing: 0.2px;
+.pag-note-accent-bar { height: 5px; width: 100%; }
+
+.pag-note-body { padding: 1rem 1.1rem 1.1rem; }
+
+.pag-note-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 0.75rem;
 }
 
-.note-aralin-label {
-  margin: 0;
-  font-size: 0.82rem;
-  font-weight: 600;
-  opacity: 0.9;
+.pag-note-title {
+  font-family: 'Baloo 2', cursive;
+  font-size: 1.05rem; font-weight: 900;
+  color: var(--pag-accent, #FF6B6B);
+  margin: 0 0 3px;
+  line-height: 1.2;
 }
-
-.note-meta {
-  margin: 0.4rem 0 0.65rem;
-  font-size: 0.82rem;
-  opacity: 0.75;
+.pag-note-meta {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.72rem; font-weight: 600;
+  color: #7A7A9A; margin: 0;
 }
-
-.note-content {
-  margin: 0;
+.pag-note-content {
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.92rem; font-weight: 500;
+  color: #4A4A6A;
+  line-height: 1.65;
   white-space: pre-wrap;
-  line-height: 1.6;
+  margin: 0;
 }
 
-.note-actions {
-  margin-top: 0.75rem;
+/* Note action buttons */
+.pag-note-actions {
   display: flex;
-  gap: 0.5rem;
-  flex-wrap: wrap;
+  gap: 6px;
+  flex-shrink: 0;
+}
+
+.pag-action-btn {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  border: none;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s;
+  flex-shrink: 0;
+}
+.pag-action-btn:hover { transform: scale(1.12); }
+.pag-action-btn:active { transform: scale(0.92); }
+
+.pag-action-btn--edit {
+  background: var(--action-color, #FF6B6B);
+  color: white;
+  box-shadow: 0 3px 0 var(--action-dk, #C0392B);
+}
+.pag-action-btn--delete {
+  background: #fee2e2;
+  color: #ef4444;
+  box-shadow: 0 3px 0 rgba(220,38,38,0.2);
+}
+.pag-action-btn--delete:hover { background: #fecaca; }
+
+/* ─── Modal content ───────────────────────── */
+.pag-modal-content {
+  --background: #FFFBF0;
+}
+
+.pag-modal-body {
+  padding: 1.4rem 1rem 2rem;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.pag-modal-aralin-label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-family: 'Baloo 2', cursive;
+  font-size: 0.88rem; font-weight: 800;
+  color: #4A4A6A;
+  background: white;
+  border-radius: 12px;
+  padding: 10px 14px;
+  margin-bottom: 1.1rem;
+  border: 2px solid #EEEEf5;
+  box-shadow: 0 3px 0 rgba(0,0,0,0.06);
+}
+.pag-modal-aralin-label ion-icon { color: #FF6B6B; font-size: 1rem; }
+
+.pag-form-group { margin-bottom: 1rem; }
+
+.pag-form-label {
+  display: block;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.78rem; font-weight: 800;
+  text-transform: uppercase; letter-spacing: 0.6px;
+  color: #7A7A9A;
+  margin-bottom: 6px;
+  padding-left: 2px;
+}
+
+.pag-form-input,
+.pag-form-textarea {
+  --background: white;
+  --color: #1A1A2E;
+  --placeholder-color: #B0B0C8;
+  --border-radius: 14px;
+  --padding-start: 14px;
+  --padding-end: 14px;
+  --padding-top: 12px;
+  --padding-bottom: 12px;
+  border: 2.5px solid #EEEEf5;
+  border-radius: 14px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 0.95rem; font-weight: 600;
+  box-shadow: 0 3px 0 rgba(0,0,0,0.06);
+  transition: border-color 0.2s;
+}
+.pag-form-input:focus-within,
+.pag-form-textarea:focus-within {
+  border-color: #FF6B6B;
+  box-shadow: 0 3px 0 rgba(192,57,43,0.15);
+}
+
+.pag-save-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 100%;
+  padding: 15px;
+  border: none;
+  border-radius: 16px;
+  color: white;
+  font-family: 'Baloo 2', cursive;
+  font-size: 1rem; font-weight: 800;
+  cursor: pointer;
+  margin-top: 1.2rem;
+  transition: transform 0.2s cubic-bezier(0.34,1.56,0.64,1), box-shadow 0.2s, opacity 0.2s;
+  background: linear-gradient(135deg, #FF6B6B, #C0392B); /* fallback */
+  box-shadow: 0 6px 0 rgba(192,57,43,0.3), 0 10px 24px rgba(255,107,107,0.25);
+}
+.pag-save-btn:hover:not([disabled]) {
+  transform: translateY(-3px);
+  box-shadow: 0 9px 0 rgba(192,57,43,0.25), 0 14px 30px rgba(255,107,107,0.3);
+}
+.pag-save-btn:active:not([disabled]) { transform: translateY(3px); }
+.pag-save-btn[disabled] {
+  background: #D0D0E0 !important;
+  box-shadow: 0 3px 0 rgba(0,0,0,0.08);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.pag-save-btn ion-icon { font-size: 1.1rem; }
+
+/* ─── Bottom spacing ──────────────────────── */
+.pag-bottom-space { height: 2.5rem; }
+
+/* ─── Responsive ──────────────────────────── */
+@media (min-width: 768px) {
+  .pag-body       { padding: 1.5rem 2rem 0; max-width: 860px; margin: 0 auto; }
+  .pag-modal-body { padding: 1.8rem 1.5rem 2rem; }
+  .pag-hero-title { font-size: 2.5rem; }
+}
+
+/* ─── Reduced Motion ─────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
