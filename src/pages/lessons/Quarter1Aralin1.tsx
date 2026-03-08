@@ -44,6 +44,12 @@ import { useParams } from 'react-router-dom';
 
 const PUZZLE_SIZE = 3;
 
+const playRevealSound = () => {
+  const audio = new Audio('/assets/audio/reveal.mp3');
+  audio.volume = 0.6;
+  audio.play().catch(() => {}); // catch silences autoplay errors
+};
+
 type BugtongExample = {
   id: number;
   label: string;
@@ -51,19 +57,98 @@ type BugtongExample = {
   answer: string;
 };
 
+// ─── GIF map per section ──────────────────────────────────────────────────────
+// Place your own GIFs in public/assets/gif/ and update these paths.
+// Fallback: free Tenor/Giphy embed URLs (no login needed for img src).
+// Each section gets a different celebratory reaction.
+const SECTION_GIFS: Record<string, { src: string; alt: string; bgClass: string }> = {
+  bugtong: {
+    src: 'https://media.tenor.com/YKMVQSJdBsIAAAAi/light-bulb-idea.gif',
+    alt: 'Lightbulb idea!',
+    bgClass: 'gif-bugtong',
+  },
+  palaisipan: {
+    src: 'https://media.tenor.com/2LTWBKbS1KYAAAAC/thinking-hmm.gif',
+    alt: 'Thinking face!',
+    bgClass: 'gif-palaisipan',
+  },
+  tanaga: {
+    src: 'https://media.tenor.com/eFPFHSN4rHcAAAAC/clapping-minions.gif',
+    alt: 'Clapping!',
+    bgClass: 'gif-tanaga',
+  },
+  salawikain: {
+    src: 'https://media.tenor.com/2aJoAFhxqjcAAAAC/heart-love.gif',
+    alt: 'Heart!',
+    bgClass: 'gif-salawikain',
+  },
+};
+
+// Per-answer GIFs for Bugtong — keyed by answer text (lowercase), matches your data file exactly
+const BUGTONG_ANSWER_GIFS: Record<string, string> = {
+  cellphone:  '/assets/gif/Cellphone.gif',
+  kalendaryo: '/assets/gif/Orasan.gif',   // no kalendaryo.gif — Yelo is closest
+  tubig:      '/assets/gif/Yelo.gif',   // no tubig.gif — fallback
+  aklat:      '/assets/gif/Liham.gif',  // no aklat.gif — Liham (letter/page) is closest
+  radyo:      '/assets/gif/Radyo.gif',
+  suklay:     '/assets/gif/Suklay.gif',
+  anino:      '/assets/gif/Anino.gif',
+};
+
+// ─── Answer Reveal WITH GIF component ─────────────────────────────────────────
+// Replaces the plain .answer-reveal pill in Pagbasa/read mode only.
+// Quiz reveal pills use the original .answer-reveal.animated unchanged.
+const AnswerRevealWithGif: React.FC<{
+  sectionId: string;
+  icon: string;
+  label: string;
+  answer?: string;
+  
+}> = ({ sectionId, icon, label, answer }) => {
+  const gif = SECTION_GIFS[sectionId] ?? SECTION_GIFS['bugtong'];
+  // For bugtong, use the specific answer GIF if available
+  const gifSrc = (sectionId === 'bugtong' && answer)
+    ? (BUGTONG_ANSWER_GIFS[answer.trim().toLowerCase()] ?? gif.src)
+    : gif.src;
+
+  const [gifLoaded, setGifLoaded] = useState(false);
+  const [gifError, setGifError] = useState(false);
+
+  return (
+    <div className="answer-reveal-gif-block">
+      {/* GIF banner — hidden until loaded, invisible if error */}
+      {!gifError && (
+        <div className={`answer-gif-wrapper ${gif.bgClass} ${gifLoaded ? 'gif-visible' : 'gif-hidden'}`}>
+          <img
+            className="answer-gif"
+            src={gifSrc}
+            alt={gif.alt}
+            loading="eager"
+            decoding="async"
+            onLoad={() => setGifLoaded(true)}
+            onError={() => setGifError(true)}
+          />
+        </div>
+      )}
+      {/* Original yellow pill — ALWAYS shown, preserves original design */}
+      <div className="answer-reveal animated">
+        <IonIcon icon={icon} />
+        <span>{label}</span>
+      </div>
+    </div>
+  );
+};
+
 const createShuffledTiles = (): number[] => {
   const tiles = Array.from({ length: PUZZLE_SIZE * PUZZLE_SIZE }, (_, index) => index);
-
   for (let i = tiles.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [tiles[i], tiles[j]] = [tiles[j], tiles[i]];
   }
-
   const isSolved = tiles.every((value, index) => value === index);
   if (isSolved) {
     [tiles[0], tiles[1]] = [tiles[1], tiles[0]];
   }
-
   return tiles;
 };
 
@@ -87,27 +172,19 @@ const createBugtongPuzzleImage = (answerText: string): string => {
     </linearGradient>
   </defs>
   <rect width="600" height="600" fill="url(#bg)"/>
-
-  <!-- Big frame so side tiles are not "just color" -->
   <rect x="40" y="70" rx="34" ry="34" width="520" height="480" fill="rgba(255,255,255,0.06)" stroke="rgba(255,255,255,0.18)" stroke-width="6"/>
   <rect x="58" y="88" rx="28" ry="28" width="484" height="444" fill="url(#panel)" stroke="rgba(255,255,255,0.18)" stroke-width="4"/>
-
-  <!-- Asymmetric accents (helps puzzle uniqueness) -->
   <rect x="58" y="88" rx="28" ry="28" width="86" height="444" fill="rgba(0,0,0,0.14)"/>
   <path d="M110 88 L542 320 L542 365 L110 133 Z" fill="rgba(255,255,255,0.06)"/>
   <circle cx="520" cy="118" r="42" fill="rgba(255,255,255,0.10)"/>
   <circle cx="515" cy="500" r="66" fill="rgba(0,0,0,0.10)"/>
-
-  <!-- Tiny dots pattern -->
   <g fill="rgba(255,255,255,0.16)">
     <circle cx="185" cy="120" r="4"/><circle cx="230" cy="120" r="4"/><circle cx="275" cy="120" r="4"/>
     <circle cx="455" cy="150" r="4"/><circle cx="485" cy="178" r="4"/><circle cx="455" cy="206" r="4"/>
     <circle cx="180" cy="505" r="4"/><circle cx="215" cy="505" r="4"/><circle cx="250" cy="505" r="4"/>
   </g>
-
   ${inner}
-</svg>
-`;
+</svg>`;
 
   const templates: Record<string, string> = {
     cellphone: wrap(`
@@ -125,20 +202,15 @@ const createBugtongPuzzleImage = (answerText: string): string => {
       <circle cx="185" cy="190" r="16" fill="rgba(255,255,255,0.70)"/>
       <circle cx="415" cy="190" r="16" fill="rgba(255,255,255,0.70)"/>
       <g fill="rgba(255,255,255,0.55)">
-        <rect x="150" y="260" width="68" height="46" rx="10"/>
-        <rect x="242" y="260" width="68" height="46" rx="10"/>
-        <rect x="334" y="260" width="68" height="46" rx="10"/>
-        <rect x="426" y="260" width="48" height="46" rx="10"/>
-        <rect x="150" y="326" width="68" height="46" rx="10"/>
-        <rect x="242" y="326" width="68" height="46" rx="10"/>
-        <rect x="334" y="326" width="68" height="46" rx="10"/>
-        <rect x="150" y="392" width="68" height="46" rx="10"/>
+        <rect x="150" y="260" width="68" height="46" rx="10"/><rect x="242" y="260" width="68" height="46" rx="10"/>
+        <rect x="334" y="260" width="68" height="46" rx="10"/><rect x="426" y="260" width="48" height="46" rx="10"/>
+        <rect x="150" y="326" width="68" height="46" rx="10"/><rect x="242" y="326" width="68" height="46" rx="10"/>
+        <rect x="334" y="326" width="68" height="46" rx="10"/><rect x="150" y="392" width="68" height="46" rx="10"/>
         <rect x="242" y="392" width="68" height="46" rx="10"/>
       </g>
     `),
     tubig: wrap(`
-      <path d="M300 120 C250 210, 185 280, 185 360 C185 455, 245 520, 300 520 C355 520, 415 455, 415 360 C415 280, 350 210, 300 120 Z"
-        fill="rgba(56,189,248,0.75)" stroke="rgba(255,255,255,0.25)" stroke-width="6"/>
+      <path d="M300 120 C250 210, 185 280, 185 360 C185 455, 245 520, 300 520 C355 520, 415 455, 415 360 C415 280, 350 210, 300 120 Z" fill="rgba(56,189,248,0.75)" stroke="rgba(255,255,255,0.25)" stroke-width="6"/>
       <path d="M245 390 C245 438, 278 470, 318 485" fill="none" stroke="rgba(255,255,255,0.45)" stroke-width="12" stroke-linecap="round"/>
       <path d="M300 210 C275 255, 250 290, 250 335 C250 385, 280 420, 310 430" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="10" stroke-linecap="round"/>
     `),
@@ -183,55 +255,26 @@ const createBugtongPuzzleImage = (answerText: string): string => {
           <feGaussianBlur stdDeviation="6" />
         </filter>
       </defs>
-
-      <!-- ground plane -->
       <path d="M70 520 L560 460 L560 560 L70 560 Z" fill="rgba(0,0,0,0.10)"/>
       <path d="M70 520 L560 460" stroke="rgba(255,255,255,0.14)" stroke-width="8" stroke-linecap="round"/>
-
-      <!-- sun + strong rays -->
       <circle cx="120" cy="140" r="54" fill="url(#accent)"/>
       <circle cx="120" cy="140" r="78" fill="rgba(250,204,21,0.10)"/>
       <g stroke="rgba(250,204,21,0.38)" stroke-width="12" stroke-linecap="round">
         <path d="M120 45 V78"/><path d="M120 202 V235"/><path d="M25 140 H58"/><path d="M182 140 H215"/>
         <path d="M58 78 L80 100"/><path d="M160 180 L182 202"/><path d="M160 100 L182 78"/><path d="M58 202 L80 180"/>
       </g>
-
-      <!-- light beam direction -->
       <path d="M155 175 L310 250" stroke="rgba(250,204,21,0.18)" stroke-width="28" stroke-linecap="round"/>
       <path d="M165 190 L315 265" stroke="rgba(250,204,21,0.12)" stroke-width="44" stroke-linecap="round"/>
-
-      <!-- person silhouette (brighter) -->
       <g fill="rgba(255,255,255,0.34)" stroke="rgba(255,255,255,0.20)" stroke-width="6" stroke-linecap="round" stroke-linejoin="round">
-        <!-- head -->
         <circle cx="240" cy="215" r="44"/>
-        <!-- neck -->
-        <path d="M232 260 L232 285"/>
-        <path d="M248 260 L248 285"/>
-        <!-- torso -->
+        <path d="M232 260 L232 285"/><path d="M248 260 L248 285"/>
         <path d="M200 300 Q240 275 280 300 L295 395 Q240 430 185 395 Z"/>
-        <!-- arms -->
-        <path d="M205 320 Q160 355 135 405"/>
-        <path d="M275 320 Q320 355 345 405"/>
-        <!-- legs -->
-        <path d="M210 395 Q205 470 190 545"/>
-        <path d="M270 395 Q275 470 292 545"/>
-        <!-- feet -->
-        <path d="M170 548 H210"/>
-        <path d="M272 548 H312"/>
+        <path d="M205 320 Q160 355 135 405"/><path d="M275 320 Q320 355 345 405"/>
+        <path d="M210 395 Q205 470 190 545"/><path d="M270 395 Q275 470 292 545"/>
+        <path d="M170 548 H210"/><path d="M272 548 H312"/>
       </g>
-
-      <!-- cast shadow: big, dark near feet, fading outward -->
-      <path
-        d="M200 486 L290 486 L565 535 L520 560 L225 560 Z"
-        fill="url(#shadowGrad)"
-        filter="url(#shadowBlur)"
-      />
-      <!-- core shadow for extra contrast -->
-      <path
-        d="M215 500 L280 500 L540 540 L480 555 L235 555 Z"
-        fill="rgba(0,0,0,0.28)"
-        filter="url(#shadowBlur)"
-      />
+      <path d="M200 486 L290 486 L565 535 L520 560 L225 560 Z" fill="url(#shadowGrad)" filter="url(#shadowBlur)"/>
+      <path d="M215 500 L280 500 L540 540 L480 555 L235 555 Z" fill="rgba(0,0,0,0.28)" filter="url(#shadowBlur)"/>
     `),
   };
 
@@ -244,15 +287,11 @@ const createBugtongPuzzleImage = (answerText: string): string => {
   return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 };
 
-const splitLines = (text: string): string[] => text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
+const splitLines = (text: string): string[] =>
+  text.split(/\r?\n/).map((line) => line.trim()).filter(Boolean);
 
 type AralinMode = 'read' | 'watch' | 'listen' | 'play';
-
-type QuizItem = {
-  id: string;
-  prompt: string;
-  correct: string;
-};
+type QuizItem = { id: string; prompt: string; correct: string };
 
 const shuffleArray = <T,>(items: T[]): T[] => {
   const copy = [...items];
@@ -278,7 +317,7 @@ const Quarter1Aralin1: React.FC = () => {
 
   const [aralinMode, setAralinMode] = useState<AralinMode>('read');
   const [activeSection, setActiveSection] = useState<string>(selectedSectionId);
-  const [showAnswers, setShowAnswers] = useState<{[key: number]: boolean}>({});
+  const [showAnswers, setShowAnswers] = useState<{ [key: number]: boolean }>({});
   const [puzzleTiles, setPuzzleTiles] = useState<number[]>(() => createShuffledTiles());
   const [selectedPuzzleIndex, setSelectedPuzzleIndex] = useState<number | null>(null);
   const [puzzleMoves, setPuzzleMoves] = useState<number>(0);
@@ -287,10 +326,8 @@ const Quarter1Aralin1: React.FC = () => {
   const [quizScoreBySection, setQuizScoreBySection] = useState<Record<string, number>>({});
   const [quizCompletedBySection, setQuizCompletedBySection] = useState<Record<string, boolean>>({});
   const [quizLivesBySection, setQuizLivesBySection] = useState<Record<string, number>>({});
-  
-  const bugtongSection = quarter1Lesson1.sections.find(
-  section => section.id === "bugtong"
-  );
+
+  const bugtongSection = quarter1Lesson1.sections.find((s) => s.id === 'bugtong');
 
   useEffect(() => {
     setActiveSection(selectedSectionId);
@@ -307,60 +344,20 @@ const Quarter1Aralin1: React.FC = () => {
 
   const quizDataBySection: Record<string, QuizItem[]> = useMemo(() => ({
     palaisipan: [
-      {
-        id: 'pal-1',
-        prompt: 'Ano ang bagay na habang kinukuha mo ay lalo mong pinapalaki?',
-        correct: 'Butas',
-      },
-      {
-        id: 'pal-2',
-        prompt: 'Anong hayop ang may apat na paa kapag bata, dalawa kapag matanda?',
-        correct: 'Tao',
-      },
-      {
-        id: 'pal-3',
-        prompt: 'Ano ang bagay na kahit puno pa ay hindi tumatanda?',
-        correct: 'Bato',
-      },
+      { id: 'pal-1', prompt: 'Ano ang bagay na habang kinukuha mo ay lalo mong pinapalaki?', correct: 'Butas' },
+      { id: 'pal-2', prompt: 'Anong hayop ang may apat na paa kapag bata, dalawa kapag matanda?', correct: 'Tao' },
+      { id: 'pal-3', prompt: 'Ano ang bagay na kahit puno pa ay hindi tumatanda?', correct: 'Bato' },
     ],
     tanaga: [
-      {
-        id: 'tan-1',
-        prompt: 'Ano ang tema ng tanagang: "Wika’y ating yaman..."?',
-        correct: 'Pagmamahal sa Wikang Filipino',
-      },
-      {
-        id: 'tan-2',
-        prompt: 'Ano ang tema ng tanagang: "Kabataan ng bayan..."?',
-        correct: 'Edukasyon at Kinabukasan',
-      },
-      {
-        id: 'tan-3',
-        prompt: 'Ano ang tema ng tanagang: "Kalikasan ay yaman..."?',
-        correct: 'Pangangalaga sa Kalikasan',
-      },
+      { id: 'tan-1', prompt: 'Ano ang tema ng tanagang: "Wika\'y ating yaman..."?', correct: 'Pagmamahal sa Wikang Filipino' },
+      { id: 'tan-2', prompt: 'Ano ang tema ng tanagang: "Kabataan ng bayan..."?', correct: 'Edukasyon at Kinabukasan' },
+      { id: 'tan-3', prompt: 'Ano ang tema ng tanagang: "Kalikasan ay yaman..."?', correct: 'Pangangalaga sa Kalikasan' },
     ],
     salawikain: [
-      {
-        id: 'sal-1',
-        prompt: 'Ano ang aral ng: "Ang hindi marunong lumingon sa pinanggalingan..."?',
-        correct: 'Mahalagang alamin at ipagmalaki ang ating pinagmulan',
-      },
-      {
-        id: 'sal-2',
-        prompt: 'Ano ang aral ng: "Nasa Diyos ang awa, nasa tao ang gawa."?',
-        correct: 'Huwag umasa sa biyaya lamang, kailangan din ang sariling pagkilos',
-      },
-      {
-        id: 'sal-3',
-        prompt: 'Ano ang aral ng: "Kung ano ang puno, siya ang bunga."?',
-        correct: 'Ang kalakasan o kahinaan ng isang tao ay nagmumula sa kanyang pamilya at pinagmulan',
-      },
-      {
-        id: 'sal-4',
-        prompt: 'Ano ang aral ng: "Wag mo ring kalalimangin ang dating iniirog."?',
-        correct: 'Huwag kalimutan ang mga taong dati nating minahal at tinulungan',
-      },
+      { id: 'sal-1', prompt: 'Ano ang aral ng: "Ang hindi marunong lumingon sa pinanggalingan..."?', correct: 'Mahalagang alamin at ipagmalaki ang ating pinagmulan' },
+      { id: 'sal-2', prompt: 'Ano ang aral ng: "Nasa Diyos ang awa, nasa tao ang gawa."?', correct: 'Huwag umasa sa biyaya lamang, kailangan din ang sariling pagkilos' },
+      { id: 'sal-3', prompt: 'Ano ang aral ng: "Kung ano ang puno, siya ang bunga."?', correct: 'Ang kalakasan o kahinaan ng isang tao ay nagmumula sa kanyang pamilya at pinagmulan' },
+      { id: 'sal-4', prompt: 'Ano ang aral ng: "Wag mo ring kalalimangin ang dating iniirog."?', correct: 'Huwag kalimutan ang mga taong dati nating minahal at tinulungan' },
     ],
   }), []);
 
@@ -368,9 +365,7 @@ const Quarter1Aralin1: React.FC = () => {
     const result: Record<string, string[]> = {};
     Object.entries(quizDataBySection).forEach(([sectionKey, items]) => {
       items.forEach((item) => {
-        const pool = items
-          .map((q) => q.correct)
-          .filter((answer) => answer !== item.correct);
+        const pool = items.map((q) => q.correct).filter((a) => a !== item.correct);
         const distractors = shuffleArray(pool).slice(0, 2);
         result[`${sectionKey}-${item.id}`] = shuffleArray([item.correct, ...distractors]);
       });
@@ -380,33 +375,20 @@ const Quarter1Aralin1: React.FC = () => {
 
   const handleQuizSelect = (key: string, choice: string) => {
     if (quizSelections[key]) return;
-    setQuizSelections((prev) => ({
-      ...prev,
-      [key]: choice,
-    }));
+    setQuizSelections((prev) => ({ ...prev, [key]: choice }));
     const [sectionKey] = key.split('-');
     const item = (quizDataBySection[sectionKey] ?? []).find((q) => `${sectionKey}-${q.id}` === key);
     if (item && choice === item.correct) {
-      setQuizScoreBySection((prev) => ({
-        ...prev,
-        [sectionKey]: (prev[sectionKey] ?? 0) + 1,
-      }));
+      setQuizScoreBySection((prev) => ({ ...prev, [sectionKey]: (prev[sectionKey] ?? 0) + 1 }));
     } else if (item) {
-      setQuizLivesBySection((prev) => ({
-        ...prev,
-        [sectionKey]: Math.max((prev[sectionKey] ?? 2) - 1, 0),
-      }));
+      setQuizLivesBySection((prev) => ({ ...prev, [sectionKey]: Math.max((prev[sectionKey] ?? 2) - 1, 0) }));
     }
   };
 
   const resetQuizSection = (sectionKey: string) => {
     setQuizSelections((prev) => {
       const next = { ...prev };
-      Object.keys(next).forEach((key) => {
-        if (key.startsWith(`${sectionKey}-`)) {
-          delete next[key];
-        }
-      });
+      Object.keys(next).forEach((key) => { if (key.startsWith(`${sectionKey}-`)) delete next[key]; });
       return next;
     });
     setQuizIndexBySection((prev) => ({ ...prev, [sectionKey]: 0 }));
@@ -419,16 +401,10 @@ const Quarter1Aralin1: React.FC = () => {
     const current = quizIndexBySection[sectionKey] ?? 0;
     const nextIndex = current + 1;
     if (nextIndex >= total) {
-      setQuizCompletedBySection((prevCompleted) => ({
-        ...prevCompleted,
-        [sectionKey]: true,
-      }));
+      setQuizCompletedBySection((prev) => ({ ...prev, [sectionKey]: true }));
       return;
     }
-    setQuizIndexBySection((prev) => ({
-      ...prev,
-      [sectionKey]: nextIndex,
-    }));
+    setQuizIndexBySection((prev) => ({ ...prev, [sectionKey]: nextIndex }));
   };
 
   const renderQuiz = (sectionKey: string, labelPrefix: string, description: string) => {
@@ -445,12 +421,9 @@ const Quarter1Aralin1: React.FC = () => {
     return (
       <IonCard className="info-card gradient-orange">
         <IonCardContent>
-          <div className="card-icon">
-            <IonIcon icon={gameControllerOutline} />
-          </div>
+          <div className="card-icon"><IonIcon icon={gameControllerOutline} /></div>
           <h1 className="card-title"><strong>Paglalaro: Quiz</strong></h1>
           <p className="mode-description">{description}</p>
-
           <div className="quiz-meta">
             <IonBadge color="light">Score: {score}/{total}</IonBadge>
             <IonBadge color="medium">Item {Math.min(currentIndex + 1, total)} of {total}</IonBadge>
@@ -460,7 +433,6 @@ const Quarter1Aralin1: React.FC = () => {
               ))}
             </div>
           </div>
-
           {completed ? (
             <div className="answer-reveal animated">
               <IonIcon icon={checkmarkCircleOutline} />
@@ -481,8 +453,6 @@ const Quarter1Aralin1: React.FC = () => {
                   const key = `${sectionKey}-${currentItem.id}`;
                   const selected = quizSelections[key];
                   const isSelected = selected === option;
-                  const isCorrect = selected ? selected === currentItem.correct : null;
-
                   return (
                     <IonButton
                       key={`${key}-${option}`}
@@ -498,13 +468,7 @@ const Quarter1Aralin1: React.FC = () => {
               </div>
               {quizSelections[`${sectionKey}-${currentItem.id}`] ? (
                 <div className="answer-reveal animated">
-                  <IonIcon
-                    icon={
-                      quizSelections[`${sectionKey}-${currentItem.id}`] === currentItem.correct
-                        ? checkmarkCircleOutline
-                        : eyeOutline
-                    }
-                  />
+                  <IonIcon icon={quizSelections[`${sectionKey}-${currentItem.id}`] === currentItem.correct ? checkmarkCircleOutline : eyeOutline} />
                   <span>
                     {quizSelections[`${sectionKey}-${currentItem.id}`] === currentItem.correct
                       ? 'Tama!'
@@ -514,14 +478,8 @@ const Quarter1Aralin1: React.FC = () => {
               ) : null}
             </div>
           ) : null}
-
           <div className="quiz-actions">
-            <IonButton
-              fill="outline"
-              onClick={() => resetQuizSection(sectionKey)}
-            >
-              I-restart
-            </IonButton>
+            <IonButton fill="outline" onClick={() => resetQuizSection(sectionKey)}>I-restart</IonButton>
             {!completed && !isGameOver && currentItem ? (
               <IonButton
                 onClick={() => goToNextQuizItem(sectionKey, total)}
@@ -550,9 +508,7 @@ const Quarter1Aralin1: React.FC = () => {
     return found ?? bugtongExamples[0];
   }, [activePuzzleExampleId, bugtongExamples]);
 
-  const activePuzzleImage = useMemo(() => {
-    return createBugtongPuzzleImage(activePuzzleExample?.answer ?? '');
-  }, [activePuzzleExample?.answer]);
+  const activePuzzleImage = useMemo(() => createBugtongPuzzleImage(activePuzzleExample?.answer ?? ''), [activePuzzleExample?.answer]);
 
   const activePuzzleIndex = useMemo(() => {
     if (!activePuzzleExample) return -1;
@@ -561,16 +517,9 @@ const Quarter1Aralin1: React.FC = () => {
 
   const puzzleSolved = puzzleTiles.every((value, index) => value === index);
 
-  const resetPuzzle = () => {
-    setPuzzleTiles(createShuffledTiles());
-    setSelectedPuzzleIndex(null);
-    setPuzzleMoves(0);
-  };
+  const resetPuzzle = () => { setPuzzleTiles(createShuffledTiles()); setSelectedPuzzleIndex(null); setPuzzleMoves(0); };
 
-  const setPuzzleExample = (exampleId: number) => {
-    setActivePuzzleExampleId(exampleId);
-    resetPuzzle();
-  };
+  const setPuzzleExample = (exampleId: number) => { setActivePuzzleExampleId(exampleId); resetPuzzle(); };
 
   const goToNextPuzzleExample = () => {
     if (!bugtongExamples.length) return;
@@ -580,20 +529,9 @@ const Quarter1Aralin1: React.FC = () => {
   };
 
   const handlePuzzleTileClick = (index: number) => {
-    if (puzzleSolved) {
-      return;
-    }
-
-    if (selectedPuzzleIndex === null) {
-      setSelectedPuzzleIndex(index);
-      return;
-    }
-
-    if (selectedPuzzleIndex === index) {
-      setSelectedPuzzleIndex(null);
-      return;
-    }
-
+    if (puzzleSolved) return;
+    if (selectedPuzzleIndex === null) { setSelectedPuzzleIndex(index); return; }
+    if (selectedPuzzleIndex === index) { setSelectedPuzzleIndex(null); return; }
     setPuzzleTiles((prev) => {
       const nextTiles = [...prev];
       [nextTiles[selectedPuzzleIndex], nextTiles[index]] = [nextTiles[index], nextTiles[selectedPuzzleIndex]];
@@ -604,40 +542,34 @@ const Quarter1Aralin1: React.FC = () => {
   };
 
   const toggleAnswer = (id: number) => {
-    setShowAnswers(prev => ({
-      ...prev,
-      [id]: !prev[id]
-    }));
+    setShowAnswers((prev) => {
+      const isCurrentlyShown = !!prev[id];
+      if (!isCurrentlyShown) playRevealSound();
+      return { ...prev, [id]: !prev[id] };
+    });
   };
+  
 
   const heroTitle = useMemo(() => {
     switch (selectedSectionId) {
-      case 'bugtong':
-        return 'Bugtong';
-      case 'palaisipan':
-        return 'Pala-isipan';
-      case 'tanaga':
-        return 'Tanaga';
-      case 'salawikain':
-        return 'Salawikain';
-      default:
-        return quarter1Lesson1.meta.title;
+      case 'bugtong':     return 'Bugtong';
+      case 'palaisipan':  return 'Pala-isipan';
+      case 'tanaga':      return 'Tanaga';
+      case 'salawikain':  return 'Salawikain';
+      default:            return quarter1Lesson1.meta.title;
     }
   }, [selectedSectionId]);
 
   const heroDescription = useMemo(() => {
-    if (selectedSectionId === 'bugtong') return bugtongSection?.intro ?? quarter1Lesson1.meta.description;
-    if (selectedSectionId === 'palaisipan') {
-      return 'Ang palaisipan ay isang uri ng patalinghagang tanong o sitwasyon na layuning hamunin ang isipan.';
-    }
-    if (selectedSectionId === 'tanaga') return 'Isang maikling tulang Pilipino na may tugma at sukat.';
+    if (selectedSectionId === 'bugtong')    return bugtongSection?.intro ?? quarter1Lesson1.meta.description;
+    if (selectedSectionId === 'palaisipan') return 'Ang palaisipan ay isang uri ng patalinghagang tanong o sitwasyon na layuning hamunin ang isipan.';
+    if (selectedSectionId === 'tanaga')     return 'Isang maikling tulang Pilipino na may tugma at sukat.';
     if (selectedSectionId === 'salawikain') return 'Mga kasabihang may aral at karunungang bayan.';
     return quarter1Lesson1.meta.description;
   }, [selectedSectionId, bugtongSection?.intro]);
 
   const totalAralin = 4;
-  const safeAralinId =
-    Number.isFinite(aralinId) && aralinId >= 1 && aralinId <= totalAralin ? aralinId : 1;
+  const safeAralinId = Number.isFinite(aralinId) && aralinId >= 1 && aralinId <= totalAralin ? aralinId : 1;
   const nextAralinId = safeAralinId < totalAralin ? safeAralinId + 1 : null;
 
   return (
@@ -658,1109 +590,562 @@ const Quarter1Aralin1: React.FC = () => {
       </IonHeader>
 
       <IonContent fullscreen className="modern-aralin-content">
-        {/* Hero Section */}
+        {/* Hero */}
         <div className="aralin-hero">
           <div className="hero-bg-gradient" />
           <div className="hero-content-wrapper">
-            <div className="hero-icon-badge">
-              <IonIcon icon={bookOutline} />
-            </div>
-            <h1 className="hero-main-title">
-             {heroTitle}
-            </h1>
-            <p className="hero-description">
-              {heroDescription}
-            </p>
+            <div className="hero-icon-badge"><IonIcon icon={bookOutline} /></div>
+            <h1 className="hero-main-title">{heroTitle}</h1>
+            <p className="hero-description">{heroDescription}</p>
             <div className="hero-stats">
-              <div className="stat-item">
-                <IonIcon icon={sparklesOutline} />
-                <span>1 Paksa</span>
-              </div>
-              <div className="stat-item">
-                <IonIcon icon={bulbOutline} />
-                <span>Interactive</span>
-              </div>
+              <div className="stat-item"><IonIcon icon={sparklesOutline} /><span>1 Paksa</span></div>
+              <div className="stat-item"><IonIcon icon={bulbOutline} /><span>Interactive</span></div>
             </div>
           </div>
         </div>
 
-        {/* Main Content */}
         <div className="content-wrapper">
-          {/* ACCORDION SECTIONS */}
-          <IonAccordionGroup 
+          <IonAccordionGroup
             className="modern-accordion-group"
             value={activeSection}
             onIonChange={(e) => setActiveSection((e.detail.value as string) ?? '')}
           >
-            {/* Bugtong Section */}
+
+            {/* ── BUGTONG ── */}
             {selectedSectionId === 'bugtong' && (
-            <IonAccordion value="bugtong" className="modern-accordion">
-              <IonItem slot="header" className="accordion-header" lines="none">
-                <div className="header-content">
-                  <div className="header-icon bugtong-icon">
-                    <IonIcon icon={bulbOutline} />
+              <IonAccordion value="bugtong" className="modern-accordion">
+                <IonItem slot="header" className="accordion-header" lines="none">
+                  <div className="header-content">
+                    <div className="header-icon bugtong-icon"><IonIcon icon={bulbOutline} /></div>
+                    <div className="header-text">
+                      <IonLabel className="accordion-title">Bugtong</IonLabel>
+                      <p className="accordion-subtitle">Palaisipang Panitikan</p>
+                    </div>
                   </div>
-                  <div className="header-text">
-                    <IonLabel className="accordion-title">Bugtong</IonLabel>
-                    <p className="accordion-subtitle">Palaisipang Panitikan</p>
+                </IonItem>
+                <div className="accordion-content" slot="content">
+                  <div className="content-intro">
+                    <IonText className="intro-text">{bugtongSection?.intro}</IonText>
                   </div>
-                </div>
-              </IonItem>
-
-              <div className="accordion-content" slot="content">
-                <div className="content-intro">
-                  <IonText className="intro-text">
-                    {bugtongSection?.intro}
-                  </IonText>
-                </div>
-
-                {/* Info Cards */}
-                <div className="info-cards-grid">
-                  <IonCard className="info-card gradient-purple">
-                    <IonCardContent>
-                      <div className="card-icon">
-                        <IonIcon icon={sparklesOutline} />
-                      </div>
-                      <h1 className="card-title"><strong>Katangian ng Bugtong</strong></h1>
-                      <div className="card-list">
-                        <div className="list-item">
-                          <span className="item-number">1</span>
-                          <div>
-                            <strong>{bugtongSection?.bugtongCharacteristics?.[0]?.title}</strong>
-                            <p>{bugtongSection?.bugtongCharacteristics?.[0]?.description}</p>
-                          </div>
-                        </div>
-                        <div className="list-item">
-                          <span className="item-number">2</span>
-                          <div>
-                            <strong>{bugtongSection?.bugtongCharacteristics?.[1]?.title}</strong>
-                            <p>{bugtongSection?.bugtongCharacteristics?.[1]?.description}</p>
-                          </div>
-                        </div>
-                        <div className="list-item">
-                          <span className="item-number">3</span>
-                          <div>
-                            <strong>{bugtongSection?.bugtongCharacteristics?.[2]?.title}</strong>
-                            <p>{bugtongSection?.bugtongCharacteristics?.[2]?.description}</p>
-                          </div>
-                        </div>
-                        <div className="list-item">
-                          <span className="item-number">4</span>
-                          <div>
-                            <strong>{bugtongSection?.bugtongCharacteristics?.[3]?.title}</strong>
-                            <p>{bugtongSection?.bugtongCharacteristics?.[3]?.description}</p>
-                          </div>
-                        </div>
-                      </div>
-                    </IonCardContent>
-                  </IonCard>
-
-            {/* Palaisipan Section */}
-                  <IonCard className="info-card gradient-pink">
-                    <IonCardContent>
-                      <div className="card-icon">
-                        <IonIcon icon={heartOutline} />
-                      </div>
-                      <h1 className="card-title"><strong>Katangian ng Palaisipan</strong></h1>
-                       <div className="card-list">
-                        <div className="list-item">
-                          <span className="item-number">1</span>
-                          <div>
-                            <strong>{bugtongSection?.bugtongImportance?.[0]?.title}</strong>
-                            <p>{bugtongSection?.bugtongImportance?.[0]?.description}</p>
-                          </div>
-                        </div>
-                        <div className="list-item">
-                          <span className="item-number">2</span>
-                          <div>
-                            <strong>{bugtongSection?.bugtongImportance?.[1]?.title}</strong>
-                            <p>{bugtongSection?.bugtongImportance?.[1]?.description}</p>
-                          </div>
-                        </div>
-                        <div className="list-item">
-                          <span className="item-number">3</span>
-                          <div>
-                            <strong>{bugtongSection?.bugtongImportance?.[2]?.title}</strong>
-                            <p>{bugtongSection?.bugtongImportance?.[2]?.description}</p>
-                          </div>
-                        </div>
-                        <div className="list-item">
-                          <span className="item-number">4</span>
-                          <div>
-                            <strong>{bugtongSection?.bugtongImportance?.[3]?.title}</strong>
-                            <p>{bugtongSection?.bugtongImportance?.[3]?.description}</p>
-                          </div>
-                        </div>
-                      </div>
-                    </IonCardContent>
-                  </IonCard>
-                </div>
-
-                {/* Interactive Chips */}
-                <div className="action-chips">
-                  <IonChip 
-                    className={`modern-chip ${aralinMode === 'read' ? 'active' : ''}`}
-                    onClick={() => setAralinMode('read')}
-                  >
-                    <IonIcon icon={bookOutline} />
-                    <IonLabel>Pagbasa</IonLabel>
-                  </IonChip>
-
-                  <IonChip 
-                    className={`modern-chip ${aralinMode === 'watch' ? 'active' : ''}`}
-                    onClick={() => setAralinMode('watch')}
-                  >
-                    <IonIcon icon={playCircleOutline} />
-                    <IonLabel>Panonood</IonLabel>
-                  </IonChip>
-
-                  <IonChip 
-                    className={`modern-chip ${aralinMode === 'listen' ? 'active' : ''}`}
-                    onClick={() => setAralinMode('listen')}
-                  >
-                    <IonIcon icon={volumeHighOutline} />
-                    <IonLabel>Pakikinig</IonLabel>
-                  </IonChip>
-                  <IonChip 
-                    className={`modern-chip ${aralinMode === 'play' ? 'active' : ''}`}
-                    onClick={() => setAralinMode('play')}
-                  >
-                    <IonIcon icon={gameControllerOutline} />
-                    <IonLabel>Paglalaro</IonLabel>
-                  </IonChip>
-                </div>
-
-                {/* Bugtong Examples with Hide/Show Answers */}
-                {aralinMode === 'read' && (
-                <div className="bugtong-examples">
-                  {/* Example 1 */}
-                  {bugtongSection?.examples?.map(example => (
-                    <IonCard key={example.id} className="example-card">
+                  <div className="info-cards-grid">
+                    <IonCard className="info-card gradient-purple">
                       <IonCardContent>
-                        <div className="example-text">
-                          <div className="example-label">
-                            <IonIcon icon={bookmarkSharp} />
-                            <span>{example.label}</span>
-                          </div>
-
-                          <p className="riddle-text">
-                            {example.text.split("\n").map((line, i) => (
-                              <span key={i}>
-                                {line}
-                                <br />
-                              </span>
-                            ))}
-                          </p>
-
-                          <div className="answer-toggle">
-                            <IonButton
-                              fill="clear"
-                              size="small"
-                              onClick={() => toggleAnswer(example.id)}
-                            >
-                              <IonIcon icon={eyeOutline} slot="start" />
-                              {showAnswers[example.id]
-                                ? "Itago ang Sagot"
-                                : "Ipakita ang Sagot"}
-                            </IonButton>
-                          </div>
-
-                          {showAnswers[example.id] && (
-                            <div className="answer-reveal animated">
-                              <IonIcon icon={bulbOutline} />
-                              <span>Sagot: {example.answer}</span>
+                        <div className="card-icon"><IonIcon icon={sparklesOutline} /></div>
+                        <h1 className="card-title"><strong>Katangian ng Bugtong</strong></h1>
+                        <div className="card-list">
+                          {[0,1,2,3].map((i) => (
+                            <div key={i} className="list-item">
+                              <span className="item-number">{i+1}</span>
+                              <div>
+                                <strong>{bugtongSection?.bugtongCharacteristics?.[i]?.title}</strong>
+                                <p>{bugtongSection?.bugtongCharacteristics?.[i]?.description}</p>
+                              </div>
                             </div>
-                          )}
+                          ))}
                         </div>
                       </IonCardContent>
                     </IonCard>
-                  ))}
-                </div>
-                )}
-
-                {/* Video Player */}
-                {aralinMode === 'watch' && (
-                  <IonCard className="info-card gradient-blue">
-                    <IonCardContent>
-                      <div className="card-icon">
-                        <IonIcon icon={playCircleOutline} />
-                      </div>
-                      <h1 className="card-title"><strong>Panonood</strong></h1>
-                       {/* Content Display */}
-                      <div className="content-area">
-                        {aralinMode === 'watch' && (
-                          <div className="video-container">
-                            <video width="100%" controls>
-                              <source src="/assets/video/YcoBugtong.mp4" type="video/mp4" />
-                              Your browser does not support the video tag.
-                            </video>
-                          </div>
-                        )}
-                      </div>
-                    </IonCardContent>
-                  </IonCard>
-                )}
-                {aralinMode === 'listen' && (
-                  <div className="bugtong-audio-list">
-                    {bugtongSection?.audioExamples?.map(audio => (
-                      <IonCard key={audio.id} className="info-card gradient-green">
-                        <IonCardContent>
-
-                          <div className="example-label">
-                            <IonIcon icon={volumeHighOutline} />
-                            <span>{audio.label}</span>
-                          </div>
-
-                          <div className="audio-container">
-                            <audio controls preload="metadata">
-                              <source src={audio.audioUrl} type="audio/mpeg" />
-                              Your browser does not support the audio element.
-                            </audio>
-                          </div>
-
-                        </IonCardContent>
-                      </IonCard>
-                    ))}
-                  </div>
-                )}
-
-                {aralinMode === 'play' && (
-                  <IonCard className="info-card puzzle-card">
-                    <IonCardContent>
-                      <div className="card-icon">
-                        <IonIcon icon={gameControllerOutline} />
-                      </div>
-                      <h1 className="card-title"><strong>Paglalaro: Image Puzzle</strong></h1>
-                      <p className="mode-description puzzle-instructions">
-                        Ayusin ang 3x3 na piraso ng larawan. I-click ang dalawang tile para magpalit sila ng puwesto.
-                        Kapag buo na ang larawan, makikita mo ang sagot ng bugtong.
-                      </p>
-
-                      {bugtongExamples.length ? (
-                        <div className="puzzle-example-chips" role="group" aria-label="Piliin ang halimbawa">
-                          {bugtongExamples.map((ex) => (
-                            <IonChip
-                              key={`puzzle-ex-${ex.id}`}
-                              className={`modern-chip ${activePuzzleExampleId === ex.id ? 'active' : ''}`}
-                              onClick={() => setPuzzleExample(ex.id)}
-                            >
-                              <IonIcon icon={bookmarkSharp} />
-                              <IonLabel>{ex.label}</IonLabel>
-                            </IonChip>
+                    <IonCard className="info-card gradient-pink">
+                      <IonCardContent>
+                        <div className="card-icon"><IonIcon icon={heartOutline} /></div>
+                        <h1 className="card-title"><strong>Katangian ng Palaisipan</strong></h1>
+                        <div className="card-list">
+                          {[0,1,2,3].map((i) => (
+                            <div key={i} className="list-item">
+                              <span className="item-number">{i+1}</span>
+                              <div>
+                                <strong>{bugtongSection?.bugtongImportance?.[i]?.title}</strong>
+                                <p>{bugtongSection?.bugtongImportance?.[i]?.description}</p>
+                              </div>
+                            </div>
                           ))}
                         </div>
-                      ) : null}
+                      </IonCardContent>
+                    </IonCard>
+                  </div>
 
-                      {activePuzzleExample ? (
-                        <div className="puzzle-preview" aria-label="Puzzle preview image">
-                          <div className="puzzle-preview-header">
-                            <IonIcon icon={imageOutline} />
-                            <span>Preview ng Larawan</span>
-                          </div>
-                          <img
-                            className="puzzle-preview-image"
-                            src={activePuzzleImage}
-                            alt={`Preview para sa ${activePuzzleExample.label}`}
-                            loading="lazy"
-                            decoding="async"
-                          />
+                  {/* Mode chips */}
+                  <div className="action-chips">
+                    {(['read','watch','listen','play'] as AralinMode[]).map((mode) => (
+                      <IonChip key={mode} className={`modern-chip ${aralinMode === mode ? 'active' : ''}`} onClick={() => setAralinMode(mode)}>
+                        <IonIcon icon={mode === 'read' ? bookOutline : mode === 'watch' ? playCircleOutline : mode === 'listen' ? volumeHighOutline : gameControllerOutline} />
+                        <IonLabel>{mode === 'read' ? 'Pagbasa' : mode === 'watch' ? 'Panonood' : mode === 'listen' ? 'Pakikinig' : 'Paglalaro'}</IonLabel>
+                      </IonChip>
+                    ))}
+                  </div>
+
+                  {/* ── READ: Bugtong examples with GIF reveal ── */}
+                  {aralinMode === 'read' && (
+                    <div className="bugtong-examples">
+                      {bugtongSection?.examples?.map((example) => (
+                        <IonCard key={example.id} className="example-card">
+                          <IonCardContent>
+                            <div className="example-text">
+                              <div className="example-label">
+                                <IonIcon icon={bookmarkSharp} />
+                                <span>{example.label}</span>
+                              </div>
+                              <p className="riddle-text">
+                                {example.text.split('\n').map((line, i) => (
+                                  <span key={i}>{line}<br /></span>
+                                ))}
+                              </p>
+                              <div className="answer-toggle">
+                                <IonButton fill="clear" size="small" onClick={() => toggleAnswer(example.id)}>
+                                  <IonIcon icon={eyeOutline} slot="start" />
+                                  {showAnswers[example.id] ? 'Itago ang Sagot' : 'Ipakita ang Sagot'}
+                                </IonButton>
+                              </div>
+                              {/* ── GIF REVEAL (replaces plain pill) ── */}
+                              {showAnswers[example.id] && (
+                                <AnswerRevealWithGif
+                                  sectionId="bugtong"
+                                  icon={bulbOutline}
+                                  label={`Sagot: ${example.answer}`}
+                                  answer={example.answer}
+                                />
+                              )}
+                            </div>
+                          </IonCardContent>
+                        </IonCard>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* watch */}
+                  {aralinMode === 'watch' && (
+                    <IonCard className="info-card gradient-blue">
+                      <IonCardContent>
+                        <div className="card-icon"><IonIcon icon={playCircleOutline} /></div>
+                        <h1 className="card-title"><strong>Panonood</strong></h1>
+                        <div className="video-container">
+                          <video width="100%" controls>
+                            <source src="/assets/video/YcoBugtong.mp4" type="video/mp4" />
+                          </video>
                         </div>
-                      ) : null}
+                      </IonCardContent>
+                    </IonCard>
+                  )}
 
-                      {activePuzzleExample?.text ? (
-                        <div className="puzzle-riddle">
-                          <IonText className="intro-text">
-                            {splitLines(activePuzzleExample.text).map((line, i) => (
-                              <span key={`puzzle-r-${activePuzzleExample.id}-l-${i}`}>
-                                {line}
-                                <br />
-                              </span>
+                  {/* listen */}
+                  {aralinMode === 'listen' && (
+                    <div className="bugtong-audio-list">
+                      {bugtongSection?.audioExamples?.map((audio) => (
+                        <IonCard key={audio.id} className="info-card gradient-green">
+                          <IonCardContent>
+                            <div className="example-label">
+                              <IonIcon icon={volumeHighOutline} />
+                              <span>{audio.label}</span>
+                            </div>
+                            <div className="audio-container">
+                              <audio controls preload="metadata">
+                                <source src={audio.audioUrl} type="audio/mpeg" />
+                              </audio>
+                            </div>
+                          </IonCardContent>
+                        </IonCard>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* play puzzle */}
+                  {aralinMode === 'play' && (
+                    <IonCard className="info-card puzzle-card">
+                      <IonCardContent>
+                        <div className="card-icon"><IonIcon icon={gameControllerOutline} /></div>
+                        <h1 className="card-title"><strong>Paglalaro: Image Puzzle</strong></h1>
+                        <p className="mode-description puzzle-instructions">
+                          Ayusin ang 3x3 na piraso ng larawan. I-click ang dalawang tile para magpalit sila ng puwesto.
+                        </p>
+                        {bugtongExamples.length ? (
+                          <div className="puzzle-example-chips">
+                            {bugtongExamples.map((ex) => (
+                              <IonChip key={`puzzle-ex-${ex.id}`} className={`modern-chip ${activePuzzleExampleId === ex.id ? 'active' : ''}`} onClick={() => setPuzzleExample(ex.id)}>
+                                <IonIcon icon={bookmarkSharp} />
+                                <IonLabel>{ex.label}</IonLabel>
+                              </IonChip>
                             ))}
-                          </IonText>
+                          </div>
+                        ) : null}
+                        {activePuzzleExample && (
+                          <div className="puzzle-preview">
+                            <div className="puzzle-preview-header">
+                              <IonIcon icon={imageOutline} /><span>Preview ng Larawan</span>
+                            </div>
+                            <img className="puzzle-preview-image" src={activePuzzleImage} alt={`Preview para sa ${activePuzzleExample.label}`} loading="lazy" decoding="async" />
+                          </div>
+                        )}
+                        {activePuzzleExample?.text && (
+                          <div className="puzzle-riddle">
+                            <IonText className="intro-text">
+                              {splitLines(activePuzzleExample.text).map((line, i) => (
+                                <span key={`puzzle-r-${activePuzzleExample.id}-l-${i}`}>{line}<br /></span>
+                              ))}
+                            </IonText>
+                          </div>
+                        )}
+                        <div className="puzzle-meta">
+                          <IonBadge color="light">Galaw: {puzzleMoves}</IonBadge>
+                          <IonBadge color={puzzleSolved ? 'success' : 'warning'}>{puzzleSolved ? 'Solved' : 'In Progress'}</IonBadge>
                         </div>
-                      ) : null}
-
-                      <div className="puzzle-meta">
-                        <IonBadge color="light">Galaw: {puzzleMoves}</IonBadge>
-                        <IonBadge color={puzzleSolved ? 'success' : 'warning'}>
-                          {puzzleSolved ? 'Solved' : 'In Progress'}
-                        </IonBadge>
-                      </div>
-                      <div className="puzzle-board" role="group" aria-label="Bugtong image puzzle">
-                        {puzzleTiles.map((tile, index) => {
-                          const x = tile % PUZZLE_SIZE;
-                          const y = Math.floor(tile / PUZZLE_SIZE);
-                          const bgPositionX = `${(x / (PUZZLE_SIZE - 1)) * 100}%`;
-                          const bgPositionY = `${(y / (PUZZLE_SIZE - 1)) * 100}%`;
-                          const isSelected = selectedPuzzleIndex === index;
-
-                          return (
-                            <button
-                              key={`tile-${index}`}
-                              type="button"
-                              className={`puzzle-tile ${isSelected ? 'selected' : ''}`}
-                              onClick={() => handlePuzzleTileClick(index)}
-                              aria-label={`Puzzle tile ${index + 1}`}
-                              style={{
-                                backgroundImage: `url("${activePuzzleImage}")`,
-                                backgroundSize: `${PUZZLE_SIZE * 100}% ${PUZZLE_SIZE * 100}%`,
-                                backgroundPosition: `${bgPositionX} ${bgPositionY}`
-                              }}
-                            />
-                          );
-                        })}
-                      </div>
-                      {puzzleSolved && (
-                        <div className="puzzle-success answer-reveal animated">
-                          <IonIcon icon={checkmarkCircleOutline} />
-                          <span>
-                            Sagot: <strong>{activePuzzleExample?.answer ?? ''}</strong>
-                          </span>
+                        <div className="puzzle-board">
+                          {puzzleTiles.map((tile, index) => {
+                            const x = tile % PUZZLE_SIZE;
+                            const y = Math.floor(tile / PUZZLE_SIZE);
+                            return (
+                              <button
+                                key={`tile-${index}`}
+                                type="button"
+                                className={`puzzle-tile ${selectedPuzzleIndex === index ? 'selected' : ''}`}
+                                onClick={() => handlePuzzleTileClick(index)}
+                                aria-label={`Puzzle tile ${index + 1}`}
+                                style={{
+                                  backgroundImage: `url("${activePuzzleImage}")`,
+                                  backgroundSize: `${PUZZLE_SIZE * 100}% ${PUZZLE_SIZE * 100}%`,
+                                  backgroundPosition: `${(x / (PUZZLE_SIZE - 1)) * 100}% ${(y / (PUZZLE_SIZE - 1)) * 100}%`,
+                                }}
+                              />
+                            );
+                          })}
                         </div>
-                      )}
+                        {puzzleSolved && (
+                          <div className="puzzle-success answer-reveal animated">
+                            <IonIcon icon={checkmarkCircleOutline} />
+                            <span>Sagot: <strong>{activePuzzleExample?.answer ?? ''}</strong></span>
+                          </div>
+                        )}
+                        <div className="puzzle-actions">
+                          <IonButton onClick={resetPuzzle} fill="solid" className="puzzle-reset-btn">
+                            <IonIcon icon={gameControllerOutline} slot="start" />I-shuffle Muli
+                          </IonButton>
+                          <IonButton onClick={goToNextPuzzleExample} fill="outline" className="puzzle-next-btn">
+                            Susunod na Halimbawa<IonIcon icon={chevronForwardOutline} slot="end" />
+                          </IonButton>
+                        </div>
+                      </IonCardContent>
+                    </IonCard>
+                  )}
 
-                      <div className="puzzle-actions">
-                        <IonButton onClick={resetPuzzle} fill="solid" className="puzzle-reset-btn">
-                          <IonIcon icon={gameControllerOutline} slot="start" />
-                          I-shuffle Muli
-                        </IonButton>
-                        <IonButton onClick={goToNextPuzzleExample} fill="outline" className="puzzle-next-btn">
-                          Susunod na Halimbawa
-                          <IonIcon icon={chevronForwardOutline} slot="end" />
-                        </IonButton>
-                      </div>
-                    </IonCardContent>
-                  </IonCard>
-                )}
-
-                <IonButton expand="block" className="game-button" onClick={() => setAralinMode('play')}>
-                  <IonIcon icon={gameControllerOutline} slot="start" />
-                  Buksan ang Paglalaro
-                  <IonIcon icon={chevronForwardOutline} slot="end" />
-                </IonButton>
-
-              </div>
-            </IonAccordion>
+                  <IonButton expand="block" className="game-button" onClick={() => setAralinMode('play')}>
+                    <IonIcon icon={gameControllerOutline} slot="start" />
+                    Buksan ang Paglalaro
+                    <IonIcon icon={chevronForwardOutline} slot="end" />
+                  </IonButton>
+                </div>
+              </IonAccordion>
             )}
 
-            {/* PALAISIPAN */}
+            {/* ── PALAISIPAN ── */}
             {selectedSectionId === 'palaisipan' && (
-            <IonAccordion value="palaisipan" className="modern-accordion">
-              <IonItem slot="header" className="accordion-header" lines="none">
-                <div className="header-content">
-                  <div className="header-icon palaisipan-icon">
-                    <IonIcon icon={sparklesOutline} />
+              <IonAccordion value="palaisipan" className="modern-accordion">
+                <IonItem slot="header" className="accordion-header" lines="none">
+                  <div className="header-content">
+                    <div className="header-icon palaisipan-icon"><IonIcon icon={sparklesOutline} /></div>
+                    <div className="header-text">
+                      <IonLabel className="accordion-title">Pala-isipan</IonLabel>
+                      <p className="accordion-subtitle">Lohikal na Hamon</p>
+                    </div>
                   </div>
-                  <div className="header-text">
-                    <IonLabel className="accordion-title">Pala-isipan</IonLabel>
-                    <p className="accordion-subtitle">Lohikal na Hamon</p>
+                </IonItem>
+                <div className="accordion-content" slot="content">
+                  <div className="content-intro">
+                    <IonText className="intro-text">
+                      Ang palaisipan ay isang uri ng patalinghagang tanong o sitwasyon na layuning hamunin ang isipan ng isang tao. Hindi tuwiran ang sagot; kailangan ng lohikal na pagiisip, obserbasyon, at malikhaing pag-aanalisa upang matuklasan ang kasagutan.
+                    </IonText>
                   </div>
-                </div>
-              </IonItem>
-
-              <div className="accordion-content" slot="content">
-                <div className="content-intro">
-                  <IonText className="intro-text">
-                    Ang palaisipan ay isang uri ng patalinghagang tanong o sitwasyon na layuning hamunin ang isipan ng isang tao. Hindi tuwiran ang sagot; kailangan ng lohikal na pagiisip, obserbasyon, at malikhaing pag-aanalisa upang matuklasan ang kasagutan. Maaari itong maging bugtong, problema sa matematika, o kahit anong uri ng tanong na nangangailangan ng katalinuhan upang masagot.
-                  </IonText>
-                </div>
-                
-                <IonCard className="info-card gradient-pink">
+                  <IonCard className="info-card gradient-pink">
                     <IonCardContent>
-                      <div className="card-icon">
-                        <IonIcon icon={sparklesOutline} />
-                      </div>
+                      <div className="card-icon"><IonIcon icon={sparklesOutline} /></div>
                       <h1 className="card-title"><strong>Katangian ng Palaisipan</strong></h1>
                       <div className="card-list">
-                        <div className="list-item">
-                          <span className="item-number">1</span> 
-                          <div>
-                            <p>May halong palaisipan at paglalarawan – kadalasan ay patula o may malikhaing pahayag.</p>
+                        {['May halong palaisipan at paglalarawan – kadalasan ay patula o may malikhaing pahayag.',
+                          'Hindi literal ang sagot – kailangan gumamit ng isip at malikhain.',
+                          'Nagpapakita ng lohika at kaalaman sa wika – nakatutulong sa pagpapatalas ng isip.',
+                          'Maikli at madaling tandaan – kadalasang may ritmo o sukat.',
+                        ].map((text, i) => (
+                          <div key={i} className="list-item">
+                            <span className="item-number">{i+1}</span>
+                            <div><p>{text}</p></div>
                           </div>
-                        </div>
-                        <div className="list-item">
-                          <span className="item-number">2</span>
-                          <div>
-                            <p>Hindi literal ang sagot – kailangan gumamit ng isip at malikhain.</p>
-                          </div>
-                        </div>
-                        <div className="list-item">
-                          <span className="item-number">3</span>
-                          <div>
-                            <p>Nagpapakita ng lohika at kaalaman sa wika – nakatutulong sa pagpapatalas ng isip.</p>
-                          </div>
-                        </div>
-                        <div className="list-item">
-                          <span className="item-number">4</span>
-                          <div>
-                            <p>Maikli at madaling tandaan – kadalasang may ritmo o sukat.</p>
-                          </div>
-                        </div>
+                        ))}
                       </div>
                     </IonCardContent>
-                </IonCard>
+                  </IonCard>
 
-                {/* Palaisipan Examples with Hide/Show Answers */}
-                <div className="action-chips">
-                  <IonChip 
-                    className={`modern-chip ${aralinMode === 'read' ? 'active' : ''}`}
-                    onClick={() => setAralinMode('read')}
-                  >
-                    <IonIcon icon={bookOutline} />
-                    <IonLabel>Pagbasa</IonLabel>
-                  </IonChip>
-                  <IonChip 
-                    className={`modern-chip ${aralinMode === 'watch' ? 'active' : ''}`}
-                    onClick={() => setAralinMode('watch')}
-                  >
-                    <IonIcon icon={playCircleOutline} />
-                    <IonLabel>Panonood</IonLabel>
-                  </IonChip>
-                  <IonChip 
-                    className={`modern-chip ${aralinMode === 'listen' ? 'active' : ''}`}
-                    onClick={() => setAralinMode('listen')}
-                  >
-                    <IonIcon icon={volumeHighOutline} />
-                    <IonLabel>Pakikinig</IonLabel>
-                  </IonChip>
-                  <IonChip 
-                    className={`modern-chip ${aralinMode === 'play' ? 'active' : ''}`}
-                    onClick={() => setAralinMode('play')}
-                  >
-                    <IonIcon icon={gameControllerOutline} />
-                    <IonLabel>Paglalaro</IonLabel>
-                  </IonChip>
+                  {/* Mode chips */}
+                  <div className="action-chips">
+                    {(['read','watch','listen','play'] as AralinMode[]).map((mode) => (
+                      <IonChip key={mode} className={`modern-chip ${aralinMode === mode ? 'active' : ''}`} onClick={() => setAralinMode(mode)}>
+                        <IonIcon icon={mode === 'read' ? bookOutline : mode === 'watch' ? playCircleOutline : mode === 'listen' ? volumeHighOutline : gameControllerOutline} />
+                        <IonLabel>{mode === 'read' ? 'Pagbasa' : mode === 'watch' ? 'Panonood' : mode === 'listen' ? 'Pakikinig' : 'Paglalaro'}</IonLabel>
+                      </IonChip>
+                    ))}
+                  </div>
+
+                  {/* ── READ: Palaisipan with GIF reveal ── */}
+                  {aralinMode === 'read' && (
+                    <div className="palaisipan-examples">
+                      {[
+                        { id: 5, label: 'Tanong 1', riddle: 'Ano ang bagay na habang kinukuha mo ay lalo mong pinapalaki?', answer: 'Butas' },
+                        { id: 6, label: 'Tanong 2', riddle: 'Anong hayop ang may apat na paa kapag bata, dalawa kapag matanda?', answer: 'Tao' },
+                        { id: 7, label: 'Tanong 3', riddle: 'Ano ang bagay na kahit puno pa ay hindi tumatanda?', answer: 'Bato' },
+                      ].map((item) => (
+                        <IonCard key={item.id} className="example-card gradient-blue">
+                          <IonCardContent>
+                            <div className="example-text">
+                              <div className="example-label">
+                                <IonIcon icon={bulbOutline} />
+                                <span>{item.label}</span>
+                              </div>
+                              <p className="riddle-text">{item.riddle}</p>
+                              <div className="answer-toggle">
+                                <IonButton fill="clear" size="small" onClick={() => toggleAnswer(item.id)}>
+                                  <IonIcon icon={eyeOutline} slot="start" />
+                                  {showAnswers[item.id] ? 'Itago ang Sagot' : 'Ipakita ang Sagot'}
+                                </IonButton>
+                              </div>
+                              {showAnswers[item.id] && (
+                                <AnswerRevealWithGif
+                                  sectionId="palaisipan"
+                                  icon={sparklesOutline}
+                                  label={`Sagot: ${item.answer}`}
+                                />
+                              )}
+                            </div>
+                          </IonCardContent>
+                        </IonCard>
+                      ))}
+                    </div>
+                  )}
+
+                  {aralinMode === 'watch' && (
+                    <IonCard className="info-card gradient-blue">
+                      <IonCardContent>
+                        <div className="card-icon"><IonIcon icon={playCircleOutline} /></div>
+                        <h1 className="card-title"><strong>Panonood</strong></h1>
+                        <p className="mode-description">Pagmasdan ang mga pahiwatig at larawan/eksena sa palaisipan.</p>
+                      </IonCardContent>
+                    </IonCard>
+                  )}
+                  {aralinMode === 'listen' && (
+                    <IonCard className="info-card gradient-green">
+                      <IonCardContent>
+                        <div className="card-icon"><IonIcon icon={volumeHighOutline} /></div>
+                        <h1 className="card-title"><strong>Pakikinig</strong></h1>
+                        <p className="mode-description">Basahin nang malakas ang palaisipan at pakinggan ang mga salitang may diin.</p>
+                      </IonCardContent>
+                    </IonCard>
+                  )}
+                  {aralinMode === 'play' && renderQuiz('palaisipan', 'Tanong', 'Piliin ang tamang sagot para sa bawat palaisipan.')}
                 </div>
-
-                {/* Palaisipan Examples with Hide/Show Answers */}
-                {aralinMode === 'read' && (
-                <div className="palaisipan-examples">
-                  {/* Example 1 */}
-                  <IonCard className="example-card gradient-blue">
-                    <IonCardContent>
-                      <div className="example-text">
-                        <div className="example-label">
-                          <IonIcon icon={bulbOutline} />
-                          <span>Tanong 1</span>
-                        </div>
-                        <p className="riddle-text">
-                          Ano ang bagay na habang kinukuha mo ay lalo mong pinapalaki?
-                        </p>
-                        <div className="answer-toggle">
-                          <IonButton 
-                            fill="clear" 
-                            size="small"
-                            onClick={() => toggleAnswer(5)}
-                          >
-                            <IonIcon icon={eyeOutline} slot="start" />
-                            {showAnswers[5] ? 'Itago ang Sagot' : 'Ipakita ang Sagot'}
-                          </IonButton>
-                        </div>
-                        {showAnswers[5] && (
-                          <div className="answer-reveal animated">
-                            <IonIcon icon={sparklesOutline} />
-                            <span>Sagot: Butas</span>
-                          </div>
-                        )}
-                      </div>
-                    </IonCardContent>
-                  </IonCard>
-
-                  {/* Example 2 */}
-                  <IonCard className="example-card gradient-blue">
-                    <IonCardContent>
-                      <div className="example-text">
-                        <div className="example-label">
-                          <IonIcon icon={bulbOutline} />
-                          <span>Tanong 2</span>
-                        </div>
-                        <p className="riddle-text">
-                          Anong hayop ang may apat na paa kapag bata, dalawa kapag matanda?
-                        </p>
-                        <div className="answer-toggle">
-                          <IonButton 
-                            fill="clear" 
-                            size="small"
-                            onClick={() => toggleAnswer(6)}
-                          >
-                            <IonIcon icon={eyeOutline} slot="start" />
-                            {showAnswers[6] ? 'Itago ang Sagot' : 'Ipakita ang Sagot'}
-                          </IonButton>
-                        </div>
-                        {showAnswers[6] && (
-                          <div className="answer-reveal animated">
-                            <IonIcon icon={sparklesOutline} />
-                            <span>Sagot: Tao</span>
-                          </div>
-                        )}
-                      </div>
-                    </IonCardContent>
-                  </IonCard>
-
-                  {/* Example 3 */}
-                  <IonCard className="example-card gradient-blue">
-                    <IonCardContent>
-                      <div className="example-text">
-                        <div className="example-label">
-                          <IonIcon icon={bulbOutline} />
-                          <span>Tanong 3</span>
-                        </div>
-                        <p className="riddle-text">
-                          Ano ang bagay na kahit puno pa ay hindi tumatanda?
-                        </p>
-                        <div className="answer-toggle">
-                          <IonButton 
-                            fill="clear" 
-                            size="small"
-                            onClick={() => toggleAnswer(7)}
-                          >
-                            <IonIcon icon={eyeOutline} slot="start" />
-                            {showAnswers[7] ? 'Itago ang Sagot' : 'Ipakita ang Sagot'}
-                          </IonButton>
-                        </div>
-                        {showAnswers[7] && (
-                          <div className="answer-reveal animated">
-                            <IonIcon icon={sparklesOutline} />
-                            <span>Sagot: Bato</span>
-                          </div>
-                        )}
-                      </div>
-                    </IonCardContent>
-                  </IonCard>
-                </div>
-                )}
-
-                {aralinMode === 'watch' && (
-                  <IonCard className="info-card gradient-blue">
-                    <IonCardContent>
-                      <div className="card-icon">
-                        <IonIcon icon={playCircleOutline} />
-                      </div>
-                      <h1 className="card-title"><strong>Panonood</strong></h1>
-                      <p className="mode-description">
-                        Pagmasdan ang mga pahiwatig at larawan/eksena sa palaisipan. Tukuyin kung
-                        alin sa mga detalye ang mahalaga bago magbigay ng sagot.
-                      </p>
-                    </IonCardContent>
-                  </IonCard>
-                )}
-
-                {aralinMode === 'listen' && (
-                  <IonCard className="info-card gradient-green">
-                    <IonCardContent>
-                      <div className="card-icon">
-                        <IonIcon icon={volumeHighOutline} />
-                      </div>
-                      <h1 className="card-title"><strong>Pakikinig</strong></h1>
-                      <p className="mode-description">
-                        Basahin nang malakas ang palaisipan at pakinggan ang mga salitang may diin
-                        o kakaibang pahiwatig. Minsan ang tono ang nagbibigay-linaw sa sagot.
-                      </p>
-                    </IonCardContent>
-                  </IonCard>
-                )}
-
-                {aralinMode === 'play' && (
-                  renderQuiz(
-                    'palaisipan',
-                    'Tanong',
-                    'Piliin ang tamang sagot para sa bawat palaisipan.'
-                  )
-                )}
-
-                {/* <IonButton expand="block" className="challenge-button" color="tertiary">
-                  <IonIcon icon={bulbOutline} slot="start" />
-                  Interactive Logic Challenge
-                  <IonIcon icon={chevronForwardOutline} slot="end" />
-                </IonButton> */}
-              </div>
-            </IonAccordion>
+              </IonAccordion>
             )}
 
-            {/* TANAGA */}
+            {/* ── TANAGA ── */}
             {selectedSectionId === 'tanaga' && (
-            <IonAccordion value="tanaga" className="modern-accordion">
-              <IonItem slot="header" className="accordion-header" lines="none">
-                <div className="header-content">
-                  <div className="header-icon tanaga-icon">
-                    <IonIcon icon={createOutline} />
+              <IonAccordion value="tanaga" className="modern-accordion">
+                <IonItem slot="header" className="accordion-header" lines="none">
+                  <div className="header-content">
+                    <div className="header-icon tanaga-icon"><IonIcon icon={createOutline} /></div>
+                    <div className="header-text">
+                      <IonLabel className="accordion-title">Tanaga</IonLabel>
+                      <p className="accordion-subtitle">Tulang Pilipino</p>
+                    </div>
                   </div>
-                  <div className="header-text">
-                    <IonLabel className="accordion-title">Tanaga</IonLabel>
-                    <p className="accordion-subtitle">Tulang Pilipino</p>
+                </IonItem>
+                <div className="accordion-content" slot="content">
+                  <div className="content-intro">
+                    <IonText className="intro-text">Ang tanaga ay apat na taludtod na tula na may pitong pantig bawat linya (7-7-7-7) at may tugma.</IonText>
                   </div>
+
+                  <div className="action-chips">
+                    {(['read','watch','listen','play'] as AralinMode[]).map((mode) => (
+                      <IonChip key={mode} className={`modern-chip ${aralinMode === mode ? 'active' : ''}`} onClick={() => setAralinMode(mode)}>
+                        <IonIcon icon={mode === 'read' ? bookOutline : mode === 'watch' ? playCircleOutline : mode === 'listen' ? volumeHighOutline : gameControllerOutline} />
+                        <IonLabel>{mode === 'read' ? 'Pagbasa' : mode === 'watch' ? 'Panonood' : mode === 'listen' ? 'Pakikinig' : 'Paglalaro'}</IonLabel>
+                      </IonChip>
+                    ))}
+                  </div>
+
+                  {/* ── READ: Tanaga with GIF reveal ── */}
+                  {aralinMode === 'read' && (
+                    <>
+                      <div className="tanaga-examples">
+                        {[
+                          { id: 8,  label: 'Tanaga 1', poem: ["Wika'y ating yaman,","Sa puso'y pinagyayaman;","Sa bawat salitang bigkas,","Pagka-Pilipino'y lantad."], tema: 'Pagmamahal sa Wikang Filipino' },
+                          { id: 9,  label: 'Tanaga 2', poem: ["Kabataan ng bayan,","Mag-aral nang mabuti;","Sa hinaharap mong buhay,","Ikaw ang magiging liwanag."], tema: 'Edukasyon at Kinabukasan' },
+                          { id: 10, label: 'Tanaga 3', poem: ["Kalikasan ay yaman,","Alagaan natin ito;","Para sa susunod na henerasyon,","Magiging masaganang buhay."], tema: 'Pangangalaga sa Kalikasan' },
+                        ].map((item) => (
+                          <IonCard key={item.id} className="example-card gradient-green">
+                            <IonCardContent>
+                              <div className="example-text">
+                                <div className="example-label">
+                                  <IonIcon icon={createOutline} /><span>{item.label}</span>
+                                </div>
+                                <p className="poem-text">
+                                  {item.poem.map((line, i) => <span key={i}>{line}<br /></span>)}
+                                </p>
+                                <div className="answer-toggle">
+                                  <IonButton fill="clear" size="small" onClick={() => toggleAnswer(item.id)}>
+                                    <IonIcon icon={eyeOutline} slot="start" />
+                                    {showAnswers[item.id] ? 'Itago ang Tema' : 'Ipakita ang Tema'}
+                                  </IonButton>
+                                </div>
+                                {showAnswers[item.id] && (
+                                  <AnswerRevealWithGif
+                                    sectionId="tanaga"
+                                    icon={createOutline}
+                                    label={`Tema: ${item.tema}`}
+                                  />
+                                )}
+                              </div>
+                            </IonCardContent>
+                          </IonCard>
+                        ))}
+                      </div>
+                      <IonButton expand="block" className="create-button">
+                        <IonIcon icon={createOutline} slot="start" />
+                        Gumawa ng Sariling Tanaga
+                        <IonIcon icon={chevronForwardOutline} slot="end" />
+                      </IonButton>
+                    </>
+                  )}
+
+                  {aralinMode === 'watch' && (
+                    <IonCard className="info-card gradient-blue">
+                      <IonCardContent>
+                        <div className="card-icon"><IonIcon icon={playCircleOutline} /></div>
+                        <h1 className="card-title"><strong>Panonood</strong></h1>
+                        <p className="mode-description">Panoorin ang pagbasa ng tanaga at obserbahan ang ritmo at paghinto ng boses.</p>
+                      </IonCardContent>
+                    </IonCard>
+                  )}
+                  {aralinMode === 'listen' && (
+                    <IonCard className="info-card gradient-green">
+                      <IonCardContent>
+                        <div className="card-icon"><IonIcon icon={volumeHighOutline} /></div>
+                        <h1 className="card-title"><strong>Pakikinig</strong></h1>
+                        <p className="mode-description">Pakinggan ang tanaga at tukuyin kung aling mga salita ang magkakatugma.</p>
+                      </IonCardContent>
+                    </IonCard>
+                  )}
+                  {aralinMode === 'play' && renderQuiz('tanaga', 'Tanaga', 'Piliin ang tamang tema para sa bawat tanaga.')}
                 </div>
-              </IonItem>
-
-              <div className="accordion-content" slot="content">
-                <div className="content-intro">
-                  <IonText className="intro-text">
-                    Ang tanaga ay apat na taludtod na tula na may pitong pantig bawat
-                    linya (7-7-7-7) at may tugma.
-                  </IonText>
-                </div>
-
-                {/* Tanaga Examples with Hide/Show Answers */}
-                <div className="action-chips">
-                  <IonChip 
-                    className={`modern-chip ${aralinMode === 'read' ? 'active' : ''}`}
-                    onClick={() => setAralinMode('read')}
-                  >
-                    <IonIcon icon={bookOutline} />
-                    <IonLabel>Pagbasa</IonLabel>
-                  </IonChip>
-                  <IonChip 
-                    className={`modern-chip ${aralinMode === 'watch' ? 'active' : ''}`}
-                    onClick={() => setAralinMode('watch')}
-                  >
-                    <IonIcon icon={playCircleOutline} />
-                    <IonLabel>Panonood</IonLabel>
-                  </IonChip>
-                  <IonChip 
-                    className={`modern-chip ${aralinMode === 'listen' ? 'active' : ''}`}
-                    onClick={() => setAralinMode('listen')}
-                  >
-                    <IonIcon icon={volumeHighOutline} />
-                    <IonLabel>Pakikinig</IonLabel>
-                  </IonChip>
-                  <IonChip 
-                    className={`modern-chip ${aralinMode === 'play' ? 'active' : ''}`}
-                    onClick={() => setAralinMode('play')}
-                  >
-                    <IonIcon icon={gameControllerOutline} />
-                    <IonLabel>Paglalaro</IonLabel>
-                  </IonChip>
-                </div>
-
-                {/* Tanaga Examples with Hide/Show Answers */}
-                {aralinMode === 'read' && (
-                <>
-                <div className="tanaga-examples">
-                  {/* Example 1 */}
-                  <IonCard className="example-card gradient-green">
-                    <IonCardContent>
-                      <div className="example-text">
-                        <div className="example-label">
-                          <IonIcon icon={createOutline} />
-                          <span>Tanaga 1</span>
-                        </div>
-                        <p className="poem-text">
-                          Wika'y ating yaman,<br />
-                          Sa puso'y pinagyayaman;<br />
-                          Sa bawat salitang bigkas,<br />
-                          Pagka-Pilipino'y lantad.
-                        </p>
-                        <div className="answer-toggle">
-                          <IonButton 
-                            fill="clear" 
-                            size="small"
-                            onClick={() => toggleAnswer(8)}
-                          >
-                            <IonIcon icon={eyeOutline} slot="start" />
-                            {showAnswers[8] ? 'Itago ang Tema' : 'Ipakita ang Tema'}
-                          </IonButton>
-                        </div>
-                        {showAnswers[8] && (
-                          <div className="answer-reveal animated">
-                            <IonIcon icon={createOutline} />
-                            <span>Tema: Pagmamahal sa Wikang Filipino</span>
-                          </div>
-                        )}
-                      </div>
-                    </IonCardContent>
-                  </IonCard>
-
-                  {/* Example 2 */}
-                  <IonCard className="example-card gradient-green">
-                    <IonCardContent>
-                      <div className="example-text">
-                        <div className="example-label">
-                          <IonIcon icon={createOutline} />
-                          <span>Tanaga 2</span>
-                        </div>
-                        <p className="poem-text">
-                          Kabataan ng bayan,<br />
-                          Mag-aral nang mabuti;<br />
-                          Sa hinaharap mong buhay,<br />
-                          Ikaw ang magiging liwanag.
-                        </p>
-                        <div className="answer-toggle">
-                          <IonButton 
-                            fill="clear" 
-                            size="small"
-                            onClick={() => toggleAnswer(9)}
-                          >
-                            <IonIcon icon={eyeOutline} slot="start" />
-                            {showAnswers[9] ? 'Itago ang Tema' : 'Ipakita ang Tema'}
-                          </IonButton>
-                        </div>
-                        {showAnswers[9] && (
-                          <div className="answer-reveal animated">
-                            <IonIcon icon={createOutline} />
-                            <span>Tema: Edukasyon at Kinabukasan</span>
-                          </div>
-                        )}
-                      </div>
-                    </IonCardContent>
-                  </IonCard>
-
-                  {/* Example 3 */}
-                  <IonCard className="example-card gradient-green">
-                    <IonCardContent>
-                      <div className="example-text">
-                        <div className="example-label">
-                          <IonIcon icon={createOutline} />
-                          <span>Tanaga 3</span>
-                        </div>
-                        <p className="poem-text">
-                          Kalikasan ay yaman,<br />
-                          Alagaan natin ito;<br />
-                          Para sa susunod na henerasyon,<br />
-                          Magiging masaganang buhay.
-                        </p>
-                        <div className="answer-toggle">
-                          <IonButton 
-                            fill="clear" 
-                            size="small"
-                            onClick={() => toggleAnswer(10)}
-                          >
-                            <IonIcon icon={eyeOutline} slot="start" />
-                            {showAnswers[10] ? 'Itago ang Tema' : 'Ipakita ang Tema'}
-                          </IonButton>
-                        </div>
-                        {showAnswers[10] && (
-                          <div className="answer-reveal animated">
-                            <IonIcon icon={createOutline} />
-                            <span>Tema: Pangangalaga sa Kalikasan</span>
-                          </div>
-                        )}
-                      </div>
-                    </IonCardContent>
-                  </IonCard>
-                </div>
-
-                <IonButton expand="block" className="create-button">
-                  <IonIcon icon={createOutline} slot="start" />
-                  Gumawa ng Sariling Tanaga
-                  <IonIcon icon={chevronForwardOutline} slot="end" />
-                </IonButton>
-                </>
-                )}
-
-                {aralinMode === 'watch' && (
-                  <IonCard className="info-card gradient-blue">
-                    <IonCardContent>
-                      <div className="card-icon">
-                        <IonIcon icon={playCircleOutline} />
-                      </div>
-                      <h1 className="card-title"><strong>Panonood</strong></h1>
-                      <p className="mode-description">
-                        Panoorin ang pagbasa ng tanaga at obserbahan ang ritmo at paghinto ng boses.
-                        Nakakatulong ito para maramdaman ang tugma at sukat.
-                      </p>
-                    </IonCardContent>
-                  </IonCard>
-                )}
-
-                {aralinMode === 'listen' && (
-                  <IonCard className="info-card gradient-green">
-                    <IonCardContent>
-                      <div className="card-icon">
-                        <IonIcon icon={volumeHighOutline} />
-                      </div>
-                      <h1 className="card-title"><strong>Pakikinig</strong></h1>
-                      <p className="mode-description">
-                        Pakinggan ang tanaga at tukuyin kung aling mga salita ang magkakatugma.
-                        Pansinin ang pitong pantig sa bawat linya.
-                      </p>
-                    </IonCardContent>
-                  </IonCard>
-                )}
-
-                {aralinMode === 'play' && (
-                  renderQuiz(
-                    'tanaga',
-                    'Tanaga',
-                    'Piliin ang tamang tema para sa bawat tanaga.'
-                  )
-                )}
-              </div>
-            </IonAccordion>
+              </IonAccordion>
             )}
 
-            {/* SALAWIKAIN */}
+            {/* ── SALAWIKAIN ── */}
             {selectedSectionId === 'salawikain' && (
-            <IonAccordion value="salawikain" className="modern-accordion">
-              <IonItem slot="header" className="accordion-header" lines="none">
-                <div className="header-content">
-                  <div className="header-icon salawikain-icon">
-                    <IonIcon icon={heartOutline} />
+              <IonAccordion value="salawikain" className="modern-accordion">
+                <IonItem slot="header" className="accordion-header" lines="none">
+                  <div className="header-content">
+                    <div className="header-icon salawikain-icon"><IonIcon icon={heartOutline} /></div>
+                    <div className="header-text">
+                      <IonLabel className="accordion-title">Salawikain at Kasabihan</IonLabel>
+                      <p className="accordion-subtitle">Karunungan ng Bayan</p>
+                    </div>
                   </div>
-                  <div className="header-text">
-                    <IonLabel className="accordion-title">Salawikain at Kasabihan</IonLabel>
-                    <p className="accordion-subtitle">Karunungan ng Bayan</p>
+                </IonItem>
+                <div className="accordion-content" slot="content">
+                  <div className="content-intro">
+                    <IonText className="intro-text">Ang salawikain at kasabihan ay mga pahayag ng karunungan na nagmumula sa karanasan ng mga Pilipino.</IonText>
                   </div>
+
+                  <div className="action-chips">
+                    {(['read','watch','listen','play'] as AralinMode[]).map((mode) => (
+                      <IonChip key={mode} className={`modern-chip ${aralinMode === mode ? 'active' : ''}`} onClick={() => setAralinMode(mode)}>
+                        <IonIcon icon={mode === 'read' ? bookOutline : mode === 'watch' ? playCircleOutline : mode === 'listen' ? volumeHighOutline : gameControllerOutline} />
+                        <IonLabel>{mode === 'read' ? 'Pagbasa' : mode === 'watch' ? 'Panonood' : mode === 'listen' ? 'Pakikinig' : 'Paglalaro'}</IonLabel>
+                      </IonChip>
+                    ))}
+                  </div>
+
+                  {/* ── READ: Salawikain with GIF reveal ── */}
+                  {aralinMode === 'read' && (
+                    <>
+                      <div className="salawikain-examples">
+                        {[
+                          { id: 11, quote: '"Ang hindi marunong lumingon sa pinanggalingan ay hindi makararating sa paroroonan."', aral: 'Mahalagang alamin at ipagmalaki ang ating pinagmulan' },
+                          { id: 12, quote: '"Nasa Diyos ang awa, nasa tao ang gawa."', aral: 'Huwag umasa sa biyaya lamang, kailangan din ang sariling pagkilos' },
+                          { id: 13, quote: '"Kung ano ang puno, siya ang bunga."', aral: 'Ang kalakasan o kahinaan ng isang tao ay nagmumula sa kanyang pamilya at pinagmulan' },
+                          { id: 14, quote: '"Wag mo ring kalalimangin ang dating iniirog."', aral: 'Huwag kalimutan ang mga taong dati nating minahal at tinulungan' },
+                        ].map((item) => (
+                          <IonCard key={item.id} className="example-card gradient-orange">
+                            <IonCardContent>
+                              <div className="example-text">
+                                <div className="quote-icon"><IonIcon icon={heartOutline} /></div>
+                                <p className="quote-text">{item.quote}</p>
+                                <div className="answer-toggle">
+                                  <IonButton fill="clear" size="small" onClick={() => toggleAnswer(item.id)}>
+                                    <IonIcon icon={eyeOutline} slot="start" />
+                                    {showAnswers[item.id] ? 'Itago ang Aral' : 'Ipakita ang Aral'}
+                                  </IonButton>
+                                </div>
+                                {showAnswers[item.id] && (
+                                  <AnswerRevealWithGif
+                                    sectionId="salawikain"
+                                    icon={heartOutline}
+                                    label={`Aral: ${item.aral}`}
+                                  />
+                                )}
+                              </div>
+                            </IonCardContent>
+                          </IonCard>
+                        ))}
+                      </div>
+                      <IonButton expand="block" className="lesson-button" fill="outline">
+                        <IonIcon icon={eyeOutline} slot="start" />
+                        Tukuyin ang Aral
+                        <IonIcon icon={chevronForwardOutline} slot="end" />
+                      </IonButton>
+                    </>
+                  )}
+
+                  {aralinMode === 'watch' && (
+                    <IonCard className="info-card gradient-blue">
+                      <IonCardContent>
+                        <div className="card-icon"><IonIcon icon={playCircleOutline} /></div>
+                        <h1 className="card-title"><strong>Panonood</strong></h1>
+                        <p className="mode-description">Panoorin ang paggamit ng salawikain sa mga sitwasyon.</p>
+                      </IonCardContent>
+                    </IonCard>
+                  )}
+                  {aralinMode === 'listen' && (
+                    <IonCard className="info-card gradient-green">
+                      <IonCardContent>
+                        <div className="card-icon"><IonIcon icon={volumeHighOutline} /></div>
+                        <h1 className="card-title"><strong>Pakikinig</strong></h1>
+                        <p className="mode-description">Pakinggan ang salawikain at bigyang-diin ang mga salitang nagbibigay ng aral.</p>
+                      </IonCardContent>
+                    </IonCard>
+                  )}
+                  {aralinMode === 'play' && renderQuiz('salawikain', 'Salawikain', 'Piliin ang tamang aral para sa bawat salawikain.')}
                 </div>
-              </IonItem>
-
-              <div className="accordion-content" slot="content">
-                <div className="content-intro">
-                  <IonText className="intro-text">
-                    Ang salawikain at kasabihan ay mga pahayag ng karunungan na
-                    nagmumula sa karanasan ng mga Pilipino.
-                  </IonText>
-                </div>
-
-                {/* Salawikain at Kasabihan Examples with Hide/Show Answers */}
-                <div className="action-chips">
-                  <IonChip 
-                    className={`modern-chip ${aralinMode === 'read' ? 'active' : ''}`}
-                    onClick={() => setAralinMode('read')}
-                  >
-                    <IonIcon icon={bookOutline} />
-                    <IonLabel>Pagbasa</IonLabel>
-                  </IonChip>
-                  <IonChip 
-                    className={`modern-chip ${aralinMode === 'watch' ? 'active' : ''}`}
-                    onClick={() => setAralinMode('watch')}
-                  >
-                    <IonIcon icon={playCircleOutline} />
-                    <IonLabel>Panonood</IonLabel>
-                  </IonChip>
-                  <IonChip 
-                    className={`modern-chip ${aralinMode === 'listen' ? 'active' : ''}`}
-                    onClick={() => setAralinMode('listen')}
-                  >
-                    <IonIcon icon={volumeHighOutline} />
-                    <IonLabel>Pakikinig</IonLabel>
-                  </IonChip>
-                  <IonChip 
-                    className={`modern-chip ${aralinMode === 'play' ? 'active' : ''}`}
-                    onClick={() => setAralinMode('play')}
-                  >
-                    <IonIcon icon={gameControllerOutline} />
-                    <IonLabel>Paglalaro</IonLabel>
-                  </IonChip>
-                </div>
-
-                {/* Salawikain at Kasabihan Examples with Hide/Show Answers */}
-                {aralinMode === 'read' && (
-                <>
-                <div className="salawikain-examples">
-                  {/* Example 1 */}
-                  <IonCard className="example-card gradient-orange">
-                    <IonCardContent>
-                      <div className="example-text">
-                        <div className="quote-icon">
-                          <IonIcon icon={heartOutline} />
-                        </div>
-                        <p className="quote-text">
-                          "Ang hindi marunong lumingon sa pinanggalingan ay hindi
-                          makararating sa paroroonan."
-                        </p>
-                        <div className="answer-toggle">
-                          <IonButton 
-                            fill="clear" 
-                            size="small"
-                            onClick={() => toggleAnswer(11)}
-                          >
-                            <IonIcon icon={eyeOutline} slot="start" />
-                            {showAnswers[11] ? 'Itago ang Aral' : 'Ipakita ang Aral'}
-                          </IonButton>
-                        </div>
-                        {showAnswers[11] && (
-                          <div className="answer-reveal animated">
-                            <IonIcon icon={heartOutline} />
-                            <span>Aral: Mahalagang alamin at ipagmalaki ang ating pinagmulan</span>
-                          </div>
-                        )}
-                      </div>
-                    </IonCardContent>
-                  </IonCard>
-
-                  {/* Example 2 */}
-                  <IonCard className="example-card gradient-orange">
-                    <IonCardContent>
-                      <div className="example-text">
-                        <div className="quote-icon">
-                          <IonIcon icon={heartOutline} />
-                        </div>
-                        <p className="quote-text">
-                          "Nasa Diyos ang awa, nasa tao ang gawa."
-                        </p>
-                        <div className="answer-toggle">
-                          <IonButton 
-                            fill="clear" 
-                            size="small"
-                            onClick={() => toggleAnswer(12)}
-                          >
-                            <IonIcon icon={eyeOutline} slot="start" />
-                            {showAnswers[12] ? 'Itago ang Aral' : 'Ipakita ang Aral'}
-                          </IonButton>
-                        </div>
-                        {showAnswers[12] && (
-                          <div className="answer-reveal animated">
-                            <IonIcon icon={heartOutline} />
-                            <span>Aral: Huwag umasa sa biyaya lamang, kailangan din ang sariling pagkilos</span>
-                          </div>
-                        )}
-                      </div>
-                    </IonCardContent>
-                  </IonCard>
-
-                  {/* Example 3 */}
-                  <IonCard className="example-card gradient-orange">
-                    <IonCardContent>
-                      <div className="example-text">
-                        <div className="quote-icon">
-                          <IonIcon icon={heartOutline} />
-                        </div>
-                        <p className="quote-text">
-                          "Kung ano ang puno, siya ang bunga."
-                        </p>
-                        <div className="answer-toggle">
-                          <IonButton 
-                            fill="clear" 
-                            size="small"
-                            onClick={() => toggleAnswer(13)}
-                          >
-                            <IonIcon icon={eyeOutline} slot="start" />
-                            {showAnswers[13] ? 'Itago ang Aral' : 'Ipakita ang Aral'}
-                          </IonButton>
-                        </div>
-                        {showAnswers[13] && (
-                          <div className="answer-reveal animated">
-                            <IonIcon icon={heartOutline} />
-                            <span>Aral: Ang kalakasan o kahinaan ng isang tao ay nagmumula sa kanyang pamilya at pinagmulan</span>
-                          </div>
-                        )}
-                      </div>
-                    </IonCardContent>
-                  </IonCard>
-
-                  {/* Example 4 */}
-                  <IonCard className="example-card gradient-orange">
-                    <IonCardContent>
-                      <div className="example-text">
-                        <div className="quote-icon">
-                          <IonIcon icon={heartOutline} />
-                        </div>
-                        <p className="quote-text">
-                          "Wag mo ring kalalimangin ang dating iniirog."
-                        </p>
-                        <div className="answer-toggle">
-                          <IonButton 
-                            fill="clear" 
-                            size="small"
-                            onClick={() => toggleAnswer(14)}
-                          >
-                            <IonIcon icon={eyeOutline} slot="start" />
-                            {showAnswers[14] ? 'Itago ang Aral' : 'Ipakita ang Aral'}
-                          </IonButton>
-                        </div>
-                        {showAnswers[14] && (
-                          <div className="answer-reveal animated">
-                            <IonIcon icon={heartOutline} />
-                            <span>Aral: Huwag kalimutan ang mga taong dati nating minahal at tinulungan</span>
-                          </div>
-                        )}
-                      </div>
-                    </IonCardContent>
-                  </IonCard>
-                </div>
-
-                <IonButton expand="block" className="lesson-button" fill="outline">
-                  <IonIcon icon={eyeOutline} slot="start" />
-                  Tukuyin ang Aral
-                  <IonIcon icon={chevronForwardOutline} slot="end" />
-                </IonButton>
-                </>
-                )}
-
-                {aralinMode === 'watch' && (
-                  <IonCard className="info-card gradient-blue">
-                    <IonCardContent>
-                      <div className="card-icon">
-                        <IonIcon icon={playCircleOutline} />
-                      </div>
-                      <h1 className="card-title"><strong>Panonood</strong></h1>
-                      <p className="mode-description">
-                        Panoorin ang paggamit ng salawikain sa mga sitwasyon. Tukuyin kung anong aral
-                        ang ipinapakita batay sa konteksto.
-                      </p>
-                    </IonCardContent>
-                  </IonCard>
-                )}
-
-                {aralinMode === 'listen' && (
-                  <IonCard className="info-card gradient-green">
-                    <IonCardContent>
-                      <div className="card-icon">
-                        <IonIcon icon={volumeHighOutline} />
-                      </div>
-                      <h1 className="card-title"><strong>Pakikinig</strong></h1>
-                      <p className="mode-description">
-                        Pakinggan ang salawikain at bigyang-diin ang mga salitang nagbibigay ng aral.
-                        Iugnay ito sa sariling karanasan.
-                      </p>
-                    </IonCardContent>
-                  </IonCard>
-                )}
-
-                {aralinMode === 'play' && (
-                  renderQuiz(
-                    'salawikain',
-                    'Salawikain',
-                    'Piliin ang tamang aral para sa bawat salawikain.'
-                  )
-                )}
-              </div>
-            </IonAccordion>
+              </IonAccordion>
             )}
+
           </IonAccordionGroup>
 
-          {/* QUIZ CTA */}
+          {/* Quiz CTA */}
           <IonCard className="quiz-cta-card">
             <IonCardContent>
               <div className="lesson-complete-message">
-                <div className="complete-icon">
-                  <IonIcon icon={checkmarkCircleOutline} />
-                </div>
+                <div className="complete-icon"><IonIcon icon={checkmarkCircleOutline} /></div>
                 <div className="complete-text">
                   <h3>Natapos mo ang Aralin {safeAralinId}!</h3>
-                  <p>
-                    {nextAralinId ? 'Magaling! Ikaw ay handa na para sa susunod na aralin.' : 'Magaling! Natapos mo ang Markahan 1.'}
-                  </p>
+                  <p>{nextAralinId ? 'Magaling! Ikaw ay handa na para sa susunod na aralin.' : 'Magaling! Natapos mo ang Markahan 1.'}</p>
                 </div>
-                
-                {/* Navigation Buttons */}
                 <div className="navigation-buttons">
-                  <IonButton 
-                    fill="clear" 
-                    className="nav-button prev-button"
-                    onClick={() => window.location.href = '/quarter/1'}
-                  >
-                    <IonIcon icon={chevronBackOutline} slot="start" />
-                    Bumalik sa Markahan 1
+                  <IonButton fill="clear" className="nav-button prev-button" onClick={() => window.location.href = '/quarter/1'}>
+                    <IonIcon icon={chevronBackOutline} slot="start" />Bumalik sa Markahan 1
                   </IonButton>
-                  
                   {nextAralinId ? (
-                    <IonButton 
-                      expand="block" 
-                      className="nav-button next-button"
-                      onClick={() => window.location.href = `/quarter/1/aralin/${nextAralinId}`}
-                    >
-                      Susunod na Aralin
-                      <IonIcon icon={chevronForwardOutline} slot="end" />
+                    <IonButton expand="block" className="nav-button next-button" onClick={() => window.location.href = `/quarter/1/aralin/${nextAralinId}`}>
+                      Susunod na Aralin<IonIcon icon={chevronForwardOutline} slot="end" />
                     </IonButton>
                   ) : (
-                    <IonButton 
-                      expand="block" 
-                      className="nav-button next-button"
-                      onClick={() => window.location.href = '/quarter/1'}
-                    >
-                      Bumalik sa Markahan 1
-                      <IonIcon icon={chevronForwardOutline} slot="end" />
+                    <IonButton expand="block" className="nav-button next-button" onClick={() => window.location.href = '/quarter/1'}>
+                      Bumalik sa Markahan 1<IonIcon icon={chevronForwardOutline} slot="end" />
                     </IonButton>
                   )}
                 </div>
@@ -1769,7 +1154,6 @@ const Quarter1Aralin1: React.FC = () => {
           </IonCard>
         </div>
 
-        {/* Bottom Spacing */}
         <div className="bottom-spacing" />
       </IonContent>
     </IonPage>
