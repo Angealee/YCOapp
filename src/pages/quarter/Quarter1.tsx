@@ -123,7 +123,6 @@ const Quarter1: React.FC = () => {
                   </div>
                 
                   {/* Content */}
-                  {/* <h3 className="card-title">{aralin.title}</h3> */}
                   <p className="card-subtitle">{aralin.subtitle}</p>
                   <p className="card-description">{aralin.description}</p>
 
