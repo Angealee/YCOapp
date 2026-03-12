@@ -732,14 +732,25 @@ const Quarter1Aralin1: React.FC = () => {
       });
   }, []);
 
+  useEffect(() => {
+  if (videoRef.current) {
+    videoRef.current.pause();
+    videoRef.current.currentTime = 0;
+  }
+}, []);
+
   const handleVideoTap = () => {
-    const video = videoRef.current;
-    if (!video || videoStarted) return;
-    video.muted = false;
-    video.play()
-      .then(() => setVideoStarted(true))
-      .catch(() => {});
-  };
+  const video = videoRef.current;
+  if (!video) return;
+
+  if (video.paused) {
+    video.play();
+    setVideoStarted(true);
+  } else {
+    video.pause();
+    setVideoStarted(false);
+  }
+};
 
   return (
     <IonPage>
@@ -769,11 +780,12 @@ const Quarter1Aralin1: React.FC = () => {
             <div className="hero-stats">
               <div className="stat-item"><IonIcon icon={sparklesOutline} /><span>1 Paksa</span></div>
               <div className="stat-item"><IonIcon icon={bulbOutline} /><span>Interactive</span></div>   
+              { safeAralinId === 1 &&(
               <div className="animation-stage" onClick={handleVideoTap} aria-label="I-tap para simulan ang video">
                 <video
                   ref={videoRef}
                   className="welcome-video"
-                  src="/assets/video/revisionIntroYcoVid.mp4"
+                  src="/assets/video/revisionIntroYcoVid.mov"
                   playsInline
                   preload="auto"
                 />
@@ -785,7 +797,9 @@ const Quarter1Aralin1: React.FC = () => {
                     <p>Pindutin para simulan ang video</p>
                   </div>
                 )}
+                
               </div>
+              )}
             </div>
           </div>
         </div>
