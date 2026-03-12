@@ -52,18 +52,18 @@ const WelcomeVideoPage: React.FC = () => {
             <video
               ref={videoRef}
               className="welcome-video"
-              src="/assets/video/revisionIntroYcoVid.mp4"
+              src="/assets/video/welcomeVideo.mp4"
               playsInline
               preload="auto"
             />
             <div className="welcome-overlay" />
 
-            {!videoStarted && (
+            {/* {!videoStarted && (
               <div className="tap-to-play-hint">
                 <div className="tap-to-play-icon">▶</div>
                 <p>I-tap para simulan ang video</p>
               </div>
-            )}
+            )} */}
           </div>
 
           {/* Action Panel */}
