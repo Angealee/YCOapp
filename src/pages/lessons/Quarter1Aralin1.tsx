@@ -807,7 +807,7 @@ const Quarter1Aralin1: React.FC = () => {
                 <video
                   ref={videoRef}
                   className="welcome-video"
-                  src="/assets/video/revisionIntroYcoVid.mp4"
+                  src="/assets/video/bugtongSongVideo.mp4"
                   playsInline
                   controls={videoStarted}
                   preload="auto"
