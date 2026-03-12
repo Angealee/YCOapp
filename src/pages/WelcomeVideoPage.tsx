@@ -72,7 +72,7 @@ const WelcomeVideoPage: React.FC = () => {
             <h1 className="welcome-title">Pindutin at Matuto</h1>
             <div className="welcome-chips" aria-hidden="true">
               <span className="welcome-chip chip-lessons">Aralin</span>
-              <span className="welcome-chip chip-quiz">Quiz</span>
+              <span className="welcome-chip chip-quiz">Pagsusulit</span>
               <span className="welcome-chip chip-writing">Sulat</span>
             </div>
             <p className="welcome-subtitle">

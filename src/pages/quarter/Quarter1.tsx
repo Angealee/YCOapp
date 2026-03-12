@@ -130,7 +130,7 @@ const Quarter1: React.FC = () => {
 
                   {/* Card Footer */}
                   <div className="card-footer">
-                    <span className="tap-hint">Tap upang buksan →</span>
+                    <span className="tap-hint">Pindutin upang buksan →</span>
                   </div>
                 </IonCardContent>
               </IonCard>
