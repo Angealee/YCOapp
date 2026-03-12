@@ -98,7 +98,7 @@ const Quarter3: React.FC = () => {
                   <p className="card-description">{cardDescription}</p>
 
                   <div className="card-footer">
-                    <span className="tap-hint">Tap upang buksan →</span>
+                    <span className="tap-hint">Pindutin upang buksan →</span>
                   </div>
                 </IonCardContent>
               </IonCard>

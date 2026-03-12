@@ -421,14 +421,14 @@ const Quiz: React.FC = () => {
                 onClick={() => setShowRetakeAlert(true)}
               >
                 <IonIcon icon={bookOutline} slot="start" />
-                Umuwi sa Aralin
+                Bumalik sa Aralin
               </IonButton>
             </div>
 
             {/* Review section */}
             <div className="review-section-label">
               <IonIcon icon={trophyOutline} />
-              <span>Review ng Mga Sagot</span>
+              <span>Rebyu ng Mga Sagot</span>
             </div>
 
             {results.answers.map((answer, index) => {
@@ -473,8 +473,8 @@ const Quiz: React.FC = () => {
           <IonAlert
             isOpen={showRetakeAlert}
             onDidDismiss={() => setShowRetakeAlert(false)}
-            header="Umuwi sa Aralin"
-            message="Gusto mo bang umuwi sa Aralin 1?"
+            header="Bumalik sa Aralin"
+            message="Gusto mo bang bumalik sa Aralin 1?"
             buttons={[
               { text: 'Hindi', role: 'cancel' },
               { text: 'Oo', handler: () => { window.location.href = `/quarter/${selectedQuarter || 1}/aralin/1`; } },

@@ -71,7 +71,7 @@ const Tabs: React.FC = () => {
           steps: [
             { popover: { title: 'Maligayang pagdating!', description: 'Ito ang maikling gabay kung paano gamitin ang app.' } },
             { element: '[data-tour="tab-home"]',    popover: { title: 'Markahan',   description: 'Dito mo makikita ang mga aralin kada markahan.' } },
-            { element: '[data-tour="tab-quiz"]',    popover: { title: 'Pagsusulit', description: 'Dito ka magsasagot ng quiz para masubukan ang natutunan mo.' } },
+            { element: '[data-tour="tab-quiz"]',    popover: { title: 'Pagsusulit', description: 'Sagutin ang pagsusulit sa bahaging ito upang masubok at masukat ang iyong natamong kaalaman.' } },
             { element: '[data-tour="tab-writing"]', popover: { title: 'Pagsusulat', description: 'Dito mo magagawa ang mga gawain sa pagsulat.' } },
           ],
         });

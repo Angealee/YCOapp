@@ -711,6 +711,35 @@ const Quarter1Aralin1: React.FC = () => {
   const totalAralin  = 4;
   const safeAralinId = Number.isFinite(aralinId) && aralinId >= 1 && aralinId <= totalAralin ? aralinId : 1;
   const nextAralinId = safeAralinId < totalAralin ? safeAralinId + 1 : null;
+    const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoStarted, setVideoStarted] = useState(false);
+
+  // Autoplay fix: start muted, unmute after 300ms
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    video.muted = true;
+    video.play()
+      .then(() => {
+        setTimeout(() => {
+          if (videoRef.current) videoRef.current.muted = false;
+        }, 300);
+        setVideoStarted(true);
+      })
+      .catch(() => {
+        setVideoStarted(false);
+      });
+  }, []);
+
+  const handleVideoTap = () => {
+    const video = videoRef.current;
+    if (!video || videoStarted) return;
+    video.muted = false;
+    video.play()
+      .then(() => setVideoStarted(true))
+      .catch(() => {});
+  };
 
   return (
     <IonPage>
@@ -739,7 +768,24 @@ const Quarter1Aralin1: React.FC = () => {
             <p className="hero-description">{heroDescription}</p>
             <div className="hero-stats">
               <div className="stat-item"><IonIcon icon={sparklesOutline} /><span>1 Paksa</span></div>
-              <div className="stat-item"><IonIcon icon={bulbOutline} /><span>Interactive</span></div>
+              <div className="stat-item"><IonIcon icon={bulbOutline} /><span>Interactive</span></div>   
+              <div className="animation-stage" onClick={handleVideoTap} aria-label="I-tap para simulan ang video">
+                <video
+                  ref={videoRef}
+                  className="welcome-video"
+                  src="/assets/video/revisionIntroYcoVid.mp4"
+                  playsInline
+                  preload="auto"
+                />
+                <div className="welcome-overlay" />
+
+                {!videoStarted && (
+                  <div className="tap-to-play-hint">
+                    <div className="tap-to-play-icon">▶</div>
+                    <p>Pindutin para simulan ang video</p>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
