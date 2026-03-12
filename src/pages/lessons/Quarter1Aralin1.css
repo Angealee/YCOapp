@@ -169,7 +169,7 @@ body, ion-app, ion-content {
   position: absolute;
   font-size: 1.5rem;
   bottom:40px; right: 10%;
-  animation: wobble 4s ease-in-out infinite 0.5s;
+  animation: wobble 4s ease-in-out infinite 0.5s ;
   z-index: 2;
 }
 
