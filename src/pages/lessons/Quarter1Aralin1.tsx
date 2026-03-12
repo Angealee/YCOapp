@@ -428,6 +428,10 @@ const Quarter1Aralin1: React.FC = () => {
     audio.onended = () => { setPlayingCard(null); audioRef.current = null; };
   };
 
+  const watchVideoRef = useRef<HTMLVideoElement | null>(null);
+  const [watchBugtongStarted, setWatchBugtongStarted] = useState(false);
+  const [watchReady, setWatchReady] = useState(false);
+
   useEffect(() => {
     setActiveSection(selectedSectionId);
     setAralinMode('read');
@@ -715,6 +719,19 @@ const Quarter1Aralin1: React.FC = () => {
   const [videoStarted, setVideoStarted] = useState(false);
 
   // Autoplay fix: start muted, unmute after 300ms
+
+  useEffect(() => {
+  if (videoRef.current) {
+    videoRef.current.load();
+    videoRef.current.pause();
+    videoRef.current.currentTime = 0;
+    setVideoStarted(false);
+    setVideoReady(false);
+  }
+}, [safeAralinId]);
+
+  const [videoReady, setVideoReady] = useState(false);
+
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
@@ -740,15 +757,37 @@ const Quarter1Aralin1: React.FC = () => {
 }, []);
 
   const handleVideoTap = () => {
-  const video = videoRef.current;
+    const video = videoRef.current;
+    if (!video) return;
+
+    if(!videoReady) {
+      console.log("Video not ready yet")
+      return;
+    }
+
+    if (video.paused) {
+      video.muted = false;
+      video.volume = 1;
+      video.play();
+      setVideoStarted(true);
+    } else {
+      video.pause();
+    }
+  };
+
+  const handleWatchTapBugtongVideo = () => {
+  const video = watchVideoRef.current;
   if (!video) return;
 
+  if (!watchReady) return;
+
   if (video.paused) {
+    video.muted = false;
+    video.volume = 1;
     video.play();
-    setVideoStarted(true);
+    setWatchBugtongStarted(true);
   } else {
     video.pause();
-    setVideoStarted(false);
   }
 };
 
@@ -781,14 +820,30 @@ const Quarter1Aralin1: React.FC = () => {
               <div className="stat-item"><IonIcon icon={sparklesOutline} /><span>1 Paksa</span></div>
               <div className="stat-item"><IonIcon icon={bulbOutline} /><span>Interactive</span></div>   
               { safeAralinId === 1 &&(
-              <div className="animation-stage" onClick={handleVideoTap} aria-label="I-tap para simulan ang video">
+              <div className="animation-stage">
+
                 <video
                   ref={videoRef}
                   className="welcome-video"
                   src="/assets/video/revisionIntroYcoVid.mov"
                   playsInline
+                  controls={videoStarted}
                   preload="auto"
+                  onCanPlay={() => setVideoReady(true)}
+                  onLoadedMetadata={() => {
+                    if (videoRef.current) {
+                      videoRef.current.muted = false;
+                      videoRef.current.volume = 1;
+                    }
+                  }}
                 />
+                
+                 {/* TAP LAYER */}
+                  <div
+                    className="video-tap-layer"
+                    onClick={handleVideoTap}
+                  />
+
                 <div className="welcome-overlay" />
 
                 {!videoStarted && (
@@ -950,9 +1005,36 @@ const Quarter1Aralin1: React.FC = () => {
                         <div className="card-icon"><IonIcon icon={playCircleOutline} /></div>
                         <h1 className="card-title"><strong>Panonood</strong></h1>
                         <div className="video-container">
-                          <video width="100%" controls>
-                            <source src="/assets/video/YcoBugtong.mp4" type="video/mp4" />
-                          </video>
+                          <video
+                            ref={watchVideoRef}
+                            className="lesson-video"
+                            src="/assets/video/YcoBugtong.mp4"
+                            playsInline
+                            controls={watchBugtongStarted}
+                            preload="auto"
+                            onCanPlay={() => setWatchReady(true)}
+                            onLoadedMetadata={() => {
+                              if (watchVideoRef.current) {
+                                watchVideoRef.current.muted = false;
+                                watchVideoRef.current.volume = 1;
+                              }
+                            }}
+                          />
+                          <div
+                            className="video-tap-layer"
+                            onClick={handleWatchTapBugtongVideo}
+                          />
+                        
+                          {!watchBugtongStarted && (
+                            <div className="tap-to-play-hint" onClick={handleWatchTapBugtongVideo}>
+                              {/* <div className="tap-to-play-icon">▶</div> */}
+                                <p style={{color:'White', fontWeight:"10", fontSize:"20px", outline:""}}>Pindutin ang video</p>
+                            </div>  
+                          )}
+
+
+
+                          
                         </div>
                       </IonCardContent>
                     </IonCard>
