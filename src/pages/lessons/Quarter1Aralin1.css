@@ -557,7 +557,7 @@ body, ion-app, ion-content {
 
 .card-title {
   font-family: 'Baloo 2', cursive;
-  font-size: 1.3rem;
+  font-size: 2rem;
   font-weight: 800;
   margin: 0 0 1.1rem;
   color: rgb(0, 0, 0);
@@ -570,6 +570,7 @@ body, ion-app, ion-content {
   flex-direction: column;
   gap: 0.85rem;
   margin-bottom: 0.75rem;
+  font-size: 1.5rem;
 }
 
 .list-item {
@@ -616,6 +617,16 @@ body, ion-app, ion-content {
   overflow: hidden;
   box-shadow: 0 6px 0 rgba(0,0,0,0.15), 0 10px 30px rgba(0,0,0,0.2);
   border: 3px solid rgba(255,255,255,0.3);
+}
+
+.video-tap-layer {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+}
+
+.welcome-overlay {
+  pointer-events: none;
 }
 
 .video-container video {
@@ -1168,11 +1179,14 @@ ion-button[expand="block"].game-button::before {
 @media (min-width: 768px) {
   .content-wrapper { padding: 0 2rem 2rem; }
   .aralin-hero { padding: 3rem 2rem 4rem; }
-  .hero-main-title { font-size: 2.4rem; }
   .info-cards-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
   .hero-stats .animation-stage {
     flex-basis: min(100%, 560px);
   }
+}
+
+.hero-main-title {
+  font-size: 2.5rem !important;
 }
 
 .bottom-spacing { height: 2.5rem; }
