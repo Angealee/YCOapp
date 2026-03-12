@@ -35,7 +35,8 @@ import {
   playCircleOutline,
   chevronForwardOutline,
   chevronBackOutline,
-  checkmarkCircleOutline
+  checkmarkCircleOutline,
+  watch
 } from 'ionicons/icons';
 
 import './Quarter1Aralin1.css';
@@ -749,47 +750,30 @@ const Quarter1Aralin1: React.FC = () => {
       });
   }, []);
 
-  useEffect(() => {
-  if (videoRef.current) {
-    videoRef.current.pause();
-    videoRef.current.currentTime = 0;
-  }
-}, []);
-
   const handleVideoTap = () => {
     const video = videoRef.current;
-    if (!video) return;
+    if (!video || videoStarted) return;
+    video.muted = false;
+    video.play()
+      .then(() => setVideoStarted(true))
+      .catch(() => {});
+  };
 
-    if(!videoReady) {
-      console.log("Video not ready yet")
-      return;
-    }
+  const handleWatchTapBugtongVideo = () => {
+    const video = watchVideoRef.current;
+    if (!video) return;
+    
+    if (!watchReady) return;
 
     if (video.paused) {
       video.muted = false;
       video.volume = 1;
       video.play();
-      setVideoStarted(true);
-    } else {
+      setWatchBugtongStarted(true);
+    }else {
       video.pause();
     }
-  };
-
-  const handleWatchTapBugtongVideo = () => {
-  const video = watchVideoRef.current;
-  if (!video) return;
-
-  if (!watchReady) return;
-
-  if (video.paused) {
-    video.muted = false;
-    video.volume = 1;
-    video.play();
-    setWatchBugtongStarted(true);
-  } else {
-    video.pause();
   }
-};
 
   return (
     <IonPage>
@@ -819,13 +803,11 @@ const Quarter1Aralin1: React.FC = () => {
             <div className="hero-stats">
               <div className="stat-item"><IonIcon icon={sparklesOutline} /><span>1 Paksa</span></div>
               <div className="stat-item"><IonIcon icon={bulbOutline} /><span>Interactive</span></div>   
-              { safeAralinId === 1 &&(
-              <div className="animation-stage">
-
+              <div className="animation-stage" onClick={handleVideoTap} aria-label="I-tap para simulan ang video">
                 <video
                   ref={videoRef}
                   className="welcome-video"
-                  src="/assets/video/bugtongSongVideo.mp4"
+                  src="/assets/video/revisionIntroYcoVid.mp4"
                   playsInline
                   controls={videoStarted}
                   preload="auto"
@@ -852,9 +834,7 @@ const Quarter1Aralin1: React.FC = () => {
                     <p>Pindutin para simulan ang video</p>
                   </div>
                 )}
-                
               </div>
-              )}
             </div>
           </div>
         </div>
