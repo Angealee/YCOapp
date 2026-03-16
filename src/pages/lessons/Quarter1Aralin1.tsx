@@ -428,12 +428,20 @@ const Quarter1Aralin1: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const aralinId = Number(id);
 
-  const sectionIdByAralin: Record<number, 'bugtong' | 'palaisipan' | 'tanaga' | 'salawikain'> = {
-    1: 'bugtong',
-    2: 'palaisipan',
-    3: 'tanaga',
-    4: 'salawikain',
-  };
+  const sectionIdByAralin: Record<
+  number,
+  'bugtong' | 'palaisipan' | 'tanaga' | 'salawikain' | 'biswal' | 'hudhud' | 'ekspositori' | 'sanhi'
+> = {
+  1: 'bugtong',
+  2: 'palaisipan',
+  3: 'tanaga',
+  4: 'salawikain',
+  5: 'biswal',
+  6: 'hudhud',
+  7: 'ekspositori',
+  8: 'sanhi',
+};
+
   const selectedSectionId = sectionIdByAralin[aralinId] ?? 'bugtong';
 
   const [aralinMode, setAralinMode]       = useState<AralinMode>('read');
