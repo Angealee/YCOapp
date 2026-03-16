@@ -68,6 +68,13 @@ const SECTION_GIFS: Record<string, { src: string; alt: string; bgClass: string }
   salawikain: { src: '/assets/gif/Orasan.gif', alt: 'Salawikain aral!',  bgClass: 'gif-salawikain' },
 };
 
+const HERO_VIDEOS: Record<string, string> = {
+  bugtong: "/assets/video/bugtongSongVideo.mp4",
+  palaisipan: "/assets/video/YcoPalaisipanMusic.mp4",
+  tanaga: "/assets/video/YcoTanagaMusic.mp4",
+  salawikain: "/assets/video/YcoSalawikainMusic.mp4",
+};
+
 const BUGTONG_ANSWER_GIFS: Record<string, string> = {
   cellphone:  '/assets/gif/Cellphone.gif',
   kalendaryo: '/assets/gif/kalendaryo.gif',
@@ -792,12 +799,12 @@ const Quarter1Aralin1: React.FC = () => {
               <div className="stat-item"><IonIcon icon={sparklesOutline} /><span>1 Paksa</span></div>
               <div className="stat-item"><IonIcon icon={bulbOutline} /><span>Interactive</span></div>   
               
-            { safeAralinId === 1 && (
+            { safeAralinId && (
               <div className="animation-stage">
                 <video
                   ref={videoRef}
                   className="welcome-video"
-                  src="/assets/video/bugtongSongVideo.mp4"
+                  src={HERO_VIDEOS[selectedSectionId]}
                   playsInline
                   controls={videoStarted}
                   preload="auto"
@@ -1156,129 +1163,252 @@ const Quarter1Aralin1: React.FC = () => {
               <IonAccordion value="palaisipan" className="modern-accordion">
                 <IonItem slot="header" className="accordion-header" lines="none">
                   <div className="header-content">
-                    <div className="header-icon palaisipan-icon"><IonIcon icon={sparklesOutline} /></div>
+                    <div className="header-icon palaisipan-icon">
+                      <IonIcon icon={sparklesOutline} />
+                    </div>
+                    
                     <div className="header-text">
                       <IonLabel className="accordion-title">Pala-isipan</IonLabel>
                       <p className="accordion-subtitle">Lohikal na Hamon</p>
                     </div>
                   </div>
                 </IonItem>
+
                 <div className="accordion-content" slot="content">
-                  <div className="content-intro">
-                    <IonText className="intro-text">
-                      Ang palaisipan ay isang uri ng patalinghagang tanong o sitwasyon na layuning hamunin ang isipan ng isang tao. Hindi tuwiran ang sagot; kailangan ng lohikal na pagiisip, obserbasyon, at malikhaing pag-aanalisa upang matuklasan ang kasagutan.
-                    </IonText>
-                  </div>
+
+                  {/* ✅ Definition modal from Aralin2 */}
+                  <DefinitionModal
+                    cardTitle="Ano ang Palaisipan?"
+                    cardSubtitle="Pindutin para basahin"
+                    icon={sparklesOutline}
+                    definition="Ang palaisipan ay isang uri ng patalinghagang tanong o sitwasyon na layuning hamunin ang isipan."
+                  />
+
+                  {/* ✅ Expandable cards from Aralin2 */}
                   <IonCard className="info-card gradient-pink">
                     <IonCardContent>
-                      <div className="card-icon"><IonIcon icon={sparklesOutline} /></div>
-                      <h1 className="card-title"><strong>Katangian ng Palaisipan</strong></h1>
-                      <div className="card-list">
-                        {[
-                          'May halong palaisipan at paglalarawan – kadalasan ay patula o may malikhaing pahayag.',
-                          'Hindi literal ang sagot – kailangan gumamit ng isip at malikhain.',
-                          'Nagpapakita ng lohika at kaalaman sa wika – nakatutulong sa pagpapatalas ng isip.',
-                          'Maikli at madaling tandaan – kadalasang may ritmo o sukat.',
-                        ].map((text, i) => (
-                          <div key={i} className="list-item">
-                            <span className="item-number">{i + 1}</span>
-                            <div><p>{text}</p></div>
-                          </div>
-                        ))}
+
+                      <div className="card-icon">
+                        <IonIcon icon={sparklesOutline} />
                       </div>
+
+                      <h1 className="card-title">
+                        <strong>Katangian ng Palaisipan</strong>
+                      </h1>
+
+                      <div className="card-list">
+
+                        <ExpandableItem
+                          number={1}
+                          title="May halong palaisipan"
+                          description="May malikhaing paglalarawan"
+                        />
+
+                        <ExpandableItem
+                          number={2}
+                          title="Hindi literal"
+                          description="Kailangan ng lohika"
+                        />
+
+                        <ExpandableItem
+                          number={3}
+                          title="Nagpapatalas ng isip"
+                          description="Pinapagana ang utak"
+                        />
+
+                        <ExpandableItem
+                          number={4}
+                          title="Maikli"
+                          description="Madaling tandaan"
+                        />
+
+                      </div>
+
                     </IonCardContent>
                   </IonCard>
 
+                  {/* ✅ Modes (from Aralin2) */}
                   <div className="action-chips">
-                    {(['read', 'watch', 'listen', 'play'] as AralinMode[]).map((mode) => (
-                      <IonChip key={mode} className={`modern-chip ${aralinMode === mode ? 'active' : ''}`} onClick={() => setAralinMode(mode)}>
-                        <IonIcon icon={mode === 'read' ? bookOutline : mode === 'watch' ? playCircleOutline : mode === 'listen' ? volumeHighOutline : gameControllerOutline} />
-                        <IonLabel>{mode === 'read' ? 'Pagbasa' : mode === 'watch' ? 'Panonood' : mode === 'listen' ? 'Pakikinig' : 'Paglalaro'}</IonLabel>
+
+                    {(['read','watch','listen','play'] as AralinMode[]).map(mode => (
+
+                      <IonChip
+                        key={mode}
+                        className={`modern-chip ${aralinMode === mode ? 'active' : ''}`}
+                        onClick={() => setAralinMode(mode)}
+                      >
+
+                        <IonIcon
+                          icon={
+                            mode === 'read'
+                              ? bookOutline
+                              : mode === 'watch'
+                              ? playCircleOutline
+                              : mode === 'listen'
+                              ? volumeHighOutline
+                              : gameControllerOutline
+                          }
+                        />
+
+                        <IonLabel>
+                          {mode === 'read'
+                            ? 'Pagbasa'
+                            : mode === 'watch'
+                            ? 'Panonood'
+                            : mode === 'listen'
+                            ? 'Pakikinig'
+                            : 'Paglalaro'}
+                        </IonLabel>
+
                       </IonChip>
+
                     ))}
+
                   </div>
 
+                  {/* ✅ Read mode */}
                   {aralinMode === 'read' && (
+
                     <div className="palaisipan-examples">
+
                       {[
-                        { id: 5, label: 'Tanong 1', riddle: 'Ano ang bagay na habang kinukuha mo ay lalo mong pinapalaki?', answer: 'Butas' },
-                        { id: 6, label: 'Tanong 2', riddle: 'Anong hayop ang may apat na paa kapag bata, dalawa kapag matanda?', answer: 'Tao' },
-                        { id: 7, label: 'Tanong 3', riddle: 'Ano ang bagay na kahit puno pa ay hindi tumatanda?', answer: 'Bato' },
-                      ].map((item) => (
-                        <IonCard key={item.id} className="example-card gradient-blue">
+                        {
+                          id:1,
+                          riddle:"Ano ang bagay na habang kinukuha mo ay lalo mong pinapalaki?",
+                          answer:"Butas"
+                        },
+                        {
+                          id:2,
+                          riddle:"Anong hayop ang may apat na paa kapag bata, dalawa kapag matanda?",
+                          answer:"Tao"
+                        },
+                      ].map(item => (
+
+                        <IonCard key={item.id}>
+
                           <IonCardContent>
-                            <div className="example-text">
-                              <div className="example-label">
-                                <IonIcon icon={bulbOutline} />
-                                <span>{item.label}</span>
-                              </div>
-                              <p className="riddle-text">{item.riddle}</p>
-                              <div className="answer-toggle">
-                                <IonButton fill="clear" size="small" onClick={() => toggleAnswer(item.id)}>
-                                  <IonIcon icon={eyeOutline} slot="start" />
-                                  {showAnswers[item.id] ? 'Itago ang Sagot' : 'Ipakita ang Sagot'}
-                                </IonButton>
-                              </div>
-                              {showAnswers[item.id] && (
-                                <AnswerRevealWithGif sectionId="palaisipan" icon={sparklesOutline} label={`Sagot: ${item.answer}`} />
-                              )}
-                            </div>
+
+                            <p>{item.riddle}</p>
+
+                            <IonButton
+                              fill="clear"
+                              onClick={() => toggleAnswer(item.id)}
+                            >
+                              Ipakita
+                            </IonButton>
+
+                            {showAnswers[item.id] && (
+
+                              <AnswerRevealWithGif
+                                sectionId="palaisipan"
+                                icon={sparklesOutline}
+                                label={`Sagot: ${item.answer}`}
+                              />
+
+                            )}
+
                           </IonCardContent>
+
                         </IonCard>
+
                       ))}
+
                     </div>
+
                   )}
+
+                  {/* Panonood mode */}
                   {aralinMode === 'watch' && (
+
                     <IonCard className="info-card gradient-blue">
                       <IonCardContent>
-                        <div className="card-icon"><IonIcon icon={playCircleOutline} /></div>
-                        <h1 className="card-title"><strong>Panonood</strong></h1>
-                        <p className="mode-description">Pagmasdan ang mga pahiwatig at larawan/eksena sa palaisipan.</p>
+
+                        <div className="card-icon">
+                          <IonIcon icon={playCircleOutline} />
+                        </div>
+
+                        <h1 className="card-title">
+                          <strong>Panonood</strong>
+                        </h1>
+
+                        <div className="video-container">
+
+                          <video
+                            ref={watchVideoRef}
+                            className="lesson-video"
+                            src="/assets/video/YcoPalaisipan.mp4"
+                            playsInline
+                            controls={watchBugtongStarted}
+                            preload="auto"
+                            onCanPlay={() => setWatchReady(true)}
+                          />
+
+                          <div
+                            className="video-tap-layer"
+                            onClick={handleWatchTapBugtongVideo}
+                          />
+
+                        </div>
+
                       </IonCardContent>
                     </IonCard>
+
                   )}
+                  
+                  {/* Pakikinig Mode */}
                   {aralinMode === 'listen' && (
-                    <IonCard className="info-card gradient-green">
-                      <IonCardContent>
-                        <div className="card-icon"><IonIcon icon={volumeHighOutline} /></div>
-                        <h1 className="card-title"><strong>Pakikinig</strong></h1>
-                        <p className="mode-description">Basahin nang malakas ang palaisipan at pakinggan ang mga salitang may diin.</p>
-                      </IonCardContent>
-                    </IonCard>
-                  )}
-                  {aralinMode === 'play' && (
-                    <>
-                      <div className="action-chips">
-                        <IonChip
-                          className={`modern-chip ${palaisipanPlayMode === 'quiz' ? 'active' : ''}`}
-                          onClick={() => setPalaisipanPlayMode('quiz')}
-                        >
-                          <IonIcon icon={gameControllerOutline} />
-                          <IonLabel>Paglalaro 1</IonLabel>
-                        </IonChip>
-                        <IonChip
-                          className={`modern-chip ${palaisipanPlayMode === 'word' ? 'active' : ''}`}
-                          onClick={() => setPalaisipanPlayMode('word')}
-                        >
-                          <IonIcon icon={sparklesOutline} />
-                          <IonLabel>Paglalaro 2</IonLabel>
-                        </IonChip>
+
+                  <IonCard className="info-card gradient-green">
+                    <IonCardContent>
+
+                      <div className="card-icon">
+                        <IonIcon icon={volumeHighOutline} />
                       </div>
-                      {palaisipanPlayMode === 'quiz'
-                        ? renderQuiz('palaisipan', 'Tanong', 'Piliin ang tamang sagot para sa bawat palaisipan.')
-                        : (
-                          <IonCard className="info-card puzzle-card">
-                            <IonCardContent>
-                              <WordSearchFillBlankGame
-                                title="Paglalaro 2: Hanapin ang Salita"
-                                items={palaisipanWordSearchItems}
-                              />
-                            </IonCardContent>
-                          </IonCard>
-                        )}
-                    </>
-                  )}
+
+                      <h1 className="card-title">
+                        <strong>Pakikinig</strong>
+                      </h1>
+
+                      <div className="audio-container">
+
+                        <audio controls>
+                          <source src="/assets/audio/palaisipan1.aac" />
+                        </audio>
+
+                      </div>
+
+                      <div className="audio-container">
+
+                        <audio controls>
+                          <source src="/assets/audio/palaisipan2.aac" />
+                        </audio>
+
+                      </div>
+
+                      <div className="audio-container">
+
+                        <audio controls>
+                          <source src="/assets/audio/palaisipan3.aac" />
+                        </audio>
+
+                      </div>
+
+                    </IonCardContent>
+                  </IonCard>
+
+                )}
+
+                  {/* ✅ play mode still uses renderQuiz */}
+                  {aralinMode === 'play' &&
+                    renderQuiz(
+                      "palaisipan",
+                      "Tanong",
+                      "Piliin ang sagot"
+                    )
+                  }
+
                 </div>
+
               </IonAccordion>
             )}
 

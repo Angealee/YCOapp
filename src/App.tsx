@@ -23,7 +23,6 @@ import { SplashScreen } from '@capacitor/splash-screen';
 
 import Quarter1 from './pages/quarter/Quarter1';
 import Quarter1Aralin1 from './pages/lessons/Quarter1Aralin1';
-import Quarter1Aralin2 from './pages/lessons/Quarter1Aralin2';
 import Quarter2Aralin1 from './pages/lessons/Quarter2Aralin1';
 import Quarter2 from './pages/quarter/Quarter2';
 import Quarter3 from './pages/quarter/Quarter3';
@@ -92,19 +91,19 @@ const Tabs: React.FC = () => {
   return (
     <IonTabs>
       <IonRouterOutlet>
-        <Route exact path="/home" component={Home} />
-        <Route exact path="/quiz" component={Quiz} />
-        <Route exact path="/quiz/take/:quarter" component={Quiz} />
-        <Route exact path="/pagsusulat" component={Pagsusulat} />
-        <Route exact path="/pagsusulat/:quarter"component={Pagsusulat} />
-        <Route exact path="/pagsusulat/:quarter/:aralin" component={Pagsusulat} />
-        <Route exact path="/setting"component={Setting} />
-        <Route exact path="/quarter/1" component={Quarter1} />
-        <Route exact path="/quarter/1/aralin/1" component={Quarter1Aralin1} />
-        <Route exact path="/quarter/1/aralin/2" component={Quarter1Aralin2} />
-        <Route exact path="/quarter/2" component={Quarter2} />
-        <Route exact path="/quarter/3" component={Quarter3} />
-        <Route exact path="/quarter/3/aralin/:id" component={Quarter3Aralin} />
+        <Route exact path="/home"                          component={Home} />
+        <Route exact path="/quiz"                          component={Quiz} />
+        <Route exact path="/quiz/take/:quarter"            component={Quiz} />
+        <Route exact path="/pagsusulat"                    component={Pagsusulat} />
+        <Route exact path="/pagsusulat/:quarter"           component={Pagsusulat} />
+        <Route exact path="/pagsusulat/:quarter/:aralin"   component={Pagsusulat} />
+        <Route exact path="/setting"                       component={Setting} />
+        <Route exact path="/quarter/1"                     component={Quarter1} />
+        <Route exact path="/quarter/1/aralin/:id"          component={Quarter1Aralin1} />
+        <Route exact path="/quarter/2"                     component={Quarter2} />
+        <Route exact path="/quarter/2/aralin/:id"          component={Quarter2Aralin1} />
+        <Route exact path="/quarter/3"                     component={Quarter3} />
+        <Route exact path="/quarter/3/aralin/:id"          component={Quarter3Aralin} />
         <Route exact path="/">
           <Redirect to="/home" />
         </Route>
