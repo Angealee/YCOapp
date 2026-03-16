@@ -428,30 +428,31 @@ const Quarter1Aralin2: React.FC = () => {
     }
   }, [safeAralinId]);
 
-  useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    video.muted = true;
-    video.play()
-      .then(() => {
-        setTimeout(() => {
-          if (videoRef.current) videoRef.current.muted = false;
-        }, 300);
-        setVideoStarted(true);
-      })
-      .catch(() => {
-        setVideoStarted(false);
-      });
-  }, []);
+// ✅ Remove the auto-play useEffect entirely, keep only the reset one:
+useEffect(() => {
+  if (videoRef.current) {
+    videoRef.current.load();
+    videoRef.current.pause();
+    videoRef.current.currentTime = 0;
+    setVideoStarted(false);
+    setVideoReady(false);
+  }
+}, [safeAralinId]);
 
   const handleVideoTap = () => {
     const video = videoRef.current;
-    if (!video || videoStarted) return;
-    video.muted = false;
-    video.play()
-      .then(() => setVideoStarted(true))
-      .catch(() => {});
+    if (!video) return;
+
+    if (!videoReady) return;
+
+    if (video.paused) {
+      video.muted = false;
+      video.volume = 1;
+      video.play();
+      setVideoStarted(true);
+    } else {
+      video.pause();
+    }
   };
 
   const handleWatchTapPalaisipanVideo = () => {
@@ -498,9 +499,9 @@ const Quarter1Aralin2: React.FC = () => {
             <div className="hero-stats">
               <div className="stat-item"><IonIcon icon={sparklesOutline} /><span>1 Paksa</span></div>
               <div className="stat-item"><IonIcon icon={bulbOutline} /><span>Interactive</span></div>
-              <div className="animation-stage" onClick={handleVideoTap} aria-label="I-tap para simulan ang video">
-                
-                {/* PALAISIPAN VIDEO */}
+              
+              {/* Video Palaisipan */}
+              <div className="animation-stage">
                 <video
                   ref={videoRef}
                   className="welcome-video"
@@ -517,7 +518,12 @@ const Quarter1Aralin2: React.FC = () => {
                   }}
                 />
                 
-                <div className="video-tap-layer" onClick={handleVideoTap} />
+                 {/* TAP LAYER */}
+                  <div
+                    className="video-tap-layer"
+                    onClick={handleVideoTap}
+                  />
+
                 <div className="welcome-overlay" />
 
                 {!videoStarted && (
