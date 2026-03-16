@@ -171,6 +171,114 @@ export const quarter1Lesson1 = {
           `,
           answer: "Anino"
         },
+
+      {
+        id: "biswal",
+        title: "Pagsusuring Biswal",
+        subtitle: "Komiks",
+        intro:
+          "Ang komiks ay isang anyo ng panitikan na gumagamit ng larawan at teksto upang magkuwento.",
+
+        characteristics: [
+          {
+            title: "May larawan at teksto",
+            description: "Pinagsasama ang drawing at salita."
+          },
+          {
+            title: "May panel",
+            description: "Hinahati sa kahon ang eksena."
+          },
+          {
+            title: "May tauhan",
+            description: "May gumaganap sa kuwento."
+          },
+          {
+            title: "May diyalogo",
+            description: "Usapan ng mga tauhan."
+          }
+        ]
+      },
+
+      {
+        id: "hudhud",
+        title: "Hudhud",
+        subtitle: "Epiko ng Ifugao",
+        intro:
+          "Ang Hudhud ay epiko ng mga Ifugao na inaawit sa pagtatanim at pag-aani.",
+
+        characteristics: [
+          {
+            title: "Epiko",
+            description: "Mahabang kuwento ng bayani."
+          },
+          {
+            title: "Inaawit",
+            description: "Kinakanta sa tradisyon."
+          },
+          {
+            title: "Kultura",
+            description: "Nagpapakita ng paniniwala."
+          },
+          {
+            title: "Pamana",
+            description: "Ipinapasa sa susunod na henerasyon."
+          }
+        ]
+      },
+
+      {
+        id: "ekspositori",
+        title: "Tekstong Ekspositori",
+        subtitle: "Pagkakatulad at Pagkakaiba",
+        intro:
+          "Ang tekstong ekspositori ay nagpapaliwanag at nagbibigay impormasyon.",
+
+        characteristics: [
+          {
+            title: "Nagbibigay impormasyon",
+            description: "Layunin ay magpaliwanag."
+          },
+          {
+            title: "May panimula",
+            description: "Ipinapakilala ang paksa."
+          },
+          {
+            title: "May katawan",
+            description: "Detalye ng paliwanag."
+          },
+          {
+            title: "May wakas",
+            description: "Buod ng paksa."
+          }
+        ]
+      },
+
+      {
+        id: "sanhi",
+        title: "Sanhi at Bunga",
+        subtitle: "Pagpapasya at Pananagutan",
+        intro:
+          "Ang sanhi ay dahilan at ang bunga ay resulta ng ginawa.",
+
+        characteristics: [
+          {
+            title: "Sanhi",
+            description: "Dahilan ng pangyayari."
+          },
+          {
+            title: "Bunga",
+            description: "Resulta ng ginawa."
+          },
+          {
+            title: "Pagpapasya",
+            description: "Pagpili ng gagawin."
+          },
+          {
+            title: "Pananagutan",
+            description: "Tanggapin ang resulta."
+          }
+        ]
+      }
       ]
     },
 

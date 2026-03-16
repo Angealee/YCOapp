@@ -389,6 +389,41 @@ const shuffleArray = <T,>(items: T[]): T[] => {
   return copy;
 };
 
+const lessonMeta: Record<string, { title: string; desc: string }> = {
+  "1": {
+    title: "Bugtong",
+    desc: "Palaisipang Panitikan",
+  },
+  "2": {
+    title: "Palaisipan",
+    desc: "Lohikal na Hamon",
+  },
+  "3": {
+    title: "Tanaga",
+    desc: "Tulang Pilipino",
+  },
+  "4": {
+    title: "Salawikain",
+    desc: "Karunungan ng Bayan",
+  },
+  "5": {
+    title: "Pagsusuring Biswal",
+    desc: "Komiks",
+  },
+  "6": {
+    title: "Hudhud",
+    desc: "Epiko ng Ifugao",
+  },
+  "7": {
+    title: "Tekstong Ekspositori",
+    desc: "Pagkakatulad at Pagkakaiba",
+  },
+  "8": {
+    title: "Sanhi at Bunga",
+    desc: "Pagpapasya at Pananagutan",
+  },
+};
+
 const Quarter1Aralin1: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const aralinId = Number(id);
@@ -720,7 +755,7 @@ const Quarter1Aralin1: React.FC = () => {
     return quarter1Lesson1.meta.description;
   }, [selectedSectionId, bugtongSection?.intro]);
 
-  const totalAralin  = 4;
+  const totalAralin  = 8;
   const safeAralinId = Number.isFinite(aralinId) && aralinId >= 1 && aralinId <= totalAralin ? aralinId : 1;
   const nextAralinId = safeAralinId < totalAralin ? safeAralinId + 1 : null;
     const videoRef = useRef<HTMLVideoElement>(null);
@@ -794,7 +829,13 @@ const Quarter1Aralin1: React.FC = () => {
           <div className="hero-bg-gradient" />
           <div className="hero-content-wrapper">
             <div className="hero-icon-badge"><IonIcon icon={bookOutline} /></div>
-            <h1 className="hero-main-title">{heroTitle}</h1>
+            <h1 className="hero-main-title">
+              {lessonMeta[id]?.title || "Aralin"}
+            </h1>
+
+            <p className="hero-description">
+              {lessonMeta[id]?.desc || ""}
+            </p>
             <div className="hero-stats">
               <div className="stat-item"><IonIcon icon={sparklesOutline} /><span>1 Paksa</span></div>
               <div className="stat-item"><IonIcon icon={bulbOutline} /><span>Interactive</span></div>   
@@ -951,17 +992,17 @@ const Quarter1Aralin1: React.FC = () => {
                                 <span>{example.label}</span>
                               </div>
                               <p className="riddle-text">
-                                {example.text.split('\n').map((line, i) => (
+                                {(example.text || "").split('\n').map((line, i) => (
                                   <span key={i}>{line}<br /></span>
                                 ))}
                               </p>
                               <div className="answer-toggle">
-                                <IonButton fill="clear" size="small" onClick={() => toggleAnswer(example.id)}>
+                                <IonButton fill="clear" size="small" onClick={() => toggleAnswer(Number(example.id))}>
                                   <IonIcon icon={eyeOutline} slot="start" />
-                                  {showAnswers[example.id] ? 'Itago ang Sagot' : 'Ipakita ang Sagot'}
+                                  {showAnswers[Number(example.id)] ? 'Itago ang Sagot' : 'Ipakita ang Sagot'}
                                 </IonButton>
                               </div>
-                              {showAnswers[example.id] && (
+                              {showAnswers[Number(example.id)] && (
                                 <AnswerRevealWithGif
                                   sectionId="bugtong"
                                   icon={bulbOutline}
@@ -1642,6 +1683,223 @@ const Quarter1Aralin1: React.FC = () => {
                 </div>
               </IonAccordion>
             )}
+
+            {id === "5" && (
+              <IonAccordion value="biswal" className="modern-accordion">
+                <IonItem slot="header" className="accordion-header">
+                  <div className="header-content">
+                    <div className="header-icon palaisipan-icon">
+                      <IonIcon icon={bookOutline} />
+                    </div>
+                    <div className="header-text">
+                      <h2 className="accordion-title">Pagsusuring Biswal</h2>
+                      <p className="accordion-subtitle">Komiks</p>
+                    </div>
+                  </div>
+                </IonItem>
+
+                <div slot="content" className="accordion-content">
+
+                  <div className="info-card gradient-blue">
+                    <IonCardContent>
+
+                      <h3 className="card-title">Kahulugan</h3>
+
+                      <div className="card-list">
+
+                        <div className="list-item">
+                          <p>
+                            Ang komiks ay kuwento na gumagamit ng larawan at teksto.
+                          </p>
+                        </div>
+
+                        <div className="list-item">
+                          <p>
+                            Ginagamit ito upang ipakita ang kilos, damdamin, at pangyayari.
+                          </p>
+                        </div>
+
+                        <div className="list-item">
+                          <p>
+                            May panel, dialogue, tauhan, at banghay.
+                          </p>
+                        </div>
+
+                      </div>
+
+                    </IonCardContent>
+                  </div>
+
+                </div>
+              </IonAccordion>
+              )}
+
+
+              {id === "6" && (
+                <IonAccordion value="hudhud" className="modern-accordion">
+
+                <IonItem slot="header" className="accordion-header">
+                <div className="header-content">
+
+                <div className="header-icon tanaga-icon">
+                <IonIcon icon={bookOutline} />
+                </div>
+
+                <div className="header-text">
+                <h2 className="accordion-title">Hudhud</h2>
+                <p className="accordion-subtitle">Epiko ng Ifugao</p>
+                </div>
+
+                </div>
+                </IonItem>
+
+                <div slot="content" className="accordion-content">
+
+                <div className="info-card gradient-green">
+                <IonCardContent>
+
+                <h3 className="card-title">Kahulugan</h3>
+
+                <div className="card-list">
+
+                <div className="list-item">
+                <p>
+                Ang Hudhud ay epiko ng mga Ifugao.
+                </p>
+                </div>
+
+                <div className="list-item">
+                <p>
+                Inaawit ito sa pagtatanim at ani.
+                </p>
+                </div>
+
+                <div className="list-item">
+                <p>
+                Naglalaman ng kuwento ng bayani.
+                </p>
+                </div>
+
+                </div>
+
+                </IonCardContent>
+                </div>
+
+                </div>
+                </IonAccordion>
+                )}
+
+                {id === "7" && (
+                  <IonAccordion value="ekspositori" className="modern-accordion">
+
+                  <IonItem slot="header" className="accordion-header">
+                  <div className="header-content">
+
+                  <div className="header-icon salawikain-icon">
+                  <IonIcon icon={bookOutline} />
+                  </div>
+
+                  <div className="header-text">
+                  <h2 className="accordion-title">Tekstong Ekspositori</h2>
+                  <p className="accordion-subtitle">Pagkakatulad at Pagkakaiba</p>
+                  </div>
+
+                  </div>
+                  </IonItem>
+
+                  <div slot="content" className="accordion-content">
+
+                  <div className="info-card gradient-purple">
+                  <IonCardContent>
+
+                  <h3 className="card-title">Kahulugan</h3>
+
+                  <div className="card-list">
+
+                  <div className="list-item">
+                  <p>
+                  Nagbibigay impormasyon ang tekstong ekspositori.
+                  </p>
+                  </div>
+
+                  <div className="list-item">
+                  <p>
+                  Ipinapakita ang pagkakatulad at pagkakaiba.
+                  </p>
+                  </div>
+
+                  <div className="list-item">
+                  <p>
+                  May panimula, katawan, at wakas.
+                  </p>
+                  </div>
+
+                  </div>
+
+                  </IonCardContent>
+                  </div>
+
+                  </div>
+                  </IonAccordion>
+                  )}
+
+                  {id === "8" && (
+                  <IonAccordion value="sanhi" className="modern-accordion">
+
+                  <IonItem slot="header" className="accordion-header">
+                  <div className="header-content">
+
+                  <div className="header-icon bugtong-icon">
+                  <IonIcon icon={bookOutline} />
+                  </div>
+
+                  <div className="header-text">
+                  <h2 className="accordion-title">Sanhi at Bunga</h2>
+                  <p className="accordion-subtitle">Pagpapasya at Pananagutan</p>
+                  </div>
+
+                  </div>
+                  </IonItem>
+
+                  <div slot="content" className="accordion-content">
+
+                  <div className="info-card gradient-orange">
+                  <IonCardContent>
+
+                  <h3 className="card-title">Kahulugan</h3>
+
+                  <div className="card-list">
+
+                  <div className="list-item">
+                  <p>
+                  Sanhi ang dahilan ng pangyayari.
+                  </p>
+                  </div>
+
+                  <div className="list-item">
+                  <p>
+                  Bunga ang resulta ng ginawa.
+                  </p>
+                  </div>
+
+                  <div className="list-item">
+                  <p>
+                  May pananagutan sa bawat desisyon.
+                  </p>
+                  </div>
+
+                  </div>
+
+                  </IonCardContent>
+                  </div>
+
+                  </div>
+                  </IonAccordion>
+                  )}
+
+
+
+
 
           </IonAccordionGroup>
 

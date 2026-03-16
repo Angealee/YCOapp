@@ -39,4 +39,36 @@ export const quarter1Aralin: Aralin[] = [
       "Pag-unawa sa salawikain at pagkuha ng aral mula sa mga kasabihan.",
     progress: 0.1,
   },
+  {
+    id: 5,
+    title: "Aralin 5",
+    subtitle: "Pagsusuring Biswal",
+    description: "Pagkilala sa komiks at pagsusuri ng biswal.",
+    progress: 0,
+  },
+
+  {
+    id: 6,
+    title: "Aralin 6",
+    subtitle: "Hudhud",
+    description: "Epiko ng Ifugao at tradisyong Pilipino.",
+    progress: 0,
+  },
+
+  {
+    id: 7,
+    title: "Aralin 7",
+    subtitle: "Tekstong Ekspositori",
+    description: "Pagkakatulad at pagkakaiba.",
+    progress: 0,
+  },
+
+  {
+    id: 8,
+    title: "Aralin 8",
+    subtitle: "Sanhi at Bunga",
+    description: "Pagpapasya at pananagutan.",
+    progress: 0,
+  },
+  
 ];
