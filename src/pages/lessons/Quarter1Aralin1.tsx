@@ -697,6 +697,138 @@ const Quarter1Aralin1: React.FC = () => {
     []
   );
 
+  const komiksExamples = useMemo(
+    () => [
+      {
+        id: 51,
+        label: 'Halimbawa 1',
+        text: 'Sa unang panel, makikitang nakakunot-noo ang bata habang hawak ang basang payong. Sa ikalawang panel, may putik sa sahig at may nanay na nakatingin sa kanya.',
+        answer: 'Ipinapakita ng larawan na kakauwi pa lang ng bata mula sa ulan at kailangang linisin ang sahig. Ang ekspresyon ng mukha at ayos ng tagpuan ang gabay sa pagsusuri.',
+      },
+      {
+        id: 52,
+        label: 'Halimbawa 2',
+        text: 'May tatlong panel. Una, may batang nag-aaral. Ikalawa, nakapatay ang ilaw dahil brownout. Ikatlo, gumagamit siya ng flashlight upang ipagpatuloy ang pagbabasa.',
+        answer: 'Makikita rito na determinado ang tauhan. Ang pagkilos niya sa huling panel ang nagbibigay-diin sa sipag at pagpupursigi.',
+      },
+      {
+        id: 53,
+        label: 'Halimbawa 3',
+        text: 'Sa komiks, may lobo ng usapan na nagsasabing, "Tara, magtanim tayo!" Habang nagsasalita ang mga tauhan, makikita sa likuran ang malinis na bakuran at mga halamang nakahanda.',
+        answer: 'Ang teksto at larawan ay nagtutulungan upang ipakita ang mensahe ng pagtutulungan at pangangalaga sa kapaligiran.',
+      },
+    ],
+    []
+  );
+
+  const hudhudExamples = useMemo(
+    () => [
+      {
+        id: 61,
+        label: 'Halimbawa 1',
+        text: 'Inaawit ng mga nakatatanda ang isang Hudhud habang nagtatanim ng palay upang hindi mabagot ang mga kasama sa gawain.',
+        answer: 'Ipinapakita nito na ang Hudhud ay hindi lamang panitikan kundi bahagi rin ng pang-araw-araw na buhay at pagtutulungan ng komunidad.',
+      },
+      {
+        id: 62,
+        label: 'Halimbawa 2',
+        text: 'Sa isang pagdiriwang ng ani, isinasalaysay sa awit ang katapangan ng isang bayani at ang kanyang pagmamahal sa pamilya.',
+        answer: 'Makikita rito na ang Hudhud ay naglalaman ng kabayanihan, tradisyon, at mahahalagang pagpapahalaga ng mga Ifugao.',
+      },
+      {
+        id: 63,
+        label: 'Halimbawa 3',
+        text: 'May bahaging paulit-ulit ang himig at ilang linya upang madaling matandaan ng mga umaawit at nakikinig.',
+        answer: 'Isa itong katangian ng pasalitang panitikan. Ang pag-uulit ay tumutulong sa pag-alala at pagpasa ng kultura sa susunod na henerasyon.',
+      },
+    ],
+    []
+  );
+
+  const ekspositoriExamples = useMemo(
+    () => [
+      {
+        id: 71,
+        label: 'Halimbawa 1',
+        text: 'Ang aso at pusa ay parehong alagang hayop sa bahay. Ang aso ay karaniwang bantay samantalang ang pusa ay kilala sa pagiging maliksi at tahimik.',
+        answer: 'Ito ay tekstong ekspositori dahil malinaw nitong inihahambing ang pagkakatulad at pagkakaiba ng aso at pusa gamit ang impormasyong batay sa obserbasyon.',
+      },
+      {
+        id: 72,
+        label: 'Halimbawa 2',
+        text: 'Ang online class at face-to-face class ay parehong paraan ng pag-aaral. Ngunit sa online class ay gumagamit ng internet, samantalang sa face-to-face class ay nagkikita sa silid-aralan.',
+        answer: 'Ang pokus ng teksto ay paghahambing. Ipinapaliwanag nito ang dalawang paraan ng pag-aaral sa maayos at diretsong paraan.',
+      },
+      {
+        id: 73,
+        label: 'Halimbawa 3',
+        text: 'Ang mangga at bayabas ay parehong prutas. Ang mangga ay kadalasang matamis at dilaw kapag hinog, habang ang bayabas ay maaaring maputi o rosas sa loob at maraming buto.',
+        answer: 'Ekspositori ang halimbawa dahil layunin nitong magbigay ng impormasyon at ihambing ang katangian ng dalawang prutas.',
+      },
+    ],
+    []
+  );
+
+  const sanhiBungaExamples = useMemo(
+    () => [
+      {
+        id: 81,
+        label: 'Halimbawa 1',
+        text: 'Hindi nagdala ng payong si Lira kahit maulap ang langit, kaya nabasa siya sa malakas na ulan.',
+        answer: 'Sanhi: hindi pagdadala ng payong. Bunga: nabasa siya sa ulan.',
+      },
+      {
+        id: 82,
+        label: 'Halimbawa 2',
+        text: 'Masipag na nag-aral si Ben para sa pagsusulit kaya nakakuha siya ng mataas na marka.',
+        answer: 'Sanhi: masipag na pag-aaral. Bunga: mataas na marka sa pagsusulit.',
+      },
+      {
+        id: 83,
+        label: 'Halimbawa 3',
+        text: 'Nagtapon ng basura ang mga tao sa kanal kaya bumara ito at nagkaroon ng baha sa kalsada.',
+        answer: 'Sanhi: pagtatapon ng basura sa kanal. Bunga: pagbabara at pagbaha sa kalsada.',
+      },
+    ],
+    []
+  );
+
+  const komiksWordSearchItems = useMemo(
+    () => [
+      { id: 'komiks-word-1', sentence: 'Sa komiks, ang kahon ng bawat tagpo ay tinatawag na {blank}.', answer: 'Panel' },
+      { id: 'komiks-word-2', sentence: 'Ang nagsasabi ng usapan o iniisip ng tauhan ay nasa {blank} ng usapan.', answer: 'Lobo' },
+      { id: 'komiks-word-3', sentence: 'Ang mga gumaganap sa kuwento ay ang mga {blank}.', answer: 'Tauhan' },
+    ],
+    []
+  );
+
+  const hudhudWordSearchItems = useMemo(
+    () => [
+      { id: 'hudhud-word-1', sentence: 'Ang Hudhud ay epikong-bayan ng mga {blank}.', answer: 'Ifugao' },
+      { id: 'hudhud-word-2', sentence: 'Madalas itong inaawit sa pagtatanim at {blank}.', answer: 'Pagaani' },
+      { id: 'hudhud-word-3', sentence: 'Naipapasa ito bilang pasalitang {blank}.', answer: 'Tradisyon' },
+    ],
+    []
+  );
+
+  const ekspositoriWordSearchItems = useMemo(
+    () => [
+      { id: 'eks-word-1', sentence: 'Ang tekstong ekspositori ay nagbibigay ng malinaw na {blank}.', answer: 'Impormasyon' },
+      { id: 'eks-word-2', sentence: 'Ipinakikita nito ang pagkakatulad at {blank}.', answer: 'Pagkakaiba' },
+      { id: 'eks-word-3', sentence: 'Isa sa mga hudyat na salita sa paghahambing ay {blank}.', answer: 'Samantalang' },
+    ],
+    []
+  );
+
+  const sanhiBungaWordSearchItems = useMemo(
+    () => [
+      { id: 'sb-word-1', sentence: 'Ang {blank} ay dahilan ng pangyayari.', answer: 'Sanhi' },
+      { id: 'sb-word-2', sentence: 'Ang {blank} ay resulta o epekto ng nangyari.', answer: 'Bunga' },
+      { id: 'sb-word-3', sentence: 'Kapag tama ang pasya, may mabuting {blank}.', answer: 'Resulta' },
+    ],
+    []
+  );
+
   const [activePuzzleExampleId, setActivePuzzleExampleId] = useState<number>(1);
 
   const activePuzzleExample = useMemo(() => {
@@ -751,6 +883,10 @@ const Quarter1Aralin1: React.FC = () => {
       case 'palaisipan': return 'Pala-isipan';
       case 'tanaga':     return 'Tanaga';
       case 'salawikain': return 'Salawikain';
+      case 'biswal':     return 'Pagsusuring Biswal';
+      case 'hudhud':     return 'Hudhud';
+      case 'ekspositori': return 'Tekstong Ekspositori';
+      case 'sanhi':      return 'Sanhi at Bunga';
       default:           return quarter1Lesson1.meta.title;
     }
   }, [selectedSectionId]);
@@ -760,8 +896,14 @@ const Quarter1Aralin1: React.FC = () => {
     if (selectedSectionId === 'palaisipan') return 'Ang palaisipan ay isang uri ng patalinghagang tanong o sitwasyon na layuning hamunin ang isipan.';
     if (selectedSectionId === 'tanaga')     return 'Isang maikling tulang Pilipino na may tugma at sukat.';
     if (selectedSectionId === 'salawikain') return 'Mga kasabihang may aral at karunungang bayan.';
+    if (selectedSectionId === 'biswal')     return 'Sinusuri sa komiks ang ugnayan ng larawan, salita, kilos, at damdamin upang maunawaan ang mensahe ng kuwento.';
+    if (selectedSectionId === 'hudhud')     return 'Ang Hudhud ay mahalagang epikong-bayan ng mga Ifugao na inaawit sa mga gawaing pangkomunidad at pagdiriwang.';
+    if (selectedSectionId === 'ekspositori') return 'Nagbibigay-linaw ang tekstong ekspositori sa mga paksa sa pamamagitan ng paghahambing ng pagkakatulad at pagkakaiba.';
+    if (selectedSectionId === 'sanhi')      return 'Tinutukoy sa araling ito ang dahilan ng pangyayari at ang resulta o epekto ng isang kilos o pasya.';
     return quarter1Lesson1.meta.description;
   }, [selectedSectionId, bugtongSection?.intro]);
+
+  const heroVideoSrc = HERO_VIDEOS[selectedSectionId];
 
   const totalAralin  = 8;
   const safeAralinId = Number.isFinite(aralinId) && aralinId >= 1 && aralinId <= totalAralin ? aralinId : 1;
@@ -848,12 +990,12 @@ const Quarter1Aralin1: React.FC = () => {
               <div className="stat-item"><IonIcon icon={sparklesOutline} /><span>1 Paksa</span></div>
               <div className="stat-item"><IonIcon icon={bulbOutline} /><span>Interactive</span></div>   
               
-            { safeAralinId && (
+            {heroVideoSrc && safeAralinId && (
               <div className="animation-stage">
                 <video
                   ref={videoRef}
                   className="welcome-video"
-                  src={HERO_VIDEOS[selectedSectionId]}
+                  src={heroVideoSrc}
                   playsInline
                   controls={videoStarted}
                   preload="auto"
@@ -1694,10 +1836,10 @@ const Quarter1Aralin1: React.FC = () => {
 
             {id === "5" && (
               <IonAccordion value="biswal" className="modern-accordion">
-                <IonItem slot="header" className="accordion-header">
+                <IonItem slot="header" className="accordion-header" lines="none">
                   <div className="header-content">
                     <div className="header-icon palaisipan-icon">
-                      <IonIcon icon={bookOutline} />
+                      <IonIcon icon={imageOutline} />
                     </div>
                     <div className="header-text">
                       <h2 className="accordion-title">Pagsusuring Biswal</h2>
@@ -1707,37 +1849,109 @@ const Quarter1Aralin1: React.FC = () => {
                 </IonItem>
 
                 <div slot="content" className="accordion-content">
-
-                  <div className="info-card gradient-blue">
-                    <IonCardContent>
-
-                      <h3 className="card-title">Kahulugan</h3>
-
-                      <div className="card-list">
-
-                        <div className="list-item">
-                          <p>
-                            Ang komiks ay kuwento na gumagamit ng larawan at teksto.
-                          </p>
-                        </div>
-
-                        <div className="list-item">
-                          <p>
-                            Ginagamit ito upang ipakita ang kilos, damdamin, at pangyayari.
-                          </p>
-                        </div>
-
-                        <div className="list-item">
-                          <p>
-                            May panel, dialogue, tauhan, at banghay.
-                          </p>
-                        </div>
-
-                      </div>
-
-                    </IonCardContent>
+                  <div className="action-chips">
+                    {(['read', 'watch', 'listen', 'play'] as AralinMode[]).map((mode) => (
+                      <IonChip key={mode} className={`modern-chip ${aralinMode === mode ? 'active' : ''}`} onClick={() => setAralinMode(mode)}>
+                        <IonIcon icon={mode === 'read' ? bookOutline : mode === 'watch' ? playCircleOutline : mode === 'listen' ? volumeHighOutline : gameControllerOutline} />
+                        <IonLabel>{mode === 'read' ? 'Pagbasa' : mode === 'watch' ? 'Panonood' : mode === 'listen' ? 'Pakikinig' : 'Paglalaro'}</IonLabel>
+                      </IonChip>
+                    ))}
                   </div>
 
+                  {aralinMode === 'read' && (
+                    <>
+                  <div className="content-intro">
+                    <IonText className="intro-text">
+                      Ang komiks ay pinagsamang larawan at salita. Sa pagsusuring biswal, tinitingnan natin ang panel, ekspresyon, galaw, at usapan upang maunawaan ang ipinahihiwatig na mensahe ng kuwento.
+                    </IonText>
+                  </div>
+
+                  <div className="info-cards-grid">
+                    <IonCard className="info-card gradient-blue">
+                      <IonCardContent>
+                        <div className="card-icon"><IonIcon icon={imageOutline} /></div>
+                        <h3 className="card-title">Kahulugan</h3>
+                        <div className="card-list">
+                          <ExpandableItem number={1} title="Larawan at teksto" description="Magkasamang ginagamit ang guhit at salita upang maipakita ang kilos, tagpuan, at mensahe." />
+                          <ExpandableItem number={2} title="Pagkakasunod-sunod ng panel" description="Mahalaga ang ayos ng mga panel upang masundan ng mambabasa ang daloy ng pangyayari." />
+                          <ExpandableItem number={3} title="Pagsusuri ng detalye" description="Tinitingnan ang ekspresyon ng mukha, simbolo, kulay, at galaw upang matukoy ang damdamin at ideya." />
+                        </div>
+                      </IonCardContent>
+                    </IonCard>
+
+                    <IonCard className="info-card gradient-pink">
+                      <IonCardContent>
+                        <div className="card-icon"><IonIcon icon={sparklesOutline} /></div>
+                        <h3 className="card-title">Bahagi ng Komiks</h3>
+                        <div className="card-list">
+                          <ExpandableItem number={1} title="Panel" description="Ito ang kahon o bahagi kung saan makikita ang isang tagpo o pangyayari." />
+                          <ExpandableItem number={2} title="Lobo ng usapan" description="Dito inilalagay ang mga sinasabi o iniisip ng tauhan." />
+                          <ExpandableItem number={3} title="Tauhan at tagpuan" description="Ang tauhan ang gumaganap sa kuwento at ang tagpuan ang lugar kung saan ito nagaganap." />
+                        </div>
+                      </IonCardContent>
+                    </IonCard>
+                  </div>
+
+                  <div className="palaisipan-examples">
+                    {komiksExamples.map((item) => (
+                      <IonCard key={item.id} className="example-card">
+                        <IonCardContent>
+                          <div className="example-text">
+                            <div className="example-label">
+                              <IonIcon icon={bookmarkSharp} />
+                              <span>{item.label}</span>
+                            </div>
+                            <p className="riddle-text">{item.text}</p>
+                            <div className="answer-toggle">
+                              <IonButton fill="clear" size="small" onClick={() => toggleAnswer(item.id)}>
+                                <IonIcon icon={eyeOutline} slot="start" />
+                                {showAnswers[item.id] ? 'Itago ang Pagsusuri' : 'Ipakita ang Pagsusuri'}
+                              </IonButton>
+                            </div>
+                            {showAnswers[item.id] && (
+                              <div className="answer-reveal animated">
+                                <IonIcon icon={imageOutline} />
+                                <span>{item.answer}</span>
+                              </div>
+                            )}
+                          </div>
+                        </IonCardContent>
+                      </IonCard>
+                    ))}
+                  </div>
+                    </>
+                  )}
+
+                  {aralinMode === 'play' && (
+                    <IonCard className="info-card puzzle-card">
+                      <IonCardContent>
+                        <WordSearchFillBlankGame
+                          title="Paglalaro: Hanapin ang Salita sa Komiks"
+                          items={komiksWordSearchItems}
+                        />
+                      </IonCardContent>
+                    </IonCard>
+                  )}
+
+                  {aralinMode === 'watch' && (
+                    <IonCard className="info-card gradient-blue">
+                      <IonCardContent>
+                        <div className="card-icon"><IonIcon icon={playCircleOutline} /></div>
+                        <h1 className="card-title"><strong>Panonood</strong></h1>
+                        <p className="mode-description">Panoorin ang komiks at suriin ang pagkakasunod-sunod ng panel, ekspresyon ng tauhan, at mensaheng ipinapakita ng bawat tagpo.</p>
+                      </IonCardContent>
+                    </IonCard>
+                  )}
+
+                  {aralinMode === 'listen' && (
+                    <IonCard className="info-card gradient-green">
+                      <IonCardContent>
+                        <div className="card-icon"><IonIcon icon={volumeHighOutline} /></div>
+                        <h1 className="card-title"><strong>Pakikinig</strong></h1>
+                        <p className="mode-description">Pakinggan ang paglalarawan sa isang komiks at tukuyin kung alin ang tauhan, tagpuan, at kilos na inilalarawan.</p>
+                      </IonCardContent>
+                    </IonCard>
+                  )}
                 </div>
               </IonAccordion>
               )}
@@ -1746,11 +1960,11 @@ const Quarter1Aralin1: React.FC = () => {
               {id === "6" && (
                 <IonAccordion value="hudhud" className="modern-accordion">
 
-                <IonItem slot="header" className="accordion-header">
+                <IonItem slot="header" className="accordion-header" lines="none">
                 <div className="header-content">
 
                 <div className="header-icon tanaga-icon">
-                <IonIcon icon={bookOutline} />
+                <IonIcon icon={volumeHighOutline} />
                 </div>
 
                 <div className="header-text">
@@ -1762,37 +1976,109 @@ const Quarter1Aralin1: React.FC = () => {
                 </IonItem>
 
                 <div slot="content" className="accordion-content">
+                <div className="action-chips">
+                  {(['read', 'watch', 'listen', 'play'] as AralinMode[]).map((mode) => (
+                    <IonChip key={mode} className={`modern-chip ${aralinMode === mode ? 'active' : ''}`} onClick={() => setAralinMode(mode)}>
+                      <IonIcon icon={mode === 'read' ? bookOutline : mode === 'watch' ? playCircleOutline : mode === 'listen' ? volumeHighOutline : gameControllerOutline} />
+                      <IonLabel>{mode === 'read' ? 'Pagbasa' : mode === 'watch' ? 'Panonood' : mode === 'listen' ? 'Pakikinig' : 'Paglalaro'}</IonLabel>
+                    </IonChip>
+                  ))}
+                </div>
 
-                <div className="info-card gradient-green">
+                {aralinMode === 'read' && (
+                  <>
+
+                <div className="content-intro">
+                  <IonText className="intro-text">
+                    Ang Hudhud ay isang tulang pasalaysay o epikong-bayan ng mga Ifugao. Inaawit ito sa mga gawain tulad ng pagtatanim, pag-aani, at iba pang pagtitipon upang maipasa ang kultura at alaala ng komunidad.
+                  </IonText>
+                </div>
+
+                <div className="info-cards-grid">
+                <IonCard className="info-card gradient-green">
                 <IonCardContent>
-
                 <h3 className="card-title">Kahulugan</h3>
-
                 <div className="card-list">
-
-                <div className="list-item">
-                <p>
-                Ang Hudhud ay epiko ng mga Ifugao.
-                </p>
+                  <ExpandableItem number={1} title="Epikong-bayan" description="Mahabang tulang pasalaysay ang Hudhud na nagkukuwento tungkol sa bayani, pamilya, at pamumuhay." />
+                  <ExpandableItem number={2} title="Inaawit sa komunidad" description="Karaniwang inaawit ito habang nagtatanim, nag-aani, o may mahalagang pagdiriwang." />
+                  <ExpandableItem number={3} title="Pasalitang tradisyon" description="Naipapasa ang Hudhud sa pamamagitan ng pakikinig at pag-awit mula sa matatanda patungo sa kabataan." />
                 </div>
-
-                <div className="list-item">
-                <p>
-                Inaawit ito sa pagtatanim at ani.
-                </p>
-                </div>
-
-                <div className="list-item">
-                <p>
-                Naglalaman ng kuwento ng bayani.
-                </p>
-                </div>
-
-                </div>
-
                 </IonCardContent>
+                </IonCard>
+
+                <IonCard className="info-card gradient-orange">
+                  <IonCardContent>
+                    <div className="card-icon"><IonIcon icon={heartOutline} /></div>
+                    <h3 className="card-title">Kahalagahan</h3>
+                    <div className="card-list">
+                      <ExpandableItem number={1} title="Pagpapanatili ng kultura" description="Natutulungan nitong mapanatili ang kasaysayan, paniniwala, at kaugalian ng mga Ifugao." />
+                      <ExpandableItem number={2} title="Pagpapahalaga sa bayani" description="Ipinakikilala nito ang kabutihan, katapangan, at dangal ng mga tauhan sa kuwento." />
+                      <ExpandableItem number={3} title="Pagkakaisa ng pamayanan" description="Nagiging daan ito para magsama-sama ang komunidad sa pag-awit at pag-alala sa kanilang pinagmulan." />
+                    </div>
+                  </IonCardContent>
+                </IonCard>
                 </div>
 
+                <div className="tanaga-examples">
+                  {hudhudExamples.map((item) => (
+                    <IonCard key={item.id} className="example-card">
+                      <IonCardContent>
+                        <div className="example-text">
+                          <div className="example-label">
+                            <IonIcon icon={bookmarkSharp} />
+                            <span>{item.label}</span>
+                          </div>
+                          <p className="riddle-text">{item.text}</p>
+                          <div className="answer-toggle">
+                            <IonButton fill="clear" size="small" onClick={() => toggleAnswer(item.id)}>
+                              <IonIcon icon={eyeOutline} slot="start" />
+                              {showAnswers[item.id] ? 'Itago ang Paliwanag' : 'Ipakita ang Paliwanag'}
+                            </IonButton>
+                          </div>
+                          {showAnswers[item.id] && (
+                            <div className="answer-reveal animated">
+                              <IonIcon icon={volumeHighOutline} />
+                              <span>{item.answer}</span>
+                            </div>
+                          )}
+                        </div>
+                      </IonCardContent>
+                    </IonCard>
+                  ))}
+                </div>
+                </>
+                )}
+
+                {aralinMode === 'play' && (
+                  <IonCard className="info-card puzzle-card">
+                    <IonCardContent>
+                      <WordSearchFillBlankGame
+                        title="Paglalaro: Hanapin ang Salita sa Hudhud"
+                        items={hudhudWordSearchItems}
+                      />
+                    </IonCardContent>
+                  </IonCard>
+                )}
+
+                {aralinMode === 'watch' && (
+                  <IonCard className="info-card gradient-blue">
+                    <IonCardContent>
+                      <div className="card-icon"><IonIcon icon={playCircleOutline} /></div>
+                      <h1 className="card-title"><strong>Panonood</strong></h1>
+                      <p className="mode-description">Panoorin ang pagganap o pagsasalaysay ng Hudhud at obserbahan kung paano naipapakita ang kultura, kabayanihan, at damdamin sa pag-awit.</p>
+                    </IonCardContent>
+                  </IonCard>
+                )}
+
+                {aralinMode === 'listen' && (
+                  <IonCard className="info-card gradient-green">
+                    <IonCardContent>
+                      <div className="card-icon"><IonIcon icon={volumeHighOutline} /></div>
+                      <h1 className="card-title"><strong>Pakikinig</strong></h1>
+                      <p className="mode-description">Pakinggan ang himig at pag-uulit sa Hudhud at tukuyin kung paano ito nakatutulong sa pag-alala at pagpasa ng tradisyon.</p>
+                    </IonCardContent>
+                  </IonCard>
+                )}
                 </div>
                 </IonAccordion>
                 )}
@@ -1800,11 +2086,11 @@ const Quarter1Aralin1: React.FC = () => {
                 {id === "7" && (
                   <IonAccordion value="ekspositori" className="modern-accordion">
 
-                  <IonItem slot="header" className="accordion-header">
+                  <IonItem slot="header" className="accordion-header" lines="none">
                   <div className="header-content">
 
                   <div className="header-icon salawikain-icon">
-                  <IonIcon icon={bookOutline} />
+                  <IonIcon icon={createOutline} />
                   </div>
 
                   <div className="header-text">
@@ -1816,37 +2102,109 @@ const Quarter1Aralin1: React.FC = () => {
                   </IonItem>
 
                   <div slot="content" className="accordion-content">
+                  <div className="action-chips">
+                    {(['read', 'watch', 'listen', 'play'] as AralinMode[]).map((mode) => (
+                      <IonChip key={mode} className={`modern-chip ${aralinMode === mode ? 'active' : ''}`} onClick={() => setAralinMode(mode)}>
+                        <IonIcon icon={mode === 'read' ? bookOutline : mode === 'watch' ? playCircleOutline : mode === 'listen' ? volumeHighOutline : gameControllerOutline} />
+                        <IonLabel>{mode === 'read' ? 'Pagbasa' : mode === 'watch' ? 'Panonood' : mode === 'listen' ? 'Pakikinig' : 'Paglalaro'}</IonLabel>
+                      </IonChip>
+                    ))}
+                  </div>
 
-                  <div className="info-card gradient-purple">
+                  {aralinMode === 'read' && (
+                    <>
+                  <div className="content-intro">
+                    <IonText className="intro-text">
+                      Ang tekstong ekspositori ay tekstong naglalayong magpaliwanag at magbigay ng impormasyon. Sa araling ito, ginagamit ito upang maipakita ang pagkakatulad at pagkakaiba ng dalawang bagay, tao, hayop, o pangyayari.
+                    </IonText>
+                  </div>
+
+                  <div className="info-cards-grid">
+                  <IonCard className="info-card gradient-purple">
                   <IonCardContent>
-
+                  <div className="card-icon"><IonIcon icon={createOutline} /></div>
                   <h3 className="card-title">Kahulugan</h3>
-
                   <div className="card-list">
-
-                  <div className="list-item">
-                  <p>
-                  Nagbibigay impormasyon ang tekstong ekspositori.
-                  </p>
+                    <ExpandableItem number={1} title="Nagpapaliwanag" description="Layunin nitong maglahad ng malinaw at wastong impormasyon tungkol sa isang paksa." />
+                    <ExpandableItem number={2} title="Naghahambing" description="Ipinakikita nito kung ano ang magkatulad at kung ano ang magkaiba sa dalawang bagay." />
+                    <ExpandableItem number={3} title="Maayos ang pagkakasulat" description="Karaniwang may panimula, katawan, at wakas upang madaling maunawaan ng mambabasa." />
                   </div>
-
-                  <div className="list-item">
-                  <p>
-                  Ipinapakita ang pagkakatulad at pagkakaiba.
-                  </p>
-                  </div>
-
-                  <div className="list-item">
-                  <p>
-                  May panimula, katawan, at wakas.
-                  </p>
-                  </div>
-
-                  </div>
-
                   </IonCardContent>
+                  </IonCard>
+
+                  <IonCard className="info-card gradient-blue">
+                    <IonCardContent>
+                      <div className="card-icon"><IonIcon icon={bulbOutline} /></div>
+                      <h3 className="card-title">Mga Hudyat na Salita</h3>
+                      <div className="card-list">
+                        <ExpandableItem number={1} title="Pagkakatulad" description='Mga salitang tulad ng "pareho", "magkatulad", at "kapwa".' />
+                        <ExpandableItem number={2} title="Pagkakaiba" description='Mga salitang tulad ng "samantalang", "ngunit", at "subalit".' />
+                        <ExpandableItem number={3} title="Pag-oorganisa ng ideya" description='Nakakatulong ang mga hudyat na salita upang maging malinaw ang paghahambing sa teksto.' />
+                      </div>
+                    </IonCardContent>
+                  </IonCard>
                   </div>
 
+                  <div className="palaisipan-examples">
+                    {ekspositoriExamples.map((item) => (
+                      <IonCard key={item.id} className="example-card">
+                        <IonCardContent>
+                          <div className="example-text">
+                            <div className="example-label">
+                              <IonIcon icon={bookmarkSharp} />
+                              <span>{item.label}</span>
+                            </div>
+                            <p className="riddle-text">{item.text}</p>
+                            <div className="answer-toggle">
+                              <IonButton fill="clear" size="small" onClick={() => toggleAnswer(item.id)}>
+                                <IonIcon icon={eyeOutline} slot="start" />
+                                {showAnswers[item.id] ? 'Itago ang Paliwanag' : 'Ipakita ang Paliwanag'}
+                              </IonButton>
+                            </div>
+                            {showAnswers[item.id] && (
+                              <div className="answer-reveal animated">
+                                <IonIcon icon={createOutline} />
+                                <span>{item.answer}</span>
+                              </div>
+                            )}
+                          </div>
+                        </IonCardContent>
+                      </IonCard>
+                    ))}
+                  </div>
+                  </>
+                  )}
+
+                  {aralinMode === 'play' && (
+                    <IonCard className="info-card puzzle-card">
+                      <IonCardContent>
+                        <WordSearchFillBlankGame
+                          title="Paglalaro: Hanapin ang Salita sa Tekstong Ekspositori"
+                          items={ekspositoriWordSearchItems}
+                        />
+                      </IonCardContent>
+                    </IonCard>
+                  )}
+
+                  {aralinMode === 'watch' && (
+                    <IonCard className="info-card gradient-blue">
+                      <IonCardContent>
+                        <div className="card-icon"><IonIcon icon={playCircleOutline} /></div>
+                        <h1 className="card-title"><strong>Panonood</strong></h1>
+                        <p className="mode-description">Panoorin ang paghahambing ng dalawang bagay at alamin kung aling impormasyon ang nagpapakita ng pagkakatulad at alin ang nagpapakita ng pagkakaiba.</p>
+                      </IonCardContent>
+                    </IonCard>
+                  )}
+
+                  {aralinMode === 'listen' && (
+                    <IonCard className="info-card gradient-green">
+                      <IonCardContent>
+                        <div className="card-icon"><IonIcon icon={volumeHighOutline} /></div>
+                        <h1 className="card-title"><strong>Pakikinig</strong></h1>
+                        <p className="mode-description">Pakinggan ang isang maikling tekstong ekspositori at tukuyin ang mga hudyat na salitang ginamit sa paghahambing.</p>
+                      </IonCardContent>
+                    </IonCard>
+                  )}
                   </div>
                   </IonAccordion>
                   )}
@@ -1854,11 +2212,11 @@ const Quarter1Aralin1: React.FC = () => {
                   {id === "8" && (
                   <IonAccordion value="sanhi" className="modern-accordion">
 
-                  <IonItem slot="header" className="accordion-header">
+                  <IonItem slot="header" className="accordion-header" lines="none">
                   <div className="header-content">
 
                   <div className="header-icon bugtong-icon">
-                  <IonIcon icon={bookOutline} />
+                  <IonIcon icon={watch} />
                   </div>
 
                   <div className="header-text">
@@ -1870,37 +2228,109 @@ const Quarter1Aralin1: React.FC = () => {
                   </IonItem>
 
                   <div slot="content" className="accordion-content">
+                  <div className="action-chips">
+                    {(['read', 'watch', 'listen', 'play'] as AralinMode[]).map((mode) => (
+                      <IonChip key={mode} className={`modern-chip ${aralinMode === mode ? 'active' : ''}`} onClick={() => setAralinMode(mode)}>
+                        <IonIcon icon={mode === 'read' ? bookOutline : mode === 'watch' ? playCircleOutline : mode === 'listen' ? volumeHighOutline : gameControllerOutline} />
+                        <IonLabel>{mode === 'read' ? 'Pagbasa' : mode === 'watch' ? 'Panonood' : mode === 'listen' ? 'Pakikinig' : 'Paglalaro'}</IonLabel>
+                      </IonChip>
+                    ))}
+                  </div>
 
-                  <div className="info-card gradient-orange">
+                  {aralinMode === 'read' && (
+                    <>
+                  <div className="content-intro">
+                    <IonText className="intro-text">
+                      Ang sanhi ay tumutukoy sa dahilan kung bakit nangyari ang isang pangyayari, samantalang ang bunga ay ang naging resulta nito. Mahalaga itong matukoy upang maging mapanuri at responsable sa mga pasya.
+                    </IonText>
+                  </div>
+
+                  <div className="info-cards-grid">
+                  <IonCard className="info-card gradient-orange">
                   <IonCardContent>
-
+                  <div className="card-icon"><IonIcon icon={watch} /></div>
                   <h3 className="card-title">Kahulugan</h3>
-
                   <div className="card-list">
-
-                  <div className="list-item">
-                  <p>
-                  Sanhi ang dahilan ng pangyayari.
-                  </p>
+                    <ExpandableItem number={1} title="Sanhi" description="Ito ang pinagmulan o dahilan ng isang kilos, pangyayari, o sitwasyon." />
+                    <ExpandableItem number={2} title="Bunga" description="Ito ang kinalabasan o epekto ng nangyaring sanhi." />
+                    <ExpandableItem number={3} title="Pananagutan" description="Mahahalagang pag-isipan ang kilos dahil may katapat itong bunga na maaaring mabuti o di-mabuti." />
                   </div>
-
-                  <div className="list-item">
-                  <p>
-                  Bunga ang resulta ng ginawa.
-                  </p>
-                  </div>
-
-                  <div className="list-item">
-                  <p>
-                  May pananagutan sa bawat desisyon.
-                  </p>
-                  </div>
-
-                  </div>
-
                   </IonCardContent>
+                  </IonCard>
+
+                  <IonCard className="info-card gradient-green">
+                    <IonCardContent>
+                      <div className="card-icon"><IonIcon icon={bulbOutline} /></div>
+                      <h3 className="card-title">Mga Palatandaan</h3>
+                      <div className="card-list">
+                        <ExpandableItem number={1} title="Sanhi" description='Karaniwang may mga salitang "dahil", "sapagkat", at "dulot ng".' />
+                        <ExpandableItem number={2} title="Bunga" description='Madalas gamitin ang "kaya", "bunga nito", at "nagresulta sa".' />
+                        <ExpandableItem number={3} title="Pagpapasya" description="Tinutulungan tayo ng pag-alam sa sanhi at bunga upang makagawa ng tamang desisyon." />
+                      </div>
+                    </IonCardContent>
+                  </IonCard>
                   </div>
 
+                  <div className="salawikain-examples">
+                    {sanhiBungaExamples.map((item) => (
+                      <IonCard key={item.id} className="example-card">
+                        <IonCardContent>
+                          <div className="example-text">
+                            <div className="example-label">
+                              <IonIcon icon={bookmarkSharp} />
+                              <span>{item.label}</span>
+                            </div>
+                            <p className="riddle-text">{item.text}</p>
+                            <div className="answer-toggle">
+                              <IonButton fill="clear" size="small" onClick={() => toggleAnswer(item.id)}>
+                                <IonIcon icon={eyeOutline} slot="start" />
+                                {showAnswers[item.id] ? 'Itago ang Sagot' : 'Ipakita ang Sagot'}
+                              </IonButton>
+                            </div>
+                            {showAnswers[item.id] && (
+                              <div className="answer-reveal animated">
+                                <IonIcon icon={watch} />
+                                <span>{item.answer}</span>
+                              </div>
+                            )}
+                          </div>
+                        </IonCardContent>
+                      </IonCard>
+                    ))}
+                  </div>
+                  </>
+                  )}
+
+                  {aralinMode === 'play' && (
+                    <IonCard className="info-card puzzle-card">
+                      <IonCardContent>
+                        <WordSearchFillBlankGame
+                          title="Paglalaro: Hanapin ang Sanhi at Bunga"
+                          items={sanhiBungaWordSearchItems}
+                        />
+                      </IonCardContent>
+                    </IonCard>
+                  )}
+
+                  {aralinMode === 'watch' && (
+                    <IonCard className="info-card gradient-blue">
+                      <IonCardContent>
+                        <div className="card-icon"><IonIcon icon={playCircleOutline} /></div>
+                        <h1 className="card-title"><strong>Panonood</strong></h1>
+                        <p className="mode-description">Panoorin ang isang sitwasyon at tukuyin kung alin ang sanhi at alin ang bunga ng pangyayari.</p>
+                      </IonCardContent>
+                    </IonCard>
+                  )}
+
+                  {aralinMode === 'listen' && (
+                    <IonCard className="info-card gradient-green">
+                      <IonCardContent>
+                        <div className="card-icon"><IonIcon icon={volumeHighOutline} /></div>
+                        <h1 className="card-title"><strong>Pakikinig</strong></h1>
+                        <p className="mode-description">Pakinggan ang maikling pangyayari at tukuyin ang dahilan ng kilos at ang naging bunga o epekto nito.</p>
+                      </IonCardContent>
+                    </IonCard>
+                  )}
                   </div>
                   </IonAccordion>
                   )}
