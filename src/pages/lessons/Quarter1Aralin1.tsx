@@ -70,9 +70,9 @@ const SECTION_GIFS: Record<string, { src: string; alt: string; bgClass: string }
 
 const BUGTONG_ANSWER_GIFS: Record<string, string> = {
   cellphone:  '/assets/gif/Cellphone.gif',
-  kalendaryo: '/assets/gif/Orasan.gif',
-  tubig:      '/assets/gif/Yelo.gif',
-  aklat:      '/assets/gif/Liham.gif',
+  kalendaryo: '/assets/gif/kalendaryo.gif',
+  tubig:      '/assets/gif/tubig.gif',
+  aklat:      '/assets/gif/aklat.gif',
   radyo:      '/assets/gif/Radyo.gif',
   suklay:     '/assets/gif/Suklay.gif',
   anino:      '/assets/gif/Anino.gif',
@@ -549,7 +549,7 @@ const Quarter1Aralin1: React.FC = () => {
           ) : isGameOver ? (
             <div className="answer-reveal animated">
               <IonIcon icon={eyeOutline} />
-              <span>Game over. Naubos ang buhay mo. Score: {score}/{total}</span>
+              <span>Tapos ang laro. Naubos ang buhay mo. Score: {score}/{total}</span>
             </div>
           ) : currentItem ? (
             <div className="quiz-item">
@@ -720,7 +720,6 @@ const Quarter1Aralin1: React.FC = () => {
   const [videoStarted, setVideoStarted] = useState(false);
 
   // Autoplay fix: start muted, unmute after 300ms
-
   useEffect(() => {
   if (videoRef.current) {
     videoRef.current.load();
@@ -733,30 +732,20 @@ const Quarter1Aralin1: React.FC = () => {
 
   const [videoReady, setVideoReady] = useState(false);
 
-  useEffect(() => {
+    const handleVideoTap = () => {
     const video = videoRef.current;
     if (!video) return;
 
-    video.muted = true;
-    video.play()
-      .then(() => {
-        setTimeout(() => {
-          if (videoRef.current) videoRef.current.muted = false;
-        }, 300);
-        setVideoStarted(true);
-      })
-      .catch(() => {
-        setVideoStarted(false);
-      });
-  }, []);
+    if (!videoReady) return;
 
-  const handleVideoTap = () => {
-    const video = videoRef.current;
-    if (!video || videoStarted) return;
-    video.muted = false;
-    video.play()
-      .then(() => setVideoStarted(true))
-      .catch(() => {});
+    if (video.paused) {
+      video.muted = false;
+      video.volume = 1;
+      video.play();
+      setVideoStarted(true);
+    } else {
+      video.pause();
+    }
   };
 
   const handleWatchTapBugtongVideo = () => {
@@ -799,11 +788,12 @@ const Quarter1Aralin1: React.FC = () => {
           <div className="hero-content-wrapper">
             <div className="hero-icon-badge"><IonIcon icon={bookOutline} /></div>
             <h1 className="hero-main-title">{heroTitle}</h1>
-            <p className="hero-description">{heroDescription}</p>
             <div className="hero-stats">
               <div className="stat-item"><IonIcon icon={sparklesOutline} /><span>1 Paksa</span></div>
               <div className="stat-item"><IonIcon icon={bulbOutline} /><span>Interactive</span></div>   
-              <div className="animation-stage" onClick={handleVideoTap} aria-label="I-tap para simulan ang video">
+              
+            { safeAralinId === 1 && (
+              <div className="animation-stage">
                 <video
                   ref={videoRef}
                   className="welcome-video"
@@ -835,6 +825,7 @@ const Quarter1Aralin1: React.FC = () => {
                   </div>
                 )}
               </div>
+            )}
             </div>
           </div>
         </div>

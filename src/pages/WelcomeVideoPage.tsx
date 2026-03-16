@@ -52,7 +52,7 @@ const WelcomeVideoPage: React.FC = () => {
             <video
               ref={videoRef}
               className="welcome-video"
-              src="/assets/video/welcomeVideo.mp4"
+              src="/assets/video/WelcomeNew.mp4"
               playsInline
               preload="auto"
             />
